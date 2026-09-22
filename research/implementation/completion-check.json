@@ -1,7 +1,7 @@
 {
   "initialStep": 0,
-  "paused": 76,
-  "resumed": 81,
+  "paused": 74,
+  "resumed": 79,
   "forecastsRemainAtStep": 0,
   "trace": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "choiceStates": {
-    "count": 67,
+    "count": 88,
     "failures": []
   },
   "layout": [
@@ -58,8 +58,8 @@
           "color": "rgb(41, 54, 75)"
         }
       ],
-      "mathFragments": 1730,
-      "coloredFragments": 824,
+      "mathFragments": 1741,
+      "coloredFragments": 827,
       "distortedCircles": 0
     },
     {
@@ -84,8 +84,8 @@
           "color": "rgb(233, 237, 245)"
         }
       ],
-      "mathFragments": 1730,
-      "coloredFragments": 824,
+      "mathFragments": 1741,
+      "coloredFragments": 827,
       "distortedCircles": 0
     }
   ],

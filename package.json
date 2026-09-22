@@ -8,6 +8,7 @@
     "build:revision": "node tools/build-edition2.mjs",
     "verify:revision": "node tools/verify-edition2.mjs",
     "verify:pedagogy": "node tools/verify-pedagogy.mjs",
+    "verify:polish": "node tools/verify-polish.mjs",
     "verify:visuals": "node tools/verify-visual-numerics.mjs && node tools/verify-completed-book.mjs",
     "verify:continuous": "node tools/verify-continuous.mjs",
     "audit:visuals": "node tools/audit-visuals.mjs",

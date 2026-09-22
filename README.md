@@ -2,17 +2,17 @@
 
 An interactive course on world models, building the required mathematics from first-year probability, linear algebra and calculus through JEPA, SIGReg and **LeWorldModel, arXiv:2603.19312v1**. The book includes extended derivations and a genuine browser-trained visual world model.
 
-**Current status: working draft undergoing design and pedagogical revision.** The 20-chapter manuscript and planned visual coverage are implemented; the opening, illustrations, layout and several teaching interactions are now being revised in response to reader feedback.
+**Current status: working draft undergoing design and pedagogical revision.** The 20-chapter manuscript and planned visual coverage are implemented; the latest revision rebuilds the opening, occlusion illustration, neuron, optimizer, Jacobian, normalization and rollout demonstrations in response to reader feedback. See [the revision review](research/polish/REVIEW.md) for what changed and how it was checked.
 
 Open **`world-models.html`**. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 92 new teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
 
-The 234-page complete print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
+The 232-page print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
 
 The reading order starts with the purpose of predictive representations, then builds vectors, probability, covariance, calculus, and optimization before introducing JEPA and SIGReg. Normality testing has its own lesson and Monte Carlo experiment. Implementation, training, planning, and evaluation precede the advanced Gaussian theory, transformer architecture, research lineage, and guided reading of LeWorldModel. Core derivations are visible in the reading flow; worked exercise answers remain expandable.
 
 ## Figures and experiments
 
-All 97 approved visual briefs are complete: 92 teaching figures and five integrations in the live laboratory. Open `figure-atlas.html` to jump to any item. The exact coverage, source paths and presentation choices are tracked in `book/figure-plan.json`; the review and verification record is `research/implementation/REVIEW.md`.
+All 97 planned visual briefs have implementations: 92 teaching figures and five integrations in the live laboratory. This is a coverage count, not a claim that every design has received reader approval. Open `figure-atlas.html` to jump to any item; the build regenerates its titles from the figures. Coverage, source paths and presentation choices are tracked in `book/figure-plan.json`; the latest review and verification record is `research/polish/REVIEW.md`.
 
 The opening arm moves through exact two-link simulator geometry. The laboratory initializes a real random model, displays its untrained predictions, trains until paused, resumes without resetting, and replays learned versus actual futures from a shared context. Generated infographics complement editable SVG and numerical diagrams; `illustration-gallery.html` offers four or five compositions per subject, with corrected editorial selections already embedded.
 
@@ -40,6 +40,7 @@ Run `npm install`, then `npm run build`. The delivered HTML does not require the
 - `python tools/verify-book-math.py`: all-parameter finite differences for the manual learner, attention causality, Adam progress, and CEM against an analytic optimum. Requires NumPy.
 - `node tools/verify-reader.mjs`: both themes, responsive contents, SVG geometry, and a short real training/control run.
 - `node tools/inspect-full-book.mjs`: screenshots, navigation, diagram collision checks, mobile layout, and all foundational desk interactions.
+- `node tools/verify-polish.mjs`: revised mathematical experiments, pointer interactions, capacity choices, responsive layouts and sensor-theme presentation.
 - `npm run verify:visuals`: numerical figure checks and browser interaction/theme checks, including untrained forecasts and short pause/resume.
 - `npm run verify:continuous`: a separate real training run beyond 5,000 updates, then resume. This is intentionally a longer check.
 - `npm run audit:visuals`: every teaching figure in both themes at desktop/phone sizes, plus slider endpoints.

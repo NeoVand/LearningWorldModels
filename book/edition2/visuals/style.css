@@ -808,3 +808,18 @@
 #visual-N5 .visual-panels .visual-panel > svg {
   max-height: none;
 }
+
+@media print {
+  .teaching-visual { margin:14px 0; padding:12px 0; }
+  .visual-question { margin:0 0 10px; }
+  .visual-panel > svg { max-height:175px; }
+  #visual-O1 .visual-panel > svg, #visual-P3 .visual-panel > svg { max-height:115px; }
+  #visual-N2 .visual-panel > svg { max-height:135px; }
+  #visual-N5 .visual-panels .visual-panel > svg { max-height:125px; }
+  .landscape-layout > svg { max-height:215px; }
+  .course-promise { grid-template-columns:repeat(3,1fr); margin:1rem 0; padding:.8rem 0; }
+  .course-promise p { font-size:8.5pt; }
+  .landscape-readout .visual-note, #visual-N5 .visual-panel .visual-note { font-size:8pt; }
+  .norm-explanation { margin-top:.6rem; }
+  .norm-table th, .norm-table td { padding:.4rem; }
+}

@@ -238,3 +238,5 @@ fs.writeFileSync(
 console.log(
   `Second edition: ${chapters.length} chapters, ${mathCount} formulas, ${codeCount} code blocks, ${(Buffer.byteLength(html) / 1e6).toFixed(2)} MB`,
 );
+
+await import("./build-figure-atlas.mjs");

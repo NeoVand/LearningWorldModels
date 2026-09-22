@@ -480,8 +480,8 @@ function gridPicture(s, linear) {
         });
       b += path(pts, linear ? "teal" : "blue", i === 0 ? 1.8 : 0.8);
     }
-  const dx = s.axis === "x" ? s.h : 0,
-    dy = s.axis === "y" ? s.h : 0,
+  const dx = s.axis === "x" ? s.h * s.radius : 0,
+    dy = s.axis === "y" ? s.h * s.radius : 0,
     p = M(transform(dx, dy));
   b += arrow(150, 132, p[0], p[1], "amber", 2) + dot(...p, 3, "amber");
   return svg(
@@ -501,12 +501,12 @@ export const jacobianSpec = {
     range("x", "Base x", -0.8, 1.5, 0.02, 0.8),
     range("y", "Base y", -0.8, 1.5, 0.02, -0.6),
     range("radius", "Neighborhood radius", 0.05, 0.7, 0.01, 0.4),
-    range("h", "Perturbation", -0.4, 0.4, 0.01, 0.2),
+    range("h", "Step / neighborhood radius", -1, 1, 0.05, 0.5),
     choices("axis", "Change one input", ["x", "y"]),
   ],
   draw(s) {
-    const dx = s.axis === "x" ? s.h : 0,
-      dy = s.axis === "y" ? s.h : 0,
+    const dx = s.axis === "x" ? s.h * s.radius : 0,
+      dy = s.axis === "y" ? s.h * s.radius : 0,
       actual = [2 * s.x * dx + dx * dx + dy, s.y * dx + s.x * dy + dx * dy],
       pred = [2 * s.x * dx + dy, s.y * dx + s.x * dy];
     return (
@@ -518,7 +518,7 @@ export const jacobianSpec = {
     );
   },
   caption:
-    "Both panels use the same magnification and equal horizontal/vertical units. The center represents f at the base point; the grid shows output displacements. The amber vector changes only the selected input, so its linear prediction follows the corresponding Jacobian column. Magnification adjusts together when the neighborhood changes.",
+    "Both panels use the same magnification and equal horizontal/vertical units. The center represents f at the base point; the grid shows output displacements. The step slider specifies a fraction of the neighborhood radius. The amber vector changes only the selected input, so its linear prediction follows the corresponding Jacobian column. Magnification adjusts together when the neighborhood changes.",
 };
 export function normalization(s) {
   const a = [

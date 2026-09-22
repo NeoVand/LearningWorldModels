@@ -1,0 +1,1394 @@
+[
+  {
+    "page": 1,
+    "characters": 1791,
+    "outside": 0,
+    "head": "01 / THE QUESTION WORLD MODELS, FROM FIRST PRINCIPLES\nWorld models, from first\nprinciples\n"
+  },
+  {
+    "page": 2,
+    "characters": 1351,
+    "outside": 0,
+    "head": "Then ask: what description should we learn? Keeping every pixel preserves shadows and\ntabl"
+  },
+  {
+    "page": 3,
+    "characters": 1990,
+    "outside": 0,
+    "head": "The route through the book\nWe start with LeCun's reason for learning from observations rat"
+  },
+  {
+    "page": 4,
+    "characters": 1529,
+    "outside": 0,
+    "head": "Our starting point is basic algebra, elementary derivatives and integrals, and an introduc"
+  },
+  {
+    "page": 5,
+    "characters": 842,
+    "outside": 0,
+    "head": "02 / THE QUESTION WORLD MODELS, FROM FIRST PRINCIPLES\nLearning before labels\nBefore asking"
+  },
+  {
+    "page": 6,
+    "characters": 1773,
+    "outside": 0,
+    "head": "The object continues; the image loses it\nPlay one possible passage behind the screen. The "
+  },
+  {
+    "page": 7,
+    "characters": 1523,
+    "outside": 0,
+    "head": "What LeCun proposes, and what remains a\nproposal\nYann LeCun's 2022 position paper, version"
+  },
+  {
+    "page": 8,
+    "characters": 1936,
+    "outside": 0,
+    "head": "Our running example is a small slice of this proposal. The browser learner has a visual\nen"
+  },
+  {
+    "page": 9,
+    "characters": 2102,
+    "outside": 0,
+    "head": "These are definitions of a state-transition rule and a sensor rule. They are not claims th"
+  },
+  {
+    "page": 10,
+    "characters": 1491,
+    "outside": 0,
+    "head": "Keep a distinction; ignore a distraction\nChange the table, then change the elbow. Which ch"
+  },
+  {
+    "page": 11,
+    "characters": 1900,
+    "outside": 0,
+    "head": "An encoder cannot create information missing from its input. It can organize information,\n"
+  },
+  {
+    "page": 12,
+    "characters": 948,
+    "outside": 0,
+    "head": "Hierarchies shorten the question\nTo visit a friend, one might first choose a route across "
+  },
+  {
+    "page": 13,
+    "characters": 957,
+    "outside": 0,
+    "head": "A subgoal connects two time scales\nA route planner need not choose every foot placement. W"
+  },
+  {
+    "page": 14,
+    "characters": 1345,
+    "outside": 0,
+    "head": "A first worked challenge\nA learner predicts the next frame of a swinging arm. Its training"
+  },
+  {
+    "page": 15,
+    "characters": 1542,
+    "outside": 0,
+    "head": "03 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nA world in coordinates\nA re"
+  },
+  {
+    "page": 16,
+    "characters": 1636,
+    "outside": 0,
+    "head": "Four pixels, two coordinates\nSwap the bright pixels. Does this encoder notice?\nImage \u2192 row"
+  },
+  {
+    "page": 17,
+    "characters": 1245,
+    "outside": 0,
+    "head": "A tensor in this book is a multidimensional array with named axes, not a mysterious extra\n"
+  },
+  {
+    "page": 18,
+    "characters": 1657,
+    "outside": 0,
+    "head": "a matrix whose (i,j) entry is x y . This is the outer product. We will use it to record ho"
+  },
+  {
+    "page": 19,
+    "characters": 1209,
+    "outside": 0,
+    "head": "Only the first term changes with c. A square cannot be negative and is zero precisely at c"
+  },
+  {
+    "page": 20,
+    "characters": 1122,
+    "outside": 0,
+    "head": "A shadow with a sign\nRotate the measuring direction until the projection is negative. What"
+  },
+  {
+    "page": 21,
+    "characters": 687,
+    "outside": 0,
+    "head": "A square, a line, a point\nWhich input changes become invisible?\nRank 2 Rank 1\nBoth indepen"
+  },
+  {
+    "page": 22,
+    "characters": 805,
+    "outside": 0,
+    "head": "Both images map to (3,3)\u22a4. Their representation distance is zero although their pixels dif"
+  },
+  {
+    "page": 23,
+    "characters": 1397,
+    "outside": 0,
+    "head": "04 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nPrediction under uncertaint"
+  },
+  {
+    "page": 24,
+    "characters": 919,
+    "outside": 0,
+    "head": "Height is not probability\nNarrow the density. Its peak rises above one while its total are"
+  },
+  {
+    "page": 25,
+    "characters": 1619,
+    "outside": 0,
+    "head": "Independence is not needed for this identity. It is needed for a different one: if X,Y are"
+  },
+  {
+    "page": 26,
+    "characters": 1442,
+    "outside": 0,
+    "head": "A mean that stays put while spread changes\nMove equal probability toward the two outer out"
+  },
+  {
+    "page": 27,
+    "characters": 1601,
+    "outside": 0,
+    "head": "For discrete outcomes, that conditional mean is \u2211 yP(Y = y \u2223 X = x). If, after one sensor\n"
+  },
+  {
+    "page": 28,
+    "characters": 1102,
+    "outside": 0,
+    "head": "The first term does not depend on the prediction. The second is minimized at c = m. The\nve"
+  },
+  {
+    "page": 29,
+    "characters": 826,
+    "outside": 0,
+    "head": "PREDICTION DESK\nWhen the best mean never happens\nThe outcome is either \u22121 or +1. Change th"
+  },
+  {
+    "page": 30,
+    "characters": 1122,
+    "outside": 0,
+    "head": "The Gaussian family\nA standard Gaussian has density\n1\np(x)=\ne\u2212x2/2.\n2\u03c0\nThe exponential det"
+  },
+  {
+    "page": 31,
+    "characters": 1572,
+    "outside": 0,
+    "head": "The boundary term vanishes because the Gaussian exponential decays faster than \u2223x\u2223 grows.\n"
+  },
+  {
+    "page": 32,
+    "characters": 1576,
+    "outside": 0,
+    "head": "A mixture is another useful counterexample. Choose a branch with a coin, then sample a\nnar"
+  },
+  {
+    "page": 33,
+    "characters": 1621,
+    "outside": 0,
+    "head": "The data-collecting policy also matters. If it never applies a negative torque at a partic"
+  },
+  {
+    "page": 34,
+    "characters": 1713,
+    "outside": 0,
+    "head": "What is being repeated?\nRepeated test cases under one shared model seed are not the same a"
+  },
+  {
+    "page": 35,
+    "characters": 248,
+    "outside": 0,
+    "head": "We can now distinguish sample fluctuations, hidden state, and genuine ambiguity. Next we\na"
+  },
+  {
+    "page": 36,
+    "characters": 1608,
+    "outside": 0,
+    "head": "05 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nThe geometry of a cloud\nOne"
+  },
+  {
+    "page": 37,
+    "characters": 885,
+    "outside": 0,
+    "head": "For any direction u, multiplication gives\n1\nu\u22a4Cu= [u\u22a4(x \u2212x\u02c9)] 2 .\nB \u2211 i\ni\nThe right side i"
+  },
+  {
+    "page": 38,
+    "characters": 1121,
+    "outside": 0,
+    "head": "Covariance is an average of signed products\nMove one point. Watch its centered products al"
+  },
+  {
+    "page": 39,
+    "characters": 956,
+    "outside": 0,
+    "head": "The last centered row is already determined\nIf the centered rows sum to zero, can all B ro"
+  },
+  {
+    "page": 40,
+    "characters": 1882,
+    "outside": 0,
+    "head": "Compute Cu = (3,3)\u22a4/ 2 = 3u and Cv = (1,\u22121)\u22a4/ 2 = v. Thus the rising diagonal has\nvariance"
+  },
+  {
+    "page": 41,
+    "characters": 1320,
+    "outside": 0,
+    "head": "Whitening changes scale along principal directions\nFollow the same points through rotation"
+  },
+  {
+    "page": 42,
+    "characters": 1342,
+    "outside": 0,
+    "head": "Each equality follows from applying the linear map to both sides of the covariance outer\np"
+  },
+  {
+    "page": 43,
+    "characters": 717,
+    "outside": 0,
+    "head": "Identity covariance does not specify a shape\nAll three populations have zero mean and iden"
+  },
+  {
+    "page": 44,
+    "characters": 955,
+    "outside": 0,
+    "head": "2 1\nThe three outer products sum to . Divide by 3. The unit rising diagonal has variance 1"
+  },
+  {
+    "page": 45,
+    "characters": 1516,
+    "outside": 0,
+    "head": "06 / LEARNING FROM ERRORS WORLD MODELS, FROM FIRST PRINCIPLES\nHow a small change travels\nB"
+  },
+  {
+    "page": 46,
+    "characters": 1155,
+    "outside": 0,
+    "head": "Shrink the step; keep the ratio\nThe rise becomes tiny. Why does rise divided by run approa"
+  },
+  {
+    "page": 47,
+    "characters": 1271,
+    "outside": 0,
+    "head": "Follow the slope across a landscape\nClick a starting point, then take one update or play t"
+  },
+  {
+    "page": 48,
+    "characters": 1322,
+    "outside": 0,
+    "head": "Among unit directions u, Cauchy\u2013Schwarz gives \u2207L\u22a4u \u2265 \u2212\u2225\u2207L\u2225. For a nonzero gradient,\nequali"
+  },
+  {
+    "page": 49,
+    "characters": 1822,
+    "outside": 0,
+    "head": "Multiply along paths; add across paths\nThe same input reaches the loss twice. What happens"
+  },
+  {
+    "page": 50,
+    "characters": 784,
+    "outside": 0,
+    "head": "A Jacobian is a table of local effects\nLet f : R n \u2192 R m. Its JacobianJ f has one row for "
+  },
+  {
+    "page": 51,
+    "characters": 1381,
+    "outside": 0,
+    "head": "The Jacobian is a local map\nCompare the same neighborhood in two separate views. Shrink it"
+  },
+  {
+    "page": 52,
+    "characters": 1027,
+    "outside": 0,
+    "head": "Curvature and the second-order approximation\nThe HessianH is the matrix of second partial "
+  },
+  {
+    "page": 53,
+    "characters": 1296,
+    "outside": 0,
+    "head": "A local approximation has a neighborhood\nHow far from the base point would you trust each "
+  },
+  {
+    "page": 54,
+    "characters": 2089,
+    "outside": 0,
+    "head": "Return to the cloud: why principal directions exist\nWe promised to justify the general cov"
+  },
+  {
+    "page": 55,
+    "characters": 1291,
+    "outside": 0,
+    "head": "Variance as a function of direction\nA full turn covers every unit direction. Where is proj"
+  },
+  {
+    "page": 56,
+    "characters": 525,
+    "outside": 0,
+    "head": "Forward: u = 2, y = 4, and the residual is 3. Backward: \u2202L/\u2202y = 3, \u2202y/\u2202u = 4, so\n\u2202L/\u2202u = 1"
+  },
+  {
+    "page": 57,
+    "characters": 1670,
+    "outside": 0,
+    "head": "07 / LEARNING FROM ERRORS WORLD MODELS, FROM FIRST PRINCIPLES\nHow errors change a model\nLe"
+  },
+  {
+    "page": 58,
+    "characters": 1721,
+    "outside": 0,
+    "head": "A neuron, a layer, and a network\nA layer first forms r = Wx+b, then applies an activation "
+  },
+  {
+    "page": 59,
+    "characters": 770,
+    "outside": 0,
+    "head": "One neuron: follow a number through the circuit\nChoose an activation. Change its weight, b"
+  },
+  {
+    "page": 60,
+    "characters": 738,
+    "outside": 0,
+    "head": "Activation and local sensitivity\nFind a saturated region. A large input change there can p"
+  },
+  {
+    "page": 61,
+    "characters": 1669,
+    "outside": 0,
+    "head": "Build a curve from individual neurons\nChange the target, activation or number of units. Tr"
+  },
+  {
+    "page": 62,
+    "characters": 1779,
+    "outside": 0,
+    "head": "An automatic differentiation system records this computation graph and applies these local"
+  },
+  {
+    "page": 63,
+    "characters": 1836,
+    "outside": 0,
+    "head": "An epoch is one pass through a dataset by a specified sampling scheme. An update is one\nop"
+  },
+  {
+    "page": 64,
+    "characters": 1379,
+    "outside": 0,
+    "head": "At the second step, m = 0.9(0.2)+0.1(\u22121) = 0.08 and v = 0.99(0.04)+0.01(1) =\n2 2\n0.0496. T"
+  },
+  {
+    "page": 65,
+    "characters": 1755,
+    "outside": 0,
+    "head": "Regularization begins with an underdetermined\nquestion\nSuppose several functions fit the o"
+  },
+  {
+    "page": 66,
+    "characters": 816,
+    "outside": 0,
+    "head": "For \u03bb > 0, every nonzero v satisfies v\u22a4(X\u22a4X +\u03bbI)v = \u2225Xv\u22252 +\u03bb\u2225v\u22252 > 0. Hence the\nmatrix has"
+  },
+  {
+    "page": 67,
+    "characters": 1603,
+    "outside": 0,
+    "head": "The fit alone leaves a choice\nOne observation at x = 0 cannot determine the curvature. Wha"
+  },
+  {
+    "page": 68,
+    "characters": 1823,
+    "outside": 0,
+    "head": "Normalization is also not regularization by\ndefinition\nNormalization transforms activation"
+  },
+  {
+    "page": 69,
+    "characters": 1986,
+    "outside": 0,
+    "head": "L(\u03b8+\u03b5e )\u2212L(\u03b8\u2212\u03b5e )\nj j\n.\n2\u03b5\nTaylor expansions on the two sides cancel the constant and even"
+  },
+  {
+    "page": 70,
+    "characters": 1037,
+    "outside": 0,
+    "head": "08 / A USEFUL PREDICTION TASK WORLD MODELS, FROM FIRST PRINCIPLES\nAgreement without collap"
+  },
+  {
+    "page": 71,
+    "characters": 1222,
+    "outside": 0,
+    "head": "THE TARGET DETERMINES WHAT AN ERROR MEANS\nSupervised input Classifier Supplied label\no f \u03b8"
+  },
+  {
+    "page": 72,
+    "characters": 661,
+    "outside": 0,
+    "head": "LEARN TO PREDICT, WHILE PRESERVING DISTINCTIONS\nPast and present Encoder\nzt\u22121 ,zt\nPredicto"
+  },
+  {
+    "page": 73,
+    "characters": 877,
+    "outside": 0,
+    "head": "A pixel prediction is compared with an observed image; a representation prediction is comp"
+  },
+  {
+    "page": 74,
+    "characters": 1554,
+    "outside": 0,
+    "head": "Both sides can move\nFor a shared encoder used on both context and target observations, two"
+  },
+  {
+    "page": 75,
+    "characters": 1252,
+    "outside": 0,
+    "head": "Different images Constant encoder Constant predictor\no(1),o(2) f\n\u03b8\n(o)=c g\n\u03c8\n(c,a)=c\nL = \u2225"
+  },
+  {
+    "page": 76,
+    "characters": 1674,
+    "outside": 0,
+    "head": "Agreement can improve by forgetting\nShrink the code while leaving the physical inputs diff"
+  },
+  {
+    "page": 77,
+    "characters": 1584,
+    "outside": 0,
+    "head": "Negatives bring choices: which samples count as distinct, how many to use, and how to hand"
+  },
+  {
+    "page": 78,
+    "characters": 1641,
+    "outside": 0,
+    "head": "choices. Neither a slowly moving target nor stop-gradient alone proves that every collapse"
+  },
+  {
+    "page": 79,
+    "characters": 829,
+    "outside": 0,
+    "head": "Invariance Variance floor Off-diagonal covariance\n\u2225z\u2212z\u2032\u22252 max(0,\u03b3\u2212\u03c3 j ) \u2211 j=\ue020k C j 2 k\nRel"
+  },
+  {
+    "page": 80,
+    "characters": 1074,
+    "outside": 0,
+    "head": "Moment constraints change different aspects of a cloud\nNormalize coordinate spread, then r"
+  },
+  {
+    "page": 81,
+    "characters": 1618,
+    "outside": 0,
+    "head": "x \u2212x\u02c9\ni\n\u2212 .\nB v+\u03f5\nIt pushes above-mean examples upward and below-mean examples downward un"
+  },
+  {
+    "page": 82,
+    "characters": 1793,
+    "outside": 0,
+    "head": "The action belongs between the frames\nWhich command caused the target image? Read left to "
+  },
+  {
+    "page": 83,
+    "characters": 921,
+    "outside": 0,
+    "head": "Worked exercise: distinguish the remedies\nA model has zero prediction loss and every coord"
+  },
+  {
+    "page": 84,
+    "characters": 1489,
+    "outside": 0,
+    "head": "09 / DISTRIBUTIONAL REGULARIZATION WORLD MODELS, FROM FIRST PRINCIPLES\nWhen does a cloud c"
+  },
+  {
+    "page": 85,
+    "characters": 1645,
+    "outside": 0,
+    "head": "Compare accumulated probability rather than\nhistogram bins\nFor a scalar variable, the cumu"
+  },
+  {
+    "page": 86,
+    "characters": 1674,
+    "outside": 0,
+    "head": "For samples \u22121,+1, use \u03a6(\u22121) \u2248 0.1587 and \u03a6(1) \u2248 0.8413. At the first point the two\ncandid"
+  },
+  {
+    "page": 87,
+    "characters": 1365,
+    "outside": 0,
+    "head": "Why add one? Under the null, the observed experiment and simulated experiments are\nexchang"
+  },
+  {
+    "page": 88,
+    "characters": 1388,
+    "outside": 0,
+    "head": "TESTING DESK\nA discrepancy needs a reference\nEach histogram contains 511 simulated standar"
+  },
+  {
+    "page": 89,
+    "characters": 1472,
+    "outside": 0,
+    "head": "Where the simulated Gaussian samples come from\nThe simulation begins with seeded pseudoran"
+  },
+  {
+    "page": 90,
+    "characters": 1531,
+    "outside": 0,
+    "head": "Fitting the reference changes the test\nThe same sample can look closer to a Gaussian after"
+  },
+  {
+    "page": 91,
+    "characters": 1614,
+    "outside": 0,
+    "head": "Three questions, three experiments\nWhat changes when a discrepancy becomes a differentiabl"
+  },
+  {
+    "page": 92,
+    "characters": 1193,
+    "outside": 0,
+    "head": "10 / DISTRIBUTIONAL REGULARIZATION WORLD MODELS, FROM FIRST PRINCIPLES\nA statistic for use"
+  },
+  {
+    "page": 93,
+    "characters": 1509,
+    "outside": 0,
+    "head": "A Gaussian target is a choice with consequences\nIsotropic Diagonal covariance Full covaria"
+  },
+  {
+    "page": 94,
+    "characters": 1953,
+    "outside": 0,
+    "head": "limit, zero. A fair coin has entropy \u22122(1/2)log(1/2) = log2; a certain outcome has\nentropy"
+  },
+  {
+    "page": 95,
+    "characters": 1693,
+    "outside": 0,
+    "head": "From a point on a circle to a distributional\nfingerprint\nA complex number a+ib can be repr"
+  },
+  {
+    "page": 96,
+    "characters": 983,
+    "outside": 0,
+    "head": "For a real sample x, choose a real frequency\u03c9 and form ei\u03c9x. It is a unit arrow whose angl"
+  },
+  {
+    "page": 97,
+    "characters": 651,
+    "outside": 0,
+    "head": "Four samples become a complex mean\nThe samples are \u22121, \u2212\u00bd, \u00bd, 1. Predict what happens at f"
+  },
+  {
+    "page": 98,
+    "characters": 1360,
+    "outside": 0,
+    "head": "Turn each sample into an arrow\nShift the sample and watch the average leave the real axis."
+  },
+  {
+    "page": 99,
+    "characters": 1187,
+    "outside": 0,
+    "head": "q(\u03c9):=\u03c6\n(\u03c9)=e\u2212\u03c92/2.\nN(0,1)\nThe answer is real because a symmetric density makes the sine i"
+  },
+  {
+    "page": 100,
+    "characters": 1430,
+    "outside": 0,
+    "head": "Estimate the fingerprint from a batch\nFor scalar samples h ,\u2026,h , replace the population e"
+  },
+  {
+    "page": 101,
+    "characters": 1584,
+    "outside": 0,
+    "head": "Samples fluctuate even when the target is correct\nSuppose the batch consists of independen"
+  },
+  {
+    "page": 102,
+    "characters": 1402,
+    "outside": 0,
+    "head": "A classical normality test compares a statistic with its distribution under a null hypothe"
+  },
+  {
+    "page": 103,
+    "characters": 1792,
+    "outside": 0,
+    "head": "If Z has independent standard Gaussian coordinates, independence yields\nd d\nE[ei\u03c9u\u22a4Z]= E[e"
+  },
+  {
+    "page": 104,
+    "characters": 2320,
+    "outside": 0,
+    "head": "To remove the smoothing, let f be any bounded continuous function. On a joint probability\n"
+  },
+  {
+    "page": 105,
+    "characters": 1064,
+    "outside": 0,
+    "head": "Coordinate-wise normality is insufficient. Let X be standard Gaussian and let an independe"
+  },
+  {
+    "page": 106,
+    "characters": 1620,
+    "outside": 0,
+    "head": "From the integral to a finite computation\nCollect M unit directions in the columns of U \u2208 "
+  },
+  {
+    "page": 107,
+    "characters": 1662,
+    "outside": 0,
+    "head": "Embedding batch Project Average phasors Compare and integrate\nZ \u2208R B\u00d7d H =ZU \u03c6\nm\n(\u03c9\nk\n) R("
+  },
+  {
+    "page": 108,
+    "characters": 1599,
+    "outside": 0,
+    "head": "sign of curvature, which must stay below or above the chord joining its zero endpoints.\nIn"
+  },
+  {
+    "page": 109,
+    "characters": 1187,
+    "outside": 0,
+    "head": "Expand the squared discrepancy into \u2223\u03c6\u22232 \u22122Re(\u03c6)q +q2. The first term contains B2 pairs\nbe"
+  },
+  {
+    "page": 110,
+    "characters": 1350,
+    "outside": 0,
+    "head": "Expand the square into pairs\nHow can a frequency integral be checked without using a frequ"
+  },
+  {
+    "page": 111,
+    "characters": 1492,
+    "outside": 0,
+    "head": "\u2202R 1 \u2202T (m)\n= B U .\n\u2202z M \u2211 \u2202H jm\nb,j bm\nm\nThe encoder's parameters affect its outputs. One"
+  },
+  {
+    "page": 112,
+    "characters": 759,
+    "outside": 0,
+    "head": "A differentiable penalty can be stationary at collapse\nStart with all samples at zero, the"
+  },
+  {
+    "page": 113,
+    "characters": 1371,
+    "outside": 0,
+    "head": "Run the statistic and challenge it\nSame moments, different distributions\nStart with a Gaus"
+  },
+  {
+    "page": 114,
+    "characters": 1635,
+    "outside": 0,
+    "head": "Read the implementation as mathematics\nThe following Python reference is included directly"
+  },
+  {
+    "page": 115,
+    "characters": 2295,
+    "outside": 0,
+    "head": "Read the shapes as a sequence of questions. The matrix product asks, \u201cwhere does each of t"
+  },
+  {
+    "page": 116,
+    "characters": 2049,
+    "outside": 0,
+    "head": "their dependencies, and their scaling. It is a different objective.\nLikewise, compute the "
+  },
+  {
+    "page": 117,
+    "characters": 2271,
+    "outside": 0,
+    "head": "The vector (X,SX) supplies a counterexample. Both coordinates have the same Gaussian\nmargi"
+  },
+  {
+    "page": 118,
+    "characters": 1314,
+    "outside": 0,
+    "head": "Return to the world model\nWe began with a loophole: an encoder can make agreement trivial "
+  },
+  {
+    "page": 119,
+    "characters": 804,
+    "outside": 0,
+    "head": "An overview of the calculation. The comparison inset shows magnitudes; the loss uses the f"
+  },
+  {
+    "page": 120,
+    "characters": 1432,
+    "outside": 0,
+    "head": "11 / A WORKING WORLD MODEL WORLD MODELS, FROM FIRST PRINCIPLES\nFrom equations to a learner"
+  },
+  {
+    "page": 121,
+    "characters": 1267,
+    "outside": 0,
+    "head": "Follow one window through its shapes\nQuantity Shape Meaning\nCamera windows B\u00d73\u00d71024 Three "
+  },
+  {
+    "page": 122,
+    "characters": 1423,
+    "outside": 0,
+    "head": "A window keeps its axes through the graph\nSelect a time position. Which entries are contex"
+  },
+  {
+    "page": 123,
+    "characters": 1209,
+    "outside": 0,
+    "head": "Make the two reductions explicit\nFor one predicted future per example, the browser predict"
+  },
+  {
+    "page": 124,
+    "characters": 1886,
+    "outside": 0,
+    "head": "Average before squaring\nTwo arrows can cancel. Squaring their individual lengths first des"
+  },
+  {
+    "page": 125,
+    "characters": 1214,
+    "outside": 0,
+    "head": "arrays. Chunking directions can reduce peak memory if the reductions and gradients remain\n"
+  },
+  {
+    "page": 126,
+    "characters": 1118,
+    "outside": 0,
+    "head": "Python reference implementation\n1 import numpy as np\n2\n3\n4 def initialize(seed=7, pixels=4"
+  },
+  {
+    "page": 127,
+    "characters": 1978,
+    "outside": 0,
+    "head": "Python reference implementation\n1 import numpy as np\n2 from model_reference import initial"
+  },
+  {
+    "page": 128,
+    "characters": 1747,
+    "outside": 0,
+    "head": "Optimization state is part of the experiment\nPython reference implementation\n1 import nump"
+  },
+  {
+    "page": 129,
+    "characters": 1939,
+    "outside": 0,
+    "head": "A checkpoint is more than weights\nWhat must survive a pause for the next update to be a co"
+  },
+  {
+    "page": 130,
+    "characters": 1489,
+    "outside": 0,
+    "head": "A split can leak a frame without copying a window\nTwo different windows can still share mo"
+  },
+  {
+    "page": 131,
+    "characters": 1114,
+    "outside": 0,
+    "head": "Worked challenge: a bug that improves the loss\nAn implementation computes SIGReg after ave"
+  },
+  {
+    "page": 132,
+    "characters": 1926,
+    "outside": 0,
+    "head": "12 / A WORKING WORLD MODEL WORLD MODELS, FROM FIRST PRINCIPLES\nA world model you can train"
+  },
+  {
+    "page": 133,
+    "characters": 821,
+    "outside": 0,
+    "head": "Learning from camera images\nFirst inspect the untrained model. Then train, pause after at "
+  },
+  {
+    "page": 134,
+    "characters": 1279,
+    "outside": 0,
+    "head": "Objective Updates Prediction MSE Spread Effective rank Future choices\nPrediction + SIGReg "
+  },
+  {
+    "page": 135,
+    "characters": 2292,
+    "outside": 0,
+    "head": "Read the evidence, not just the curve\nPrediction / persistence compares the trained predic"
+  },
+  {
+    "page": 136,
+    "characters": 1292,
+    "outside": 0,
+    "head": "Observed history Imagine futures Score candidates Execute an action\ntwo encoded images lea"
+  },
+  {
+    "page": 137,
+    "characters": 1137,
+    "outside": 0,
+    "head": "One checkpoint, three commands\nFreeze the model and the same two-frame context. Compare pu"
+  },
+  {
+    "page": 138,
+    "characters": 1900,
+    "outside": 0,
+    "head": "B d 3\n1 1\nL= (z^ \u2212z )2+\u03bb R(Z ), \u03bb=0.01.\nBd \u2211 \u2211 b,j b,next,j 3 \u2211 r\nb=1 j=1 r=1\nThe coeffici"
+  },
+  {
+    "page": 139,
+    "characters": 1847,
+    "outside": 0,
+    "head": "Declare the evaluation before comparing models. \u201cEver within a tolerance,\u201d \u201cwithin toleran"
+  },
+  {
+    "page": 140,
+    "characters": 1112,
+    "outside": 0,
+    "head": "The laboratory runs locally in a worker so you can keep reading while it trains. Its sourc"
+  },
+  {
+    "page": 141,
+    "characters": 1276,
+    "outside": 0,
+    "head": "13 / ACTING AND EVALUATING WORLD MODELS, FROM FIRST PRINCIPLES\nFrom imagination to action\n"
+  },
+  {
+    "page": 142,
+    "characters": 1356,
+    "outside": 0,
+    "head": "The graph stays; the movable quantities change\nDuring planning, which values are optimized"
+  },
+  {
+    "page": 143,
+    "characters": 1745,
+    "outside": 0,
+    "head": "This is a modeling choice. It changes the task preference and may keep the planner from\nre"
+  },
+  {
+    "page": 144,
+    "characters": 1973,
+    "outside": 0,
+    "head": "Large products of Jacobians can amplify or suppress sensitivities over long horizons.\nNons"
+  },
+  {
+    "page": 145,
+    "characters": 1245,
+    "outside": 0,
+    "head": "1\nv = (A \u2212\u03bc )2.\n\u2217 n \u2211 i \u2217\ne\ni\u2208E\nThe denominator is n , rather than n \u22121, because we maximi"
+  },
+  {
+    "page": 146,
+    "characters": 561,
+    "outside": 0,
+    "head": "Search, keep, refit, repeat\nWhich samples determine the next search distribution?\nCandidat"
+  },
+  {
+    "page": 147,
+    "characters": 1738,
+    "outside": 0,
+    "head": "A complete reference planner\nPython reference implementation\n1 import numpy as np\n2\n3\n4 de"
+  },
+  {
+    "page": 148,
+    "characters": 1590,
+    "outside": 0,
+    "head": "A two-action calculation by hand\nConsider the known scalar system x = x +a , starting at z"
+  },
+  {
+    "page": 149,
+    "characters": 1228,
+    "outside": 0,
+    "head": "Let E be the distance between the imagined and true latent state after the same actions.\nk"
+  },
+  {
+    "page": 150,
+    "characters": 1801,
+    "outside": 0,
+    "head": "One good step does not guarantee a good rollout\nThe model is the same on both sides. Only "
+  },
+  {
+    "page": 151,
+    "characters": 1782,
+    "outside": 0,
+    "head": "A warm start shifts the previous optimized sequence forward and appends a final guess. It "
+  },
+  {
+    "page": 152,
+    "characters": 856,
+    "outside": 0,
+    "head": "The next chapter evaluates the complete observation\u2013prediction\u2013action chain. First, use th"
+  },
+  {
+    "page": 153,
+    "characters": 1278,
+    "outside": 0,
+    "head": "14 / ACTING AND EVALUATING WORLD MODELS, FROM FIRST PRINCIPLES\nWhat counts as understandin"
+  },
+  {
+    "page": 154,
+    "characters": 1381,
+    "outside": 0,
+    "head": "Linear and nonlinear probes\nFreeze the encoder, construct a labeled probe dataset, and fit"
+  },
+  {
+    "page": 155,
+    "characters": 2204,
+    "outside": 0,
+    "head": "A probe measures accessibility to a chosen decoder\nThe cubic encoding keeps all informatio"
+  },
+  {
+    "page": 156,
+    "characters": 1391,
+    "outside": 0,
+    "head": "Rotation renames coordinates\nRotate the cloud and both endpoints of a distance. Which quan"
+  },
+  {
+    "page": 157,
+    "characters": 1648,
+    "outside": 0,
+    "head": "does require recognizing that representation-specific symmetries can affect a reported err"
+  },
+  {
+    "page": 158,
+    "characters": 1933,
+    "outside": 0,
+    "head": "Why t-SNE is not a map of physical distance\nA high-dimensional cloud can be visualized by "
+  },
+  {
+    "page": 159,
+    "characters": 1273,
+    "outside": 0,
+    "head": "Neighbor probabilities are not ruler distances\nMove the two groups farther apart. Which wi"
+  },
+  {
+    "page": 160,
+    "characters": 1164,
+    "outside": 0,
+    "head": "The right side defines a model. It does not prove that low energy implies physical possibi"
+  },
+  {
+    "page": 161,
+    "characters": 271,
+    "outside": 0,
+    "head": "The two valleys assign lower model energy to two compatible alternatives. This is a constr"
+  },
+  {
+    "page": 162,
+    "characters": 1657,
+    "outside": 0,
+    "head": "Turn compatibility into a probability only after normalization\nLower the temperature. What"
+  },
+  {
+    "page": 163,
+    "characters": 2026,
+    "outside": 0,
+    "head": "Surprise is an error before it is a probability\nThe paper's violation-of-expectation exper"
+  },
+  {
+    "page": 164,
+    "characters": 1079,
+    "outside": 0,
+    "head": "Temporal straightness: derive Equation 9\nFor latent sequence z ,\u2026,z , define displacement "
+  },
+  {
+    "page": 165,
+    "characters": 1416,
+    "outside": 0,
+    "head": "Geometry, asymmetric loss, and experimental controls\nEach diagnostic has a different targe"
+  },
+  {
+    "page": 166,
+    "characters": 1819,
+    "outside": 0,
+    "head": "A goal-conditioned policy still needs goals during training and evaluation. The representa"
+  },
+  {
+    "page": 167,
+    "characters": 2068,
+    "outside": 0,
+    "head": "At \u03c4 = 1/2, the two sides balance ordinary positive and negative deviations, giving the me"
+  },
+  {
+    "page": 168,
+    "characters": 2108,
+    "outside": 0,
+    "head": "How to read the ablation tables\nAn ablation is most informative when everything except the"
+  },
+  {
+    "page": 169,
+    "characters": 606,
+    "outside": 0,
+    "head": "A successful result would support a more specific conclusion about the tested distinction."
+  },
+  {
+    "page": 170,
+    "characters": 1637,
+    "outside": 0,
+    "head": "15 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nWhat Gaussian geometry can\npromi"
+  },
+  {
+    "page": 171,
+    "characters": 1703,
+    "outside": 0,
+    "head": "Its mean is \u03b2 and its variance is (\u03c32 +\u03c32)/4 = \u03c32/2. If the observed input magnitudes are\n"
+  },
+  {
+    "page": 172,
+    "characters": 1532,
+    "outside": 0,
+    "head": "For a fixed design matrix X, suppose y = X\u03b2 +\u03b5, with E[\u03b5 \u2223 X] = 0 and noise covariance\n\u03c32I"
+  },
+  {
+    "page": 173,
+    "characters": 1633,
+    "outside": 0,
+    "head": "Ordinary least squares gives a second isotropy\nargument\nSet \u03bb = 0 and assume G is invertib"
+  },
+  {
+    "page": 174,
+    "characters": 899,
+    "outside": 0,
+    "head": "weighted average, so the prediction is (0/2+2+10/2)/2 = 3.5. A neighborhood containing\nthe"
+  },
+  {
+    "page": 175,
+    "characters": 1375,
+    "outside": 0,
+    "head": "A local prediction is a weighted average\nMove the query between observations and shrink th"
+  },
+  {
+    "page": 176,
+    "characters": 1305,
+    "outside": 0,
+    "head": "a(q+hu)=a(q)+h\u2207a(q)\u22a4u+ 1h2u\u22a4H (q)u+o(h2),\n2 a\nunder conditions allowing the remainder to b"
+  },
+  {
+    "page": 177,
+    "characters": 1526,
+    "outside": 0,
+    "head": "Symmetry cancels only with balanced density\nA symmetric kernel can still average asymmetri"
+  },
+  {
+    "page": 178,
+    "characters": 1591,
+    "outside": 0,
+    "head": "Fisher information measures average score\nmagnitude\nThe density score needs a numerical in"
+  },
+  {
+    "page": 179,
+    "characters": 1282,
+    "outside": 0,
+    "head": "The cross term is \u22122tr(\u03a3\u22121) by the preceding identity. The last term is tr(\u03a3\u22122\u03a3) = tr(\u03a3\u22121)"
+  },
+  {
+    "page": 180,
+    "characters": 1928,
+    "outside": 0,
+    "head": "From a score bound to a probe-bias bound\nSuppose the target functions satisfy \u2225\u2207m\u2225 \u2264 L and"
+  },
+  {
+    "page": 181,
+    "characters": 2190,
+    "outside": 0,
+    "head": "Follow the assumptions all the way to the claim\nWhich arrow would be unjustified if we con"
+  },
+  {
+    "page": 182,
+    "characters": 1377,
+    "outside": 0,
+    "head": "Worked challenge: audit a theorem-sized claim\nSomeone says, \u201cSIGReg makes embeddings Gauss"
+  },
+  {
+    "page": 183,
+    "characters": 1599,
+    "outside": 0,
+    "head": "16 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nInside the vision transformer\nA "
+  },
+  {
+    "page": 184,
+    "characters": 1785,
+    "outside": 0,
+    "head": "From image patches to a token sequence\nA patch is flattened before projection. Its positio"
+  },
+  {
+    "page": 185,
+    "characters": 1162,
+    "outside": 0,
+    "head": "assumptions exactly; the calculation motivates a scale that keeps scores from growing sole"
+  },
+  {
+    "page": 186,
+    "characters": 1464,
+    "outside": 0,
+    "head": "Softmax produces a normalized weighted average\nFor each query, define A\nij\n= eS ij /\u2211\nr\neS"
+  },
+  {
+    "page": 187,
+    "characters": 1247,
+    "outside": 0,
+    "head": "ATTENTION DESK\nA weighted retrieval\nDivide three fixed scores by a temperature before soft"
+  },
+  {
+    "page": 188,
+    "characters": 2020,
+    "outside": 0,
+    "head": "If h heads each produce width d , concatenation gives width hd , and an output matrix maps"
+  },
+  {
+    "page": 189,
+    "characters": 1553,
+    "outside": 0,
+    "head": "weights normalize over allowed positions.\nThis mask is an information constraint. It does "
+  },
+  {
+    "page": 190,
+    "characters": 2155,
+    "outside": 0,
+    "head": "The learned scale \u03b3 and shift \u03b2 are shared across examples. Before that affine step and wi"
+  },
+  {
+    "page": 191,
+    "characters": 1994,
+    "outside": 0,
+    "head": "Here s,b,\u03b1 are learned functions of action conditioning, all shaped to match the token\nfea"
+  },
+  {
+    "page": 192,
+    "characters": 1753,
+    "outside": 0,
+    "head": "calculus. Implementations sometimes use a tanh approximation; those are numerically simila"
+  },
+  {
+    "page": 193,
+    "characters": 1946,
+    "outside": 0,
+    "head": "Return to the diagnostic decoder\nThe evaluation chapter separated decoder quality from wor"
+  },
+  {
+    "page": 194,
+    "characters": 1811,
+    "outside": 0,
+    "head": "17 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nThe papers as a conversation\nEac"
+  },
+  {
+    "page": 195,
+    "characters": 1121,
+    "outside": 0,
+    "head": "reading the target pixels. Large target blocks discourage a solution based only on tiny lo"
+  },
+  {
+    "page": 196,
+    "characters": 1286,
+    "outside": 0,
+    "head": "What is hidden, and what supplies the target?\nCompare the prediction problem before compar"
+  },
+  {
+    "page": 197,
+    "characters": 2403,
+    "outside": 0,
+    "head": "The input is passive video, not a sequence of motor commands for our particular robot. A\nv"
+  },
+  {
+    "page": 198,
+    "characters": 1408,
+    "outside": 0,
+    "head": "DINO-WM: start from a visual representation\nthat already works\nDINO-WM, 2411.04983v1, lear"
+  },
+  {
+    "page": 199,
+    "characters": 1930,
+    "outside": 0,
+    "head": "Frozen features and joint learning are different boundaries\nMark which encoder receives gr"
+  },
+  {
+    "page": 200,
+    "characters": 2223,
+    "outside": 0,
+    "head": "The LeWM appendix describes seven terms and six relative coefficients for its PLDM\nbaselin"
+  },
+  {
+    "page": 201,
+    "characters": 1363,
+    "outside": 0,
+    "head": "computational cost, and training ablations.\nThe important simplification is in the loss an"
+  },
+  {
+    "page": 202,
+    "characters": 1251,
+    "outside": 0,
+    "head": "These rows compare targets, encoder updates, and action inputs. Each paper also makes\narch"
+  },
+  {
+    "page": 203,
+    "characters": 1476,
+    "outside": 0,
+    "head": "A worked paper-reading exercise\nSuppose paper A reports better control with a frozen large"
+  },
+  {
+    "page": 204,
+    "characters": 1912,
+    "outside": 0,
+    "head": "18 / THE DESTINATION WORLD MODELS, FROM FIRST PRINCIPLES\nRead LeWorldModel closely\nWe can "
+  },
+  {
+    "page": 205,
+    "characters": 1536,
+    "outside": 0,
+    "head": "Section 3.1: what is actually observed?\nThe training dataset contains trajectories of imag"
+  },
+  {
+    "page": 206,
+    "characters": 1953,
+    "outside": 0,
+    "head": "Image patches ViT-Tiny tokens CLS readout Projector + BN\n224\u00d7224 256+1 R 192 z t \u2208R d\nHist"
+  },
+  {
+    "page": 207,
+    "characters": 2085,
+    "outside": 0,
+    "head": "The research model\u2019s dimensions fit together\nWhere does the paper\u2019s compact notation hide "
+  },
+  {
+    "page": 208,
+    "characters": 2460,
+    "outside": 0,
+    "head": "Equations 2, 3, and 6: regularize a distribution at\neach time\nEquation 6 defines projected"
+  },
+  {
+    "page": 209,
+    "characters": 1432,
+    "outside": 0,
+    "head": "Configuration is part of the scientific object\nChoice v1 paper description Pinned reposito"
+  },
+  {
+    "page": 210,
+    "characters": 1808,
+    "outside": 0,
+    "head": "Equations 4 and 5: plan in the learned coordinates\nEquation 4 defines terminal squared lat"
+  },
+  {
+    "page": 211,
+    "characters": 1529,
+    "outside": 0,
+    "head": "Section 4: read the performance comparisons on\ntheir own terms\nThe paper evaluates TwoRoom"
+  },
+  {
+    "page": 212,
+    "characters": 1171,
+    "outside": 0,
+    "head": "Reported results, with the exceptions visible\nCompetitive control does not mean winning on"
+  },
+  {
+    "page": 213,
+    "characters": 2324,
+    "outside": 0,
+    "head": "Sections 5 and 6: physical structure and\nremaining limits\nPhysical probes recover labeled "
+  },
+  {
+    "page": 214,
+    "characters": 1607,
+    "outside": 0,
+    "head": "combinatorial size, but it does not prove a universal O(logn) global hyperparameter search"
+  },
+  {
+    "page": 215,
+    "characters": 1698,
+    "outside": 0,
+    "head": "19 / THE DESTINATION WORLD MODELS, FROM FIRST PRINCIPLES\nBuild, challenge, explain\nThe fin"
+  },
+  {
+    "page": 216,
+    "characters": 1779,
+    "outside": 0,
+    "head": "This separation allows a meaningful claim about learning control from pixels in the teachi"
+  },
+  {
+    "page": 217,
+    "characters": 2044,
+    "outside": 0,
+    "head": "integrate frequency with the specified weights, multiply by B, then average directions. Th"
+  },
+  {
+    "page": 218,
+    "characters": 1933,
+    "outside": 0,
+    "head": "The book's reference checks execute these tests. The packaged browser model additionally h"
+  },
+  {
+    "page": 219,
+    "characters": 2099,
+    "outside": 0,
+    "head": "The recorded three-seed suite reached all nine local goals at least once, but only seven w"
+  },
+  {
+    "page": 220,
+    "characters": 1898,
+    "outside": 0,
+    "head": "reached at least once, seven remained within tolerance at the final observation, and all t"
+  },
+  {
+    "page": 221,
+    "characters": 694,
+    "outside": 0,
+    "head": "For each investigation, first state the expected mechanism. Then specify the controlled\nva"
+  },
+  {
+    "page": 222,
+    "characters": 1075,
+    "outside": 0,
+    "head": "20 / REFERENCE WORLD MODELS, FROM FIRST PRINCIPLES\nKeep the whole argument in\nview\nUse thi"
+  },
+  {
+    "page": 223,
+    "characters": 1569,
+    "outside": 0,
+    "head": "Stage Read Check before moving on\nA useful prediction Agreement without Construct collapse"
+  },
+  {
+    "page": 224,
+    "characters": 1521,
+    "outside": 0,
+    "head": "Trace each paper equation back to its tools\nWhen a research equation feels opaque, return "
+  },
+  {
+    "page": 225,
+    "characters": 1192,
+    "outside": 0,
+    "head": "Symbol Meaning Important distinction\n\u03b8,\u03c8 Encoder and predictor parameters Fixed during pla"
+  },
+  {
+    "page": 226,
+    "characters": 1407,
+    "outside": 0,
+    "head": "Symbol Meaning Important distinction\n\u03f5,\u03b7 Locally defined numerical tolerance/error; Reintr"
+  },
+  {
+    "page": 227,
+    "characters": 1262,
+    "outside": 0,
+    "head": "Paper location What it contains Teaching location\n\u00a73.1; Eq. 1; Algorithm 1 Encoder, action"
+  },
+  {
+    "page": 228,
+    "characters": 1511,
+    "outside": 0,
+    "head": "Paper location What it contains Teaching location\nAppendix C.3\u2013C.4 IQL, IVL, advantage wei"
+  },
+  {
+    "page": 229,
+    "characters": 1921,
+    "outside": 0,
+    "head": "chosen modeling preference, not a mathematical identity requiring a proof of universal\nopt"
+  },
+  {
+    "page": 230,
+    "characters": 1906,
+    "outside": 0,
+    "head": "Covariance. An average outer product of centered deviations; its quadratic form gives\ndire"
+  },
+  {
+    "page": 231,
+    "characters": 1747,
+    "outside": 0,
+    "head": "Normality test. A statistic plus a calibrated null decision procedure; optimizing the stat"
+  },
+  {
+    "page": 232,
+    "characters": 1186,
+    "outside": 0,
+    "head": "Sobal and colleagues, PLDM, 2502.14819v1.\nBalestriero and LeCun, LeJEPA, 2511.08544v1.\nMae"
+  }
+]

@@ -16,9 +16,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "One synchronized simulator scene, actual sensor image, explicitly hand-designed code, three candidate-action branches. Learned outputs appear only in L1/L4."
+      "implementation_note": "Compact three-part moving scenario, with command selection replacing duplicated branch panels."
     },
     {
       "id": "O2",
@@ -73,9 +74,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "implementation_note": "Corrected spatial infographic and compact animated camera view: the path runs behind, parallel to the screen.",
       "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
     },
     {
@@ -474,9 +476,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Clickable loss landscape, actual gradient-descent trajectory, play/step/reset and rate control."
     },
     {
       "id": "D3",
@@ -512,9 +515,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Jacobian column selection, actual/linearized displacement, and nonlinear/local-linear grid images share the same inputs."
+      "implementation_note": "Separate enlarged nonlinear/Jacobian grids with matched scales, independent base directions and a perturbation constrained to the selected neighborhood."
     },
     {
       "id": "D5",
@@ -569,9 +573,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Connected rim-trimmed neuron circuit, eight activation choices, input probe, saturation levels, signed weight edges and optional tangent."
     },
     {
       "id": "N2",
@@ -607,9 +612,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Actual curve-fitting with selectable target, width and activation, continuous training, reset and per-unit contributions."
     },
     {
       "id": "N4",
@@ -645,9 +651,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Actual SGD/momentum/Adam trajectories on three explicit loss landscapes; all gradients evaluated at each method’s own state."
     },
     {
       "id": "N6",
@@ -683,9 +690,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Labeled example/feature tables and a causal comparison: changing example B affects BatchNorm for A but leaves LayerNorm and stored-statistics evaluation unchanged."
     },
     {
       "id": "J1",
@@ -1274,9 +1282,10 @@
       "verification": [
         "research/implementation/completion-check.json",
         "research/implementation/visual-audit.json",
-        "research/implementation/REVIEW.md"
+        "research/implementation/REVIEW.md",
+        "research/polish/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "Aligned one-step/free-rollout comparisons on identical axes, error gaps and RMSE."
     },
     {
       "id": "A4",
