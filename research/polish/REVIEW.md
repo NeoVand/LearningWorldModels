@@ -1,5 +1,11 @@
 # Reader-feedback revision — 21 September 2026
 
+## Follow-up correction — 22 September 2026
+
+The reader correctly caught a remaining occlusion error: the screen was wide enough to intercept the sightlines to both outer ball positions. Removing misleading rays in the earlier edit did not fix that geometry. The replacement `occlusion-narrow-screen.png` makes the wall less than half as wide and updates the three camera views. It replaces the selected plate in both HTML outputs, the gallery and the PDF.
+
+Using visually measured image coordinates, a conservative bundle of rays to each ball's bounding square clears the entire screen thickness at both outer positions; the middle bundle remains blocked. The before bundle crosses the wall depth at x=262–367, the screen occupies x=409–644, and the after bundle crosses at x=714–819. These are schematic image-coordinate checks, not calibrated camera measurements. See [the geometry check](occlusion-geometry.json) and [the exact built-in image-edit prompt](../../assets/generated/infographics/occlusion-narrow-screen-prompt.json). The earlier illustration and review below are retained as history.
+
 The public repository was created and the existing work pushed before these changes. Implementation followed in separate commits. This record describes changes already made, not a deferred work list.
 
 ## What changed

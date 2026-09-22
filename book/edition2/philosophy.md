@@ -6,7 +6,7 @@
 
 Imagine watching a ball roll behind a screen. You expect it to reappear on the other side. Nobody needs to attach a class label to each frame for the sequence to contain a lesson. The visible past constrains the hidden present and the possible future. A learner can make a prediction, wait, and compare that prediction with what happens.
 
-<figure class="generated-plate" data-art="P1"><img src="assets/generated/infographics/occlusion-clear-path.png" alt="A top-view schematic separates the ball’s path from the screen; three camera frames show the ball disappear and reappear."/><figcaption>The screen stands between the camera and the path, not across the path. The left panel is a spatial schematic; the right panels are successive camera views. The three marked positions belong to one ball at different times.</figcaption></figure>
+<figure class="generated-plate" data-art="P1"><img src="assets/generated/infographics/occlusion-narrow-screen.png" alt="A top-view schematic separates the ball’s path from the screen; three camera frames show the ball disappear and reappear."/><figcaption>The screen stands between the camera and the path. It blocks the middle position; sightlines to both outer positions clear its edges. Left: a top-view schematic. Right: successive camera views. All three marked positions belong to one moving ball.</figcaption></figure>
 
 <!-- VISUAL: P1 -->
 

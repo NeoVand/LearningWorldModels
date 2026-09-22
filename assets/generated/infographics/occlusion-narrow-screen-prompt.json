@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-22",
+  "method": "Built-in image generation, edit of occlusion-clear-path.png",
+  "prompt": "Use case: precise-object-edit. Edit target: supplied textbook occlusion infographic. Fix ONLY the screen width and corresponding camera-frame screens; preserve all typography, camera, ball positions, tabletop, layout and labels. The left screen is much too wide: lines from the camera lens to BOTH outer balls currently hit it. In this 1536x1024 composition, replace the left screen currently extending approximately x=267..813 at y=424..464 with a SHORT centered bar extending ONLY x=410..670, same y and thickness, center x=540. This is less than HALF its current width. Preserve its blue-gray material and its label 'Opaque screen', fitting the label legibly inside. Fill removed ends with seamless tabletop. Keep the before ball at (211,314), hidden ball at (540,314), after ball at (870,314), and camera optical center near (540,715). At the screen depth, rays toward the outer balls pass near x=320 and x=760, clearly OUTSIDE the new screen ends, including clearance for each ball's full radius. The hidden center is still blocked. In ALL THREE right-hand camera frames, shorten their centered screen width from about 228 pixels to about 108 pixels, preserve the screen height, keep balls and exact scene framing unchanged. Same narrower screen in all three frames. Do not move the balls inward. Do not add sight rays or shadow cones, new text, decorations, objects or labels. Preserve all existing titles and bottom sentence. The most important change is the visibly MUCH NARROWER wall, less than half as wide, consistent across all four depictions.",
+  "selected": "occlusion-narrow-screen.png",
+  "geometry": {
+    "description": "Approximate pixel coordinates visually measured on the final 1536×1024 image. Schematic pinhole line-of-sight check, not camera calibration.",
+    "camera": [
+      540,
+      708
+    ],
+    "wall": {
+      "x": [
+        409,
+        644
+      ],
+      "y": [
+        423,
+        465
+      ]
+    },
+    "balls": [
+      {
+        "name": "before",
+        "center": [
+          211,
+          314
+        ],
+        "radius": 28
+      },
+      {
+        "name": "hidden",
+        "center": [
+          540,
+          314
+        ],
+        "radius": 28
+      },
+      {
+        "name": "after",
+        "center": [
+          870,
+          314
+        ],
+        "radius": 28
+      }
+    ]
+  }
+}

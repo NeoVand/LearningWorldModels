@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-22",
+  "method": "Conservative bounding-square ray bundle across full screen thickness, using visually measured image coordinates.",
+  "results": [
+    {
+      "name": "before",
+      "rayBundleAtWall": [
+        262.0081967213115,
+        366.67535545023696
+      ],
+      "visible": true,
+      "hidden": false
+    },
+    {
+      "name": "hidden",
+      "rayBundleAtWall": [
+        518.1967213114754,
+        561.8032786885246
+      ],
+      "visible": false,
+      "hidden": true
+    },
+    {
+      "name": "after",
+      "rayBundleAtWall": [
+        713.9004739336493,
+        818.7704918032787
+      ],
+      "visible": true,
+      "hidden": false
+    }
+  ]
+}
