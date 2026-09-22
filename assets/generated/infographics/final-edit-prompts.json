@@ -1,0 +1,12 @@
+[
+  {
+    "key": "jepa-final",
+    "reference": "jepa-4",
+    "prompt": "Edit this scientific infographic. Preserve its attractive blue editorial style, scene, overall composition, and typography, but correct the architecture completely. The shared Context photograph must have exactly two arrows, each entering the LEFT side of a Learned encoder. No context arrow may bypass an encoder or enter the latent vector directly. Each branch must then be Learned encoder → violet coordinate vector → Learned predictor. Left output is labeled Pixel prediction: show a predicted future photograph beside its observed future target and a small illustrative difference inset. Right output is labeled Representation prediction: show a teal vector of abstract coordinates, with a short caption 'Predict useful features of the future'. Beneath right output a separate small observed-future photograph goes into a small Target encoder and then a violet target vector. A short comparison line connects the teal predicted vector and violet target vector; label it 'Compare representations'. Do not connect target encoder into predictor. Remove all unlabeled extraneous arrows, original arrow into middle of latent from Context, repeated frame stacks, and misleading known spatial coordinates x,y. Retain bottom texture detail inset left labeled 'Pixel detail', and right simple symbolic object/motion illustration labeled 'Structure we hope to retain'. Do not imply known physical coordinates are the learned embedding. Use legible sparse labels, mathematically honest flow, generous spacing, no overlaps. This is an explanatory diagram, not an exact architecture of a named method. Title stays 'What should a prediction keep?'."
+  },
+  {
+    "key": "energy-final",
+    "reference": "energy-3",
+    "prompt": "Edit this scientific infographic, preserving all artwork, layout and all text except the following two changes. Replace the sentence 'Paths that require less energy are more compatible. The central path requires much more energy.' with EXACTLY 'Lower model energy means greater compatibility. This score is not physical energy.' Add a small centered x-axis label below the bottom graph reading 'Candidate future'. Keep 'Illustrative compatibility, not measured probability', the two low model-energy valleys and central high-energy peak, and all left/right/incompatible labels. No other changes. Beautiful crisp accurate typography."
+  }
+]

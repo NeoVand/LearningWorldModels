@@ -1,0 +1,30 @@
+{
+  "name": "before-the-move",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build-edition2.mjs",
+    "verify": "node tools/verify-edition2.mjs",
+    "build:revision": "node tools/build-edition2.mjs",
+    "verify:revision": "node tools/verify-edition2.mjs",
+    "verify:pedagogy": "node tools/verify-pedagogy.mjs",
+    "verify:visuals": "node tools/verify-visual-numerics.mjs && node tools/verify-completed-book.mjs",
+    "verify:continuous": "node tools/verify-continuous.mjs",
+    "audit:visuals": "node tools/audit-visuals.mjs",
+    "print": "node tools/print-edition2.mjs"
+  },
+  "dependencies": {
+    "@hugeicons/core-free-icons": "4.3.2",
+    "@jax-js/jax": "0.1.18",
+    "highlight.js": "11.11.1",
+    "katex": "0.16.22",
+    "marked": "15.0.12"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "playwright": "1.55.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

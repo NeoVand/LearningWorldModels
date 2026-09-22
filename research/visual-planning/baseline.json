@@ -1,0 +1,443 @@
+{
+  "checked": "2026-09-21T20:53:29.735Z",
+  "chapters": [
+    {
+      "id": "opening",
+      "title": "Before the move",
+      "sections": [
+        "One mechanism, three questions",
+        "The route through the book",
+        "How to use a mathematical lesson",
+        "A first prediction"
+      ],
+      "figures": 1,
+      "widgets": 0,
+      "equations": 0,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "philosophy",
+      "title": "Learning before labels",
+      "sections": [
+        "The lesson hidden in an ordinary video",
+        "What LeCun proposes, and what remains a proposal",
+        "State, observation, and memory are different things",
+        "Why predict a representation?",
+        "A description can hide detail without resolving uncertainty",
+        "Planning needs preferences as well as predictions",
+        "Hierarchies shorten the question",
+        "A first worked challenge"
+      ],
+      "figures": 4,
+      "widgets": 0,
+      "equations": 16,
+      "equationsWithExplicitColor": 3,
+      "inlineCode": 0
+    },
+    {
+      "id": "geometry",
+      "title": "A world in coordinates",
+      "sections": [
+        "From an image to a list of numbers",
+        "Matrices are coordinated linear measurements",
+        "Reading shapes before calculating",
+        "Length, angle, and projection",
+        "Rank measures available directions",
+        "Work one complete encoding by hand"
+      ],
+      "figures": 1,
+      "widgets": 0,
+      "equations": 99,
+      "equationsWithExplicitColor": 9,
+      "inlineCode": 0
+    },
+    {
+      "id": "probability",
+      "title": "Prediction under uncertainty",
+      "sections": [
+        "Random variables are measurements of uncertain outcomes",
+        "Expectation is a weighted average",
+        "Conditioning changes which average is relevant",
+        "Why squared error predicts a mean",
+        "The Gaussian family",
+        "Independence is stronger than zero covariance",
+        "Generalization is a distributional question",
+        "Quantifying finite-sample uncertainty",
+        "Worked exercises: choose the right average"
+      ],
+      "figures": 1,
+      "widgets": 1,
+      "equations": 111,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "clouds",
+      "title": "The geometry of a cloud",
+      "sections": [
+        "Mean and covariance as geometry",
+        "A centered batch has a rank limit",
+        "Eigenvectors reveal the cloud's principal directions",
+        "A Gaussian cloud in several dimensions",
+        "Whitening is a moment operation",
+        "Worked exercises: what survived?"
+      ],
+      "figures": 0,
+      "widgets": 1,
+      "equations": 77,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "calculus",
+      "title": "How a small change travels",
+      "sections": [
+        "Recover a derivative from a difference",
+        "Several knobs require partial derivatives",
+        "A directional change is a dot product",
+        "A chain multiplies sensitivities",
+        "Exponentials and logarithms undo one another",
+        "A Jacobian is a table of local effects",
+        "Why backpropagation uses a transpose",
+        "Curvature and the second-order approximation",
+        "Approximation notation should say what shrinks",
+        "Return to the cloud: why principal directions exist",
+        "Check the whole chain"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 191,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "learning",
+      "title": "How errors change a model",
+      "sections": [
+        "Parameters are the knobs inside a function",
+        "A neuron, a layer, and a network",
+        "Backpropagation is organized chain rule",
+        "One example versus a batch",
+        "Momentum and Adam",
+        "Regularization begins with an underdetermined question",
+        "Other ways to express a preference",
+        "Normalization is also not regularization by definition",
+        "Check a gradient before trusting a curve",
+        "Worked exercise: trace one update by hand"
+      ],
+      "figures": 0,
+      "widgets": 1,
+      "equations": 130,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "jepa",
+      "title": "Agreement without collapse",
+      "sections": [
+        "Three targets, three learning problems",
+        "Both sides can move",
+        "Construct the collapse solution",
+        "Contrastive learning: agreement plus alternatives",
+        "Teacher branches: change the update rule",
+        "VICReg: three constraints with distinct jobs",
+        "Why the variance penalty has a gradient caveat",
+        "Temporal prediction adds an alignment problem",
+        "From covariance control to distribution matching",
+        "Worked exercise: distinguish the remedies"
+      ],
+      "figures": 5,
+      "widgets": 0,
+      "equations": 86,
+      "equationsWithExplicitColor": 27,
+      "inlineCode": 0
+    },
+    {
+      "id": "testing",
+      "title": "When does a cloud count as Gaussian?",
+      "sections": [
+        "A null model is a repeatable sampling story",
+        "Compare accumulated probability rather than histogram bins",
+        "Calibrate by repeating the null experiment",
+        "Run a test, then change the amount of evidence",
+        "Where the simulated Gaussian samples come from",
+        "Fitting the null changes the question",
+        "A training penalty is not a hypothesis-test verdict",
+        "Check the conclusion before accepting it"
+      ],
+      "figures": 0,
+      "widgets": 1,
+      "equations": 56,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "sigreg",
+      "title": "A statistic for useful variation",
+      "sections": [
+        "A Gaussian target is a choice with consequences",
+        "From a point on a circle to a distributional fingerprint",
+        "Derive the Gaussian fingerprint",
+        "Estimate the fingerprint from a batch",
+        "Samples fluctuate even when the target is correct",
+        "Why projections can reveal a multivariate distribution",
+        "From the integral to a finite computation",
+        "An independent way to check the integral",
+        "Differentiate every step",
+        "Run the statistic and challenge it",
+        "Read the implementation as mathematics",
+        "Batch axes and sample size",
+        "Check your understanding",
+        "Return to the world model"
+      ],
+      "figures": 2,
+      "widgets": 2,
+      "equations": 282,
+      "equationsWithExplicitColor": 79,
+      "inlineCode": 0
+    },
+    {
+      "id": "implementation",
+      "title": "From equations to a learner",
+      "sections": [
+        "Define the experiment before writing the loss",
+        "Follow one window through its shapes",
+        "The residual predictor gives us a baseline",
+        "Make the two reductions explicit",
+        "Trace SIGReg with a tiny concrete array",
+        "A complete inspectable reference learner",
+        "Optimization state is part of the experiment",
+        "Data splitting and matched comparisons",
+        "Diagnostics should catch different kinds of failure",
+        "Worked challenge: a bug that improves the loss"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 54,
+      "equationsWithExplicitColor": 1,
+      "inlineCode": 0
+    },
+    {
+      "id": "laboratory",
+      "title": "A world model you can train",
+      "sections": [
+        "Before you press train",
+        "Read the evidence, not just the curve",
+        "Let the learned model choose actions",
+        "What the implementation actually optimizes",
+        "Three investigations with worked interpretations",
+        "Research correspondence"
+      ],
+      "figures": 1,
+      "widgets": 2,
+      "equations": 10,
+      "equationsWithExplicitColor": 2,
+      "inlineCode": 0
+    },
+    {
+      "id": "planning",
+      "title": "From imagination to action",
+      "sections": [
+        "Separate learning from planning",
+        "Why latent distance might help, and when it misleads",
+        "Differentiate through a rollout",
+        "CEM refits a distribution to promising plans",
+        "A complete reference planner",
+        "A two-action calculation by hand",
+        "Teacher forcing does not eliminate rollout error",
+        "MPC spends predictions in short installments",
+        "Uncertainty and hierarchy remain separate challenges",
+        "Worked exercise: arriving is not staying"
+      ],
+      "figures": 2,
+      "widgets": 1,
+      "equations": 79,
+      "equationsWithExplicitColor": 16,
+      "inlineCode": 1
+    },
+    {
+      "id": "evaluation",
+      "title": "What counts as understanding?",
+      "sections": [
+        "Three levels of evidence",
+        "Linear and nonlinear probes",
+        "The freedom to rename latent coordinates",
+        "Angles require circular error",
+        "A decoder is a diagnostic instrument",
+        "Why t-SNE is not a map of physical distance",
+        "Compatibility, energy, and multiple futures",
+        "Energy is not automatically probability",
+        "Surprise is an error before it is a probability",
+        "Temporal straightness: derive Equation 9",
+        "Baselines in Appendix C: what policies learn instead",
+        "Returns and the Bellman recursion",
+        "Expectiles emphasize one side of an error",
+        "Advantage-weighted imitation",
+        "How to read the ablation tables",
+        "Worked exercise: design a stronger physical test"
+      ],
+      "figures": 1,
+      "widgets": 0,
+      "equations": 82,
+      "equationsWithExplicitColor": 7,
+      "inlineCode": 0
+    },
+    {
+      "id": "theory",
+      "title": "What Gaussian geometry can promise",
+      "sections": [
+        "A probe asks what another learner can recover",
+        "Begin with a one-coordinate probe",
+        "Bias and variance come from repeated training sets",
+        "Ordinary least squares gives a second isotropy argument",
+        "A local probe averages nearby labels",
+        "Taylor expansion explains the density score",
+        "The radial-neighborhood version",
+        "Fisher information measures average score magnitude",
+        "From a score bound to a probe-bias bound",
+        "Why a Gaussian marginal can still encode the wrong thing",
+        "Worked challenge: audit a theorem-sized claim"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 148,
+      "equationsWithExplicitColor": 1,
+      "inlineCode": 0
+    },
+    {
+      "id": "transformers",
+      "title": "Inside the vision transformer",
+      "sections": [
+        "Patches turn an image into a sequence",
+        "Queries, keys, and values are learned linear maps",
+        "Softmax produces a normalized weighted average",
+        "Multiple heads ask different questions",
+        "Causal masking enforces an information boundary",
+        "Layer Normalization changes each example's geometry",
+        "Action conditioning through adaptive normalization",
+        "Activations and positional parameters are ordinary learned machinery",
+        "A complete tiny attention calculation",
+        "Return to the diagnostic decoder",
+        "Worked exercise: why can a future leak?"
+      ],
+      "figures": 1,
+      "widgets": 1,
+      "equations": 96,
+      "equationsWithExplicitColor": 1,
+      "inlineCode": 1
+    },
+    {
+      "id": "lineage",
+      "title": "The papers as a conversation",
+      "sections": [
+        "A reading method for research papers",
+        "I-JEPA: predict a missing region in representation space",
+        "V-JEPA: time becomes part of the missing information",
+        "V-JEPA 2: large-scale video learning meets robot actions",
+        "DINO-WM: start from a visual representation that already works",
+        "PLDM: jointly learn perception and dynamics",
+        "LeJEPA: make the geometry explicit",
+        "LeWorldModel: put the pieces into one compact learner",
+        "Compare the training setups",
+        "A worked paper-reading exercise"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 1,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "paper",
+      "title": "Read LeWorldModel closely",
+      "sections": [
+        "Abstract and introduction: identify the actual claim",
+        "Section 3.1: what is actually observed?",
+        "The encoder: one frame becomes one compact vector",
+        "Equation 1: the compact prediction notation",
+        "Equations 2, 3, and 6: regularize a distribution at each time",
+        "Algorithm 1: translate intent into valid operations",
+        "Configuration is part of the scientific object",
+        "Equations 4 and 5: plan in the learned coordinates",
+        "Section 4: read the performance comparisons on their own terms",
+        "Sections 5 and 6: physical structure and remaining limits",
+        "Appendix G: what an ablation isolates",
+        "Appendix H and I: geometry and curves are diagnostics",
+        "Your equation-by-equation checkpoint"
+      ],
+      "figures": 1,
+      "widgets": 0,
+      "equations": 28,
+      "equationsWithExplicitColor": 5,
+      "inlineCode": 1
+    },
+    {
+      "id": "capstone",
+      "title": "Build, challenge, explain",
+      "sections": [
+        "The assignment",
+        "1 · Specify the information boundary",
+        "2 · Derive the objective and its shapes",
+        "3 · Prove why prediction alone has a loophole",
+        "4 · Check the implementation before training",
+        "5 · Run a matched learning experiment",
+        "6 · Test what the predictor actually uses",
+        "7 · Explain the research model from memory",
+        "8 · Write a claim that survives its own evidence",
+        "Investigations after the capstone"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 13,
+      "equationsWithExplicitColor": 0,
+      "inlineCode": 0
+    },
+    {
+      "id": "reference",
+      "title": "Keep the whole argument in view",
+      "sections": [
+        "The learning route",
+        "Symbols and axes",
+        "LeWorldModel v1 coverage map",
+        "Read the PLDM appendix without an axis mistake",
+        "A compact glossary with return paths",
+        "Primary sources and provenance"
+      ],
+      "figures": 0,
+      "widgets": 0,
+      "equations": 29,
+      "equationsWithExplicitColor": 10,
+      "inlineCode": 0
+    }
+  ],
+  "inlineCode": [
+    {
+      "theme": "light",
+      "background": "rgb(237, 236, 229)",
+      "color": "rgb(41, 54, 75)"
+    },
+    {
+      "theme": "dark",
+      "background": "rgb(237, 236, 229)",
+      "color": "rgb(233, 237, 245)"
+    }
+  ],
+  "coldStart": {
+    "step": "0",
+    "status": "Ready to generate images and initialize random weights.",
+    "trainDisabled": true,
+    "controlDisabled": true,
+    "cameraDrawn": [
+      {
+        "id": "world-current",
+        "anyOpaque": false
+      },
+      {
+        "id": "world-goal-image",
+        "anyOpaque": false
+      }
+    ],
+    "svgMechanisms": 0
+  }
+}

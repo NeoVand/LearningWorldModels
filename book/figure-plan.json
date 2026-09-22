@@ -1,0 +1,1855 @@
+{
+  "scope": "Implementation ledger for the 97 approved visual briefs across 20 chapters; 92 teaching figures plus five integrations in the live laboratory.",
+  "items": [
+    {
+      "id": "O1",
+      "chapter": "opening",
+      "section": "One mechanism, three questions",
+      "title": "Observe → encode → imagine",
+      "medium": "Interactive SVG",
+      "priority": "P0",
+      "action": "Replace",
+      "brief": "One synchronized moving arm, its camera pixels, an eight-value embedding display, and three action-conditioned future branches. Keep physical joints separate from latent coordinates; distinguish simulator illustrations from actual network outputs.",
+      "status": "complete",
+      "source": "book/edition2/visuals/arm.js",
+      "anchor": "visual-O1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "One synchronized simulator scene, actual sensor image, explicitly hand-designed code, three candidate-action branches. Learned outputs appear only in L1/L4."
+    },
+    {
+      "id": "O2",
+      "chapter": "opening",
+      "section": "A first prediction",
+      "title": "Same picture, opposite velocities",
+      "medium": "Interactive SVG",
+      "priority": "P0",
+      "action": "New",
+      "brief": "Start two arms at the identical pose with opposite velocities. Reveal earlier frames, then apply identical commands and watch different futures. Use the Jaxverse HistoryPlate behavior.",
+      "status": "complete",
+      "source": "book/edition2/visuals/arm.js",
+      "anchor": "visual-O2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "O3",
+      "chapter": "opening",
+      "section": "The route through the book",
+      "title": "One recurring experiment, three questions",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "A small map links seeing, learning and acting to the chapters. Each branch previews the concrete question that its mathematics will answer; avoid an ornamental chapter timeline.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-O3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "P1",
+      "chapter": "philosophy",
+      "section": "The lesson hidden in an ordinary video",
+      "title": "Predict the hidden part",
+      "medium": "Generated + SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "A designed scientific infographic connects visible frames, an occluded interval and compatible continuations. Keep the scene artwork if useful, but add the missing temporal reasoning and uncertainty.",
+      "status": "complete",
+      "source": "book/edition2/visuals/plates.js",
+      "anchor": "visual-P1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "P2",
+      "chapter": "philosophy",
+      "section": "What LeCun proposes, and what remains a proposal",
+      "title": "LeCun's agent in operation",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Highlight perception, memory, prediction, cost and action in sequence for one decision. Separate modules in the broad proposal from those actually implemented by the book.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-P2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "The original LeCun module SVG supplies connections; the companion uses six editable role cards to follow one decision."
+    },
+    {
+      "id": "P3",
+      "chapter": "philosophy",
+      "section": "Why predict a representation?",
+      "title": "Preserve pose, discard a nuisance",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Change background and pose independently. Compare desired invariance with destructive collapse; matching backgrounds must not be confused with a measured learned invariance.",
+      "status": "complete",
+      "source": "book/edition2/visuals/arm.js",
+      "anchor": "visual-P3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "P4",
+      "chapter": "philosophy",
+      "section": "Hierarchies shorten the question",
+      "title": "Nested plans and time scales",
+      "medium": "Generated + SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Replace a scenic metaphor alone with nested route, crossing and foot-placement panels, linked horizons and subgoals. Generate multiple sophisticated infographic compositions for selection.",
+      "status": "complete",
+      "source": "book/edition2/visuals/plates.js",
+      "anchor": "visual-P4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "G1",
+      "chapter": "geometry",
+      "section": "From an image to a list of numbers",
+      "title": "Pixels become coordinates",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Highlight a 2×2 image pixel, its flattened position, and the two outputs of the chapter's tiny encoder. Show an explicit collision: different images can share an embedding.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-G1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "G2",
+      "chapter": "geometry",
+      "section": "Matrices are coordinated linear measurements",
+      "title": "A matrix acts on a grid",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show basis vectors and a unit square before and after rotation, shear, scaling and rank loss. Highlight a row's dot product while the corresponding output coordinate changes.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-G2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "G3",
+      "chapter": "geometry",
+      "section": "Reading shapes before calculating",
+      "title": "Rows, columns, dot and outer products",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Use small numbered arrays with matching dimensions. Animate one matrix-product entry and contrast a scalar dot product with an outer-product matrix.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-G3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "A keyboard-accessible cell selector highlights each outer-product entry; the dot-product calculation stays visible beside it."
+    },
+    {
+      "id": "G4",
+      "chapter": "geometry",
+      "section": "Length, angle, and projection",
+      "title": "Projection and the closest point",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Drag a vector and unit direction; expose the scalar coordinate, projected vector, perpendicular residual and Pythagorean squares. Preserve equal units and explain negative projections.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-G4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "G5",
+      "chapter": "geometry",
+      "section": "Rank measures available directions",
+      "title": "A plane becomes a line or a point",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Three matched transformations show full rank, dimensional collapse and complete collapse. Highlight distinct inputs that become indistinguishable and the direction lost in the null space.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-G5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B1",
+      "chapter": "probability",
+      "section": "Random variables are measurements of uncertain outcomes",
+      "title": "Mass, density and accumulated area",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Link discrete probability bars, a continuous density and its CDF. Shade an interval; show why density height may exceed one while interval probability cannot.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B2",
+      "chapter": "probability",
+      "section": "Expectation is a weighted average",
+      "title": "The mean as a balance point",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Move probabilities on three outcomes and show their weighted contributions, mean and squared deviations. Changing spread should not silently change the mean.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B3",
+      "chapter": "probability",
+      "section": "Conditioning changes which average is relevant",
+      "title": "Conditioning filters the sample space",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Turn the 100-state noisy-sensor example into an icon grid with the 8 true and 18 false positive reports. Link counts, Bayes' fraction and the conditional mean.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B4",
+      "chapter": "probability",
+      "section": "Why squared error predicts a mean",
+      "title": "Two futures and an impossible average",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Upgrade the existing mean widget with the full expected-loss curve and synchronized branch outcomes. The track illustration is a metaphor; the numerical panel establishes the optimum.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B5",
+      "chapter": "probability",
+      "section": "The Gaussian family",
+      "title": "Why the bell has this area",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show shifts and scales, then the squared Gaussian integral as a plane partitioned into annuli. Connect annulus area and the substitution in the normalization proof.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B6",
+      "chapter": "probability",
+      "section": "Independence is stronger than zero covariance",
+      "title": "Zero correlation can hide dependence",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Compare independent samples, a parabola Y=X² and a mixture on the same scales. Show conditional slices and matching or differing moments rather than relying on scatterplot appearance alone.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "B7",
+      "chapter": "probability",
+      "section": "Quantifying finite-sample uncertainty",
+      "title": "Repeated experiments and shared seeds",
+      "medium": "SVG + simulation",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Resample Bernoulli trials and distinguish success-rate variability from training-seed variability. Show why correlated task evaluations are not extra independent samples.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-B7",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "C1",
+      "chapter": "clouds",
+      "section": "Mean and covariance as geometry",
+      "title": "Build a covariance matrix from deviations",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Move four points, center them, display signed deviation products and assemble the 2×2 covariance. Link positive and negative off-diagonal entries to the point cloud.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-C1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "C2",
+      "chapter": "clouds",
+      "section": "A centered batch has a rank limit",
+      "title": "Why B points supply at most B−1 directions",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show centered rows summing to zero using two and three points. Connect that dependency to the rank limit before giving the high-dimensional example.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-C2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "C3",
+      "chapter": "clouds",
+      "section": "Eigenvectors reveal the cloud's principal directions",
+      "title": "Rotate, measure, whiten",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Extend the existing covariance desk with projected samples, eigenvectors and the stages rotate → rescale → rotate back. Explain covariance ellipses as summaries, not distribution boundaries.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-C3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "C4",
+      "chapter": "clouds",
+      "section": "Whitening is a moment operation",
+      "title": "Same covariance, different distributions",
+      "medium": "SVG + linked widget",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Compare a Gaussian, ring and crossing-lines distribution with identity covariance. Label finite-sample deviations and show what whitening cannot remove; reuse SIGReg cloud generators.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-C4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "D1",
+      "chapter": "calculus",
+      "section": "Recover a derivative from a difference",
+      "title": "A secant becomes a tangent",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Shrink h on x², show rise/run and the discarded h² area. Keep the actual finite difference beside the local slope.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "D2",
+      "chapter": "calculus",
+      "section": "Several knobs require partial derivatives",
+      "title": "Slices, contours and a gradient step",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Use the book's two-parameter loss. Link one-coordinate slices to partial derivatives, a contour map to the full gradient, and a step-size control to overshooting.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "D3",
+      "chapter": "calculus",
+      "section": "A chain multiplies sensitivities",
+      "title": "Follow one perturbation through a graph",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Trace x → 2x+b → square → loss forward, then sensitivities backward. Include two paths from a shared parameter so contributions visibly add.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "D4",
+      "chapter": "calculus",
+      "section": "A Jacobian is a table of local effects",
+      "title": "A local grid and its sensitivity table",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Perturb one input coordinate of the chapter's two-output function. Highlight the Jacobian column, transformed small grid and actual-versus-linearized displacement.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Jacobian column selection, actual/linearized displacement, and nonlinear/local-linear grid images share the same inputs."
+    },
+    {
+      "id": "D5",
+      "chapter": "calculus",
+      "section": "Curvature and the second-order approximation",
+      "title": "Tangent, curvature and remainder",
+      "medium": "Interactive SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Overlay zeroth-, first- and second-order approximations with a shrinking neighborhood. Display the error scale and show why a local model can fail for large steps.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "D6",
+      "chapter": "calculus",
+      "section": "Return to the cloud: why principal directions exist",
+      "title": "Maximizing variance on the unit circle",
+      "medium": "SVG + interaction",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Sweep a unit vector around an ellipse, plot uᵀCu and show the tangent perturbation at an extremum. Add a small nested-box inset for the existence argument.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-D6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Variance-angle curve, covariance ellipse, unit direction, tangent, and nested-box existence inset."
+    },
+    {
+      "id": "N1",
+      "chapter": "learning",
+      "section": "A neuron, a layer, and a network",
+      "title": "One neuron as circuit and curve",
+      "medium": "Interactive SVG",
+      "priority": "P0",
+      "action": "New",
+      "brief": "Adapt Jaxverse OneNeuron and NeuronDiagram: weight, bias, output amplitude and an input probe update both circuit values and curve. Use pointer, touch and keyboard controls.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-N1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N2",
+      "chapter": "learning",
+      "section": "A neuron, a layer, and a network",
+      "title": "Activations and their derivatives",
+      "medium": "Interactive SVG",
+      "priority": "P0",
+      "action": "New",
+      "brief": "Adapt ActivationAtlas with identical axes for linear, ReLU, tanh, GELU and SiLU. Link saturation to derivative values; label GELU's exact or approximate implementation explicitly.",
+      "status": "complete",
+      "source": "book/edition2/visuals/foundations.js",
+      "anchor": "visual-N2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N3",
+      "chapter": "learning",
+      "section": "A neuron, a layer, and a network",
+      "title": "Why stacking linear layers is insufficient",
+      "medium": "SVG + small training demo",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Compose two affine maps, then insert a nonlinearity and fit a curved target. Adapt CurveFit selectively; show initial predictions immediately and retain a fair linear baseline.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-N3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N4",
+      "chapter": "learning",
+      "section": "Backpropagation is organized chain rule",
+      "title": "A complete forward and backward pass",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Expand the calculus graph into the chapter's two-layer network. Clicking a weight shows its local factor, upstream sensitivity and resulting gradient beside the hand-worked numbers.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-N4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N5",
+      "chapter": "learning",
+      "section": "Momentum and Adam",
+      "title": "Noisy gradients and optimizer memory",
+      "medium": "SVG + simulation",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Show the same gradient sequence entering SGD, momentum and Adam. Plot moving moments and bias correction; make the example an algorithm illustration rather than a performance ranking.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-N5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N6",
+      "chapter": "learning",
+      "section": "Regularization begins with an underdetermined question",
+      "title": "Many fits, different preferences",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Keep the ridge desk and add the one-observation constant-versus-curved example, plus separate data-loss and penalty curves whose sum determines the selected solution.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-N6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "N7",
+      "chapter": "learning",
+      "section": "Normalization is also not regularization by definition",
+      "title": "Which axis is normalized?",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show a small batch×feature array. Switch BatchNorm and LayerNorm to highlight different reduction axes and output constraints; include training versus evaluation statistics.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-N7",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "J1",
+      "chapter": "jepa",
+      "section": "Three targets, three learning problems",
+      "title": "Reconstruction versus latent prediction",
+      "medium": "Generated + SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Design an explanatory infographic with the same scene, a pixel target and a latent target, showing unpredictable detail and retained task structure. Preserve the existing exact computational graphs alongside it.",
+      "status": "complete",
+      "source": "book/edition2/visuals/plates.js",
+      "anchor": "visual-J1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "J2",
+      "chapter": "jepa",
+      "section": "Both sides can move",
+      "title": "Two gradient routes through one encoder",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Trace context and target contributions through shared weights. Toggle stop-gradient for comparison and show the changed derivative, not just a dashed arrow.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-J2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "J3",
+      "chapter": "jepa",
+      "section": "Construct the collapse solution",
+      "title": "Agreement can erase all distinctions",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Animate a cloud shrinking while prediction MSE falls. Compare full and dimensional collapse and keep the physical inputs visibly different. Expose the zero-gradient caveat at exact collapse.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-J3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "J4",
+      "chapter": "jepa",
+      "section": "VICReg: three constraints with distinct jobs",
+      "title": "What each penalty changes",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Three synchronized clouds show invariance, variance floors and covariance penalties separately and jointly. Show a ring surviving moment constraints and connect it to SIGReg.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-J4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Constructed mean/variance/covariance transformations expose each constraint. This is labeled as a calculation, not a recorded VICReg training run."
+    },
+    {
+      "id": "J5",
+      "chapter": "jepa",
+      "section": "Temporal prediction adds an alignment problem",
+      "title": "Images and actions must line up",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "A short filmstrip aligns each action with its transition and contrasts correct indexing with an off-by-one target. Reuse the same layout later for teacher forcing.",
+      "status": "complete",
+      "source": "book/edition2/visuals/learning.js",
+      "anchor": "visual-J5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "T1",
+      "chapter": "testing",
+      "section": "Compare accumulated probability rather than histogram bins",
+      "title": "Build the empirical CDF and KS gap",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Add samples one at a time, including ties. Draw both sides of each jump and highlight the point producing the maximum discrepancy against the Gaussian CDF.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-T1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "T2",
+      "chapter": "testing",
+      "section": "Calibrate by repeating the null experiment",
+      "title": "A sample distribution is not a statistic distribution",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Link individual Gaussian samples to one KS value, then to the existing null histogram. Mark the observed tail, finite Monte Carlo count and rejection threshold.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-T2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "T3",
+      "chapter": "testing",
+      "section": "Fitting the null changes the question",
+      "title": "Fixed versus fitted Gaussian reference",
+      "medium": "SVG + simulation",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Use the same sample before and after estimating mean and variance; show why the fitted discrepancy shrinks and why calibration must repeat the fit.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-T3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "T4",
+      "chapter": "testing",
+      "section": "A training penalty is not a hypothesis-test verdict",
+      "title": "Testing, power and optimization answer different questions",
+      "medium": "SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Pair a fixed-null rejection experiment with a discrepancy-minimization trajectory. Show repeated false alarms and power without interpreting a p-value as the probability of the hypothesis.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-T4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S1",
+      "chapter": "sigreg",
+      "section": "From a point on a circle to a distributional fingerprint",
+      "title": "Samples → phases → arrows → average",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Link each scalar sample to its angle and unit arrow before forming the empirical CF. Add an asymmetric sample option so the imaginary mean is not permanently zero.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S2",
+      "chapter": "sigreg",
+      "section": "Derive the Gaussian fingerprint",
+      "title": "A distribution's changing fingerprint",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Synchronize a density, its samples and real/imaginary CF curves while shifting and rescaling it. Distinguish density space from frequency space and the Gaussian target from the integration window.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S3",
+      "chapter": "sigreg",
+      "section": "Samples fluctuate even when the target is correct",
+      "title": "The finite-batch floor",
+      "medium": "SVG + simulation",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Resample Gaussian batches and plot unscaled discrepancy versus batch-scaled statistic across B. Overlay the derived expectation and show uncertainty across independent repeats.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S4",
+      "chapter": "sigreg",
+      "section": "Why projections can reveal a multivariate distribution",
+      "title": "A rotating slice reveals hidden dependence",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Project (X,SX) along the axes and diagonal, with linked histograms/CFs. Show the diagonal point mass, then explain the gap between all directions and finitely sampled ones.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S5",
+      "chapter": "sigreg",
+      "section": "From the integral to a finite computation",
+      "title": "Frequency window, truncation and trapezoids",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show error×window, endpoint A and grid K on one exact curve. Change A and K separately, compare with a dense integral and display doubled positive-side weights.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S6",
+      "chapter": "sigreg",
+      "section": "An independent way to check the integral",
+      "title": "The same discrepancy as pairwise distances",
+      "medium": "SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Expand the squared empirical mean into a B×B pair table. Link its three terms to the closed-form Gaussian integrals and to the numerical quadrature result.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S7",
+      "chapter": "sigreg",
+      "section": "Differentiate every step",
+      "title": "Follow one sample's regularization gradient",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Select a sample, direction and frequency; expose cosine/sine contributions and the return path to its embedding. Compare exact collapse with a small perturbation using real computed derivatives.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S7",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "S8",
+      "chapter": "sigreg",
+      "section": "Return to the world model",
+      "title": "SIGReg at a glance",
+      "medium": "Generated + SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Produce a carefully designed multi-panel infographic: cloud, random projections, phasors, Gaussian comparison, integration and gradient. Generate five compositions for selection; verify all displayed equations and axes.",
+      "status": "complete",
+      "source": "book/edition2/visuals/statistics.js",
+      "anchor": "visual-S8",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "I1",
+      "chapter": "implementation",
+      "section": "Follow one window through its shapes",
+      "title": "The moving tensor shapes",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Trace an actual three-frame/two-action window through encoder, concatenation, residual predictor and target. Highlight B, T and d axes without rearranging their meaning between panels.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-I1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "I2",
+      "chapter": "implementation",
+      "section": "Make the two reductions explicit",
+      "title": "What is averaged, and when?",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Select a time slice, average samples before squaring, integrate frequencies, then average projections/time. Contrast the wrong order on the same tiny array.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-I2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "I3",
+      "chapter": "implementation",
+      "section": "Trace SIGReg with a tiny concrete array",
+      "title": "Every array entry has a source",
+      "medium": "SVG + linked code",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Synchronize the 2×2 example with projected values, phases, means and weighted sum. Clicking an operation highlights the matching tested reference-code line.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-I3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "The same 2×2 batch as the prose; every selected operation highlights exact lines from the tested Python reference in a local excerpt and the full reference."
+    },
+    {
+      "id": "I4",
+      "chapter": "implementation",
+      "section": "Data splitting and matched comparisons",
+      "title": "An episode split prevents frame leakage",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show overlapping windows on a timeline and compare a random-window split with an episode split. Mark shared frames and explain what the stronger split still does not test.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-I4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "I5",
+      "chapter": "implementation",
+      "section": "Optimization state is part of the experiment",
+      "title": "What a training checkpoint contains",
+      "medium": "SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Separate parameters, Adam moments, step count and random-stream state. Show resume versus reinitialize so continuous training has a concrete conceptual meaning.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-I5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "L1",
+      "chapter": "laboratory",
+      "section": "Before you press train",
+      "title": "A complete untrained experiment",
+      "medium": "Interactive SVG + model",
+      "priority": "P0",
+      "action": "Replace",
+      "brief": "On arrival show physical arm, camera, goal, initialized embeddings and step-zero evaluation. Prepare the model near the viewport; no empty camera boxes or invisible mechanism.",
+      "status": "complete",
+      "source": "book/edition2/ui.js",
+      "anchor": "world-lab",
+      "verification": [
+        "research/implementation/continuous-training.json",
+        "research/implementation/completion-check.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Near-viewport initialization evaluates actual random weights. Physical camera/goal are populated before the backend is ready; failures retain an explicit status."
+    },
+    {
+      "id": "L2",
+      "chapter": "laboratory",
+      "section": "Read the evidence, not just the curve",
+      "title": "Training that continues until paused",
+      "medium": "Live model + charts",
+      "priority": "P0",
+      "action": "Extend",
+      "brief": "Default Train starts ongoing updates, Pause stops them, and Resume preserves weights/moments/step count. Keep optional bounded experiments and periodic evaluation without silently restarting the run.",
+      "status": "complete",
+      "source": "book/edition2/ui.js",
+      "anchor": "world-lab",
+      "verification": [
+        "research/implementation/continuous-training.json",
+        "research/implementation/completion-check.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Default training continues until Pause. Bounded update choices remain. Weights, Adam moments, RNG streams and step count persist. Hidden pages pause; returning never silently resumes computation."
+    },
+    {
+      "id": "L3",
+      "chapter": "laboratory",
+      "section": "Read the evidence, not just the curve",
+      "title": "The same future-choice task before and after learning",
+      "medium": "Interactive SVG + model",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Adapt Jaxverse future-choice/evidence panels. Keep candidates fixed, show predictor and persistence selections, and refresh scores from the current checkpoint rather than a canned success animation.",
+      "status": "complete",
+      "source": "book/edition2/ui.js",
+      "anchor": "future-choices",
+      "verification": [
+        "research/implementation/continuous-training.json",
+        "research/implementation/completion-check.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Fourteen camera panels show two fixed held-out examples and six candidates each, including model/persistence selection and ties."
+    },
+    {
+      "id": "L4",
+      "chapter": "laboratory",
+      "section": "Let the learned model choose actions",
+      "title": "Branch, predict, execute, compare",
+      "medium": "Interactive SVG + model",
+      "priority": "P0",
+      "action": "Extend",
+      "brief": "From one frozen context, show push/reverse/release predicted rollouts and actual simulator continuations side by side, then replay one. Expose untrained failure and label the fitted drawing readout.",
+      "status": "complete",
+      "source": "book/edition2/ui.js",
+      "anchor": "forecast-lab",
+      "verification": [
+        "research/implementation/continuous-training.json",
+        "research/implementation/completion-check.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Three commands share a frozen checkpoint/context. Actual and learned arms replay side by side with a shared scrubber. Pose-readout error and frozen update count are explicit."
+    },
+    {
+      "id": "L5",
+      "chapter": "laboratory",
+      "section": "Read the evidence, not just the curve",
+      "title": "Watch collapse develop",
+      "medium": "Live comparison",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Run the matched prediction-only model beside a frozen regularized checkpoint. Show spread, rank and task evidence as well as loss; mismatched intermediate update counts remain explicit.",
+      "status": "complete",
+      "source": "book/edition2/ui.js",
+      "anchor": "world-comparison",
+      "verification": [
+        "research/implementation/continuous-training.json",
+        "research/implementation/completion-check.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "The regularized checkpoint stays frozen while a matched prediction-only model trains. Loss, spread, rank and future-choice evidence update; mismatched intermediate budgets are labeled."
+    },
+    {
+      "id": "L6",
+      "chapter": "laboratory",
+      "section": "Research correspondence",
+      "title": "A result includes failures",
+      "medium": "SVG charts",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Draw the recorded local and distant-goal trajectories with tolerance and final-occupancy criteria. Label seed, budget and provenance and keep historical data visually distinct from the live run.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-L6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Recorded seed 17/41/73 trajectories, four goals, 0.15-radian criterion, failures preserved; distinct from live measurements."
+    },
+    {
+      "id": "A1",
+      "chapter": "planning",
+      "section": "Separate learning from planning",
+      "title": "Which variables can change?",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Two matched graphs hold actions fixed while learning parameters, then hold parameters fixed while searching actions. Highlight optimized variables and the goal encoding.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-A1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "A2",
+      "chapter": "planning",
+      "section": "CEM refits a distribution to promising plans",
+      "title": "One visible CEM iteration",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Sample action pairs on a cost map, retain elites, refit mean/spread and repeat. Link the elite moments to the likelihood derivation and show the variance floor.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-A2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "A3",
+      "chapter": "planning",
+      "section": "Teacher forcing does not eliminate rollout error",
+      "title": "One-step fit versus free rollout",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Align observed and fed-back contexts on a timeline, then show predicted and actual trajectories as horizon changes. Keep the existing worst-case bound separate from measured errors.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-A3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "A4",
+      "chapter": "planning",
+      "section": "MPC spends predictions in short installments",
+      "title": "Plan, execute a prefix, observe again",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Scrub through one plan and vary the execution prefix independently of horizon. Show stale open-loop predictions being replaced by a new observation and compare the browser/paper cadence.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-A4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "A5",
+      "chapter": "planning",
+      "section": "Why latent distance might help, and when it misleads",
+      "title": "A good latent score can make a bad physical plan",
+      "medium": "SVG + simulation",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Distort an embedding map or introduce model error, then compare imagined cost with actual outcome. Include a goal reached with momentum and subsequently lost.",
+      "status": "complete",
+      "source": "book/edition2/visuals/pipeline.js",
+      "anchor": "visual-A5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "E1",
+      "chapter": "evaluation",
+      "section": "Linear and nonlinear probes",
+      "title": "Recovering information versus controlling it",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Use one physical dataset with a linear and a nonlinear encoding. Fit small probes, report held-out errors, and connect to the existing three-level evidence diagram.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "E2",
+      "chapter": "evaluation",
+      "section": "The freedom to rename latent coordinates",
+      "title": "Rotate coordinates, preserve predictions",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Rotate embeddings and transform the predictor consistently. Show unchanged distances and expected isotropic objective, while a finite fixed projection set may change its SIGReg score.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "E3",
+      "chapter": "evaluation",
+      "section": "Angles require circular error",
+      "title": "A short turn across the wrap boundary",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Move two markers around a circle and show naive difference, wrapped difference and shortest arc. Include the +π/−π example before the circular RMS formula.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "E4",
+      "chapter": "evaluation",
+      "section": "Why t-SNE is not a map of physical distance",
+      "title": "Neighbors versus global geometry",
+      "medium": "SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Connect a small neighborhood-probability matrix to two low-dimensional layouts. Highlight preserved local neighbors and misleading gaps or rotations; compute examples instead of inventing clusters.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Computed neighborhood probabilities and KL contributions explain the mechanism. It is explicitly a local calculation, not a full optimized t-SNE embedding."
+    },
+    {
+      "id": "E5",
+      "chapter": "evaluation",
+      "section": "Compatibility, energy, and multiple futures",
+      "title": "Several futures in one energy landscape",
+      "medium": "Generated + interactive plot",
+      "priority": "P1",
+      "action": "New",
+      "brief": "An infographic pairs branching outcomes with a computed two-basin energy plot. Vary temperature to connect energy with normalized probability while preserving the distinction between the two.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "E6",
+      "chapter": "evaluation",
+      "section": "Surprise is an error before it is a probability",
+      "title": "Appearance change versus physical violation",
+      "medium": "SVG + simulator",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show matched video strips for normal motion, color change, occlusion and teleportation. Plot actual model errors with the intervention marked; label illustrative data if a setup is purely conceptual.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "A constructed intervention example separates history/action sensitivity and occlusion; it is not presented as measured neural performance."
+    },
+    {
+      "id": "E7",
+      "chapter": "evaluation",
+      "section": "Temporal straightness; expectiles; ablations",
+      "title": "Read the metric, not the picture",
+      "medium": "SVG small multiples",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Three compact panels: displacement angles and straightness; asymmetric squared loss and its expectile; controlled seed/ablation comparisons. Each directly accompanies its corresponding formula.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E7",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R1",
+      "chapter": "theory",
+      "section": "Begin with a one-coordinate probe",
+      "title": "Little input variation makes a slope uncertain",
+      "medium": "SVG + simulation",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Repeatedly refit a line to the same fixed design with fresh label noise, then shrink the input spread. Link the coefficient histogram to the variance calculation.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R2",
+      "chapter": "theory",
+      "section": "Bias and variance come from repeated training sets",
+      "title": "Isotropy and difficult directions",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Redistribute a fixed covariance trace between two axes. Show directional ridge bias and least-squares variance, including the privileged-task counterexample to universal optimality.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R3",
+      "chapter": "theory",
+      "section": "A local probe averages nearby labels",
+      "title": "Kernel weights make a prediction",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Reproduce the −1,0,1 triangular-kernel example. Move the query and bandwidth; show each normalized weight, label contribution and denominator, including an empty neighborhood.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R4",
+      "chapter": "theory",
+      "section": "Taylor expansion explains the density score",
+      "title": "Why unequal neighbor density creates bias",
+      "medium": "SVG + interaction",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Compare symmetric neighborhoods with balanced and unbalanced sample density. Show first-order cancellation, curvature and the density-gradient contribution to the smoothed estimate.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R5",
+      "chapter": "theory",
+      "section": "Fisher information measures average score magnitude",
+      "title": "Density, log density and score",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Link the three curves for narrow and broad Gaussians, then accumulate squared score. Illustrate the fixed-covariance assumption and distinguish a score from an attention weight.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "R6",
+      "chapter": "theory",
+      "section": "From a score bound to a probe-bias bound",
+      "title": "What the theorem does and does not connect",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "A dependency diagram links regularity and covariance assumptions to Fisher minimization, then to a bound. Leave the unsupported jump to universal downstream optimality visibly unconnected; include Gaussian nuisance encoding as a counterexample.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-R6",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "V1",
+      "chapter": "transformers",
+      "section": "Patches turn an image into a sequence",
+      "title": "Image → patches → tokens → CLS",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Use an actual arm frame. Select a patch, flatten it, project it, add position information and follow the CLS token. Match the paper's 224/14/192 dimensions with a smaller legible teaching example.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-V1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Teaching sensor patch is flattened into 16 intensities with a toy projection; research token dimensions are shown separately."
+    },
+    {
+      "id": "V2",
+      "chapter": "transformers",
+      "section": "Queries, keys, and values; softmax",
+      "title": "One query retrieves a weighted answer",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Replace a flowchart-only explanation with selectable tokens, a score matrix, row normalization and weighted values. Keep the existing temperature bar chart as one view of the same computation.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-V2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "V3",
+      "chapter": "transformers",
+      "section": "Causal masking enforces an information boundary",
+      "title": "The mask before maximum and exponential",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Show the triangular allowed region, forbidden scores, stabilized exponentials and row sums. Perturb a future token and demonstrate unchanged earlier outputs in the tested standalone function.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-V3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "V4",
+      "chapter": "transformers",
+      "section": "Layer Normalization; action conditioning",
+      "title": "Normalize, then condition with an action",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Compare per-token geometry before/after normalization; show AdaLN shift, scale and residual gate responding to an action. At zero initialization the identity path should be numerically visible.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-V4",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "V5",
+      "chapter": "transformers",
+      "section": "Multiple heads; diagnostic decoder",
+      "title": "Self-attention and cross-attention",
+      "medium": "SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Use consistent Q/K/V colors and explicit shapes to show independent heads and patch queries reading a different collection. Mark decoder training as a separate diagnostic stage.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-V5",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Editable information-flow cards identify heads and the separate diagnostic cross-attention decoder without fabricating model outputs."
+    },
+    {
+      "id": "H1",
+      "chapter": "lineage",
+      "section": "I-JEPA; V-JEPA; V-JEPA 2",
+      "title": "The prediction target changes",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Matched image/video/action filmstrips explain spatial masking, temporal masking and action-conditioned prediction. Show moving-average targets and stop-gradient where each method actually uses them.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-H1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "H2",
+      "chapter": "lineage",
+      "section": "DINO-WM; PLDM; LeJEPA; LeWM",
+      "title": "What is frozen, trained and regularized?",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "A common diagram grammar compares four training graphs, target gradients and losses. Explicitly distinguish feature pretraining from the world-model training being shown.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-H2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "H3",
+      "chapter": "lineage",
+      "section": "Compare the training setups",
+      "title": "A research lineage organized by questions",
+      "medium": "Generated infographic",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Five candidate atlas-style layouts group papers by obstacles and design choices, with versioned dates as secondary context. Avoid a chronological ladder implying that every successor dominates.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-H3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied.",
+      "art_selection": "assets/generated/infographics/selection.json; editorial selection may be changed by user preference"
+    },
+    {
+      "id": "W1",
+      "chapter": "paper",
+      "section": "The encoder: one frame becomes one compact vector",
+      "title": "The complete LeWM training computation",
+      "medium": "SVG",
+      "priority": "P1",
+      "action": "Extend",
+      "brief": "Expand the current architecture with actual tensor shapes, shared weights, target gradients, time-wise SIGReg and the stated projection dimensions. Pair paper notation with the pinned-code reductions.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-W1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "W2",
+      "chapter": "paper",
+      "section": "Equations 4 and 5: plan in the learned coordinates",
+      "title": "One action block versus one physical action",
+      "medium": "SVG timeline",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Draw four observations, context/target shifts, five-action blocks, horizon and execution prefix. Make the paper's cadence visibly different from the teaching controller's one-action loop.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-W2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "W3",
+      "chapter": "paper",
+      "section": "Section 4; ablations; Appendices H/I",
+      "title": "Read the published evidence visually",
+      "medium": "SVG charts",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Redraw selected v1 results from verified source values with denominators, units, seeds and uncertainty conventions. Include exceptions and failures; never fabricate missing error bars or traces.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-W3",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Figure 6 rates and Figure 3 timing are separate from Table 5 three-seed Push-T results. Printed ± values retain the paper’s stated convention, without invented confidence intervals."
+    },
+    {
+      "id": "K1",
+      "chapter": "capstone",
+      "section": "Specify the information boundary; explain the model",
+      "title": "Build the two graphs yourself",
+      "medium": "Interactive SVG",
+      "priority": "P2",
+      "action": "New",
+      "brief": "Let the reader label training and planning graphs, then reveal the worked answer. Mark simulator-only state, data, learned representations, gradients and optimized actions.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-K1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    },
+    {
+      "id": "K2",
+      "chapter": "capstone",
+      "section": "Write a claim that survives its own evidence",
+      "title": "One experiment, its evidence and limits",
+      "medium": "SVG report",
+      "priority": "P2",
+      "action": "New",
+      "brief": "An exportable result card combines actual configuration, plots, successes and failures. Start with the untrained run and fill measurements as work proceeds; never invent a completed experiment.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-K2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "The report reads actual current-run measurements and exports JSON. It labels control as not evaluated until actions have been executed."
+    },
+    {
+      "id": "X1",
+      "chapter": "reference",
+      "section": "Symbols and axes",
+      "title": "A visual notation key",
+      "medium": "SVG + KaTeX",
+      "priority": "P0",
+      "action": "New",
+      "brief": "A compact shared legend shows each semantic role across prose, equations, tensors and plots in both themes. Separate physical joints from latent dimensions and distinguish a density from its CF.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-X1",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "One semantic notation module and theme tokens serve prose and figure math. Undeclared constants/operators remain neutral; local variable roles can differ explicitly."
+    },
+    {
+      "id": "X2",
+      "chapter": "reference",
+      "section": "The learning route; coverage map",
+      "title": "From a paper equation back to its prerequisites",
+      "medium": "SVG + links",
+      "priority": "P2",
+      "action": "New",
+      "brief": "A navigable dependency map connects the nine numbered paper equations to their prerequisite lessons and the relevant figures. Keep the existing precise coverage table as the textual equivalent.",
+      "status": "complete",
+      "source": "book/edition2/visuals/research.js",
+      "anchor": "visual-X2",
+      "verification": [
+        "research/implementation/completion-check.json",
+        "research/implementation/visual-audit.json",
+        "research/implementation/REVIEW.md"
+      ],
+      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+    }
+  ],
+  "verification_scope": "Browser and mathematical authoring checks, not independent expert or novice validation. See research/implementation/REVIEW.md for exact evidence and limits."
+}

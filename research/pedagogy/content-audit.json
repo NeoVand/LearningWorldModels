@@ -1,0 +1,275 @@
+{
+  "built": "2026-09-21T14:55:18.819Z",
+  "chapters": [
+    {
+      "id": "opening",
+      "title": "Begin with the world",
+      "stage": "The question",
+      "prerequisites": [],
+      "outcome": "Explain why an image can omit information needed to predict.",
+      "prose_words_approximate": 725,
+      "sha256": "d32d5769a1e08d16b88761d2868dac574e0c54f88e7b79c2a4783b3bdfbd2631"
+    },
+    {
+      "id": "philosophy",
+      "title": "Learning before labels",
+      "stage": "The question",
+      "prerequisites": [
+        "opening"
+      ],
+      "outcome": "Distinguish a world model, a representation, and a preference.",
+      "prose_words_approximate": 1777,
+      "sha256": "79a0c6d4a7eec70ea055776415a24ea3b8776a495c34fbfb1fe71fef6e29c3b1"
+    },
+    {
+      "id": "geometry",
+      "title": "A world in coordinates",
+      "stage": "Mathematical language",
+      "prerequisites": [
+        "philosophy"
+      ],
+      "outcome": "Encode a tiny image and compute a distance and a projection.",
+      "prose_words_approximate": 1071,
+      "sha256": "61efa288bfb77b044b9a33a23cfaea5a32a3a91bf6b90d6646cf1c854b56b49f"
+    },
+    {
+      "id": "probability",
+      "title": "Prediction under uncertainty",
+      "stage": "Mathematical language",
+      "prerequisites": [
+        "geometry"
+      ],
+      "outcome": "Compute an expectation and explain why squared error predicts a mean.",
+      "prose_words_approximate": 1593,
+      "sha256": "066721e677baf94f78443727408d5fae14a1cc3b4a92de4480029694e92b39a9"
+    },
+    {
+      "id": "clouds",
+      "title": "The geometry of a cloud",
+      "stage": "Mathematical language",
+      "prerequisites": [
+        "geometry",
+        "probability"
+      ],
+      "outcome": "Compute covariance, inspect principal directions, and explain why whitening is not Gaussianity.",
+      "prose_words_approximate": 1190,
+      "sha256": "5bb1c2d23a9e1de0a10143b64bcfce0202174e9321ae07e830b2558616473ffc"
+    },
+    {
+      "id": "calculus",
+      "title": "How a small change travels",
+      "stage": "Learning from errors",
+      "prerequisites": [
+        "geometry",
+        "clouds"
+      ],
+      "outcome": "Trace a derivative through a scalar chain and a vector-valued map.",
+      "prose_words_approximate": 1320,
+      "sha256": "85da71cdf966d5b5a3e15411d4650696fda3f0c14765ccbf49a9a62438909cd0"
+    },
+    {
+      "id": "learning",
+      "title": "How errors change a model",
+      "stage": "Learning from errors",
+      "prerequisites": [
+        "calculus",
+        "probability"
+      ],
+      "outcome": "Perform a parameter update and explain the separate roles of loss, optimizer, and regularizer.",
+      "prose_words_approximate": 1780,
+      "sha256": "55f165fe6ae26365dde8737219c51ee1b93e94248def9b9bf017f90ca9c8e729"
+    },
+    {
+      "id": "jepa",
+      "title": "Agreement without collapse",
+      "stage": "A useful prediction task",
+      "prerequisites": [
+        "learning",
+        "clouds"
+      ],
+      "outcome": "Construct collapse and explain what different anti-collapse methods constrain.",
+      "prose_words_approximate": 1648,
+      "sha256": "6201bf82f0e9d3f9cb2312106be6b390d6b73ad71c96eb5770ea616eea8913f1"
+    },
+    {
+      "id": "testing",
+      "title": "When does a cloud count as Gaussian?",
+      "stage": "Distributional regularization",
+      "prerequisites": [
+        "probability",
+        "clouds",
+        "jepa"
+      ],
+      "outcome": "Calibrate a discrepancy and distinguish a statistical test from a training penalty.",
+      "prose_words_approximate": 1313,
+      "sha256": "b666bd1d3a756165f77aa015e36f80ba8a5ace95d160d6265a468c4270465291"
+    },
+    {
+      "id": "sigreg",
+      "title": "A statistic for useful variation",
+      "stage": "Distributional regularization",
+      "prerequisites": [
+        "testing",
+        "calculus",
+        "jepa"
+      ],
+      "outcome": "Derive the finite SIGReg objective and trace its gradient back to embeddings.",
+      "prose_words_approximate": 4460,
+      "sha256": "cf95dd58a52c5f6e1a14d3a02671a8dc4916236509dd102c83aec95a880ffa7b"
+    },
+    {
+      "id": "implementation",
+      "title": "From equations to a learner",
+      "stage": "A working world model",
+      "prerequisites": [
+        "sigreg",
+        "learning"
+      ],
+      "outcome": "Match every array axis, reduction, and gradient path to executable code.",
+      "prose_words_approximate": 1705,
+      "sha256": "1c2d10f9f72622289d907e3b24313579d0e9fad657c823a3372ab8aade14fa7a"
+    },
+    {
+      "id": "laboratory",
+      "title": "A world model you can train",
+      "stage": "A working world model",
+      "prerequisites": [
+        "implementation"
+      ],
+      "outcome": "Train a model, compare collapse, and interpret held-out measurements.",
+      "prose_words_approximate": 1616,
+      "sha256": "81f77e7acc402eda7f5abf873255f911ab29200d4b925a8a04368f51af118c96"
+    },
+    {
+      "id": "planning",
+      "title": "From imagination to action",
+      "stage": "Acting and evaluating",
+      "prerequisites": [
+        "laboratory",
+        "calculus"
+      ],
+      "outcome": "Derive the sample–score–refit planner and explain why it observes again.",
+      "prose_words_approximate": 1533,
+      "sha256": "31adc6341f4f4cc67329cabded55155d42ff4651cc103ae3d4210e94a996d587"
+    },
+    {
+      "id": "evaluation",
+      "title": "What counts as understanding?",
+      "stage": "Acting and evaluating",
+      "prerequisites": [
+        "planning",
+        "testing",
+        "sigreg"
+      ],
+      "outcome": "Distinguish representation, prediction, and control evidence.",
+      "prose_words_approximate": 2568,
+      "sha256": "db875afec21160fa4b3f0e565e78ca1d5829011ad301667a87f059cd02ba95b6"
+    },
+    {
+      "id": "theory",
+      "title": "What Gaussian geometry can promise",
+      "stage": "Research bridges",
+      "prerequisites": [
+        "evaluation",
+        "calculus",
+        "clouds",
+        "learning"
+      ],
+      "outcome": "Reconstruct the Gaussian argument with its statistical assumptions and limits.",
+      "prose_words_approximate": 2119,
+      "sha256": "93b368450159dc4cdbfafed791a4393e1297aba354eb05f17e1968d9642ee3e5"
+    },
+    {
+      "id": "transformers",
+      "title": "Inside the vision transformer",
+      "stage": "Research bridges",
+      "prerequisites": [
+        "learning",
+        "planning",
+        "clouds"
+      ],
+      "outcome": "Compute attention and explain masking and action conditioning.",
+      "prose_words_approximate": 1856,
+      "sha256": "585978005f597c4acf7596aac91c56ec3ed6e596102d6b68fd3376dec77669c6"
+    },
+    {
+      "id": "lineage",
+      "title": "The papers as a conversation",
+      "stage": "Research bridges",
+      "prerequisites": [
+        "jepa",
+        "theory",
+        "transformers",
+        "planning"
+      ],
+      "outcome": "Compare research systems by their targets, gradients, data, and evaluations.",
+      "prose_words_approximate": 1929,
+      "sha256": "ed1fbf833ae3bb741d710e610af1fb064a79cd0aea2adddd233093cae7539a7f"
+    },
+    {
+      "id": "paper",
+      "title": "Read LeWorldModel closely",
+      "stage": "The destination",
+      "prerequisites": [
+        "lineage",
+        "evaluation",
+        "theory",
+        "transformers"
+      ],
+      "outcome": "Reconstruct the target paper and reconcile its formulas with the pinned implementation.",
+      "prose_words_approximate": 2366,
+      "sha256": "9c509d10f8052afc2eab35c3745103958f8b1db80d5fe3af1e9218551a89b6b0"
+    },
+    {
+      "id": "capstone",
+      "title": "Build, challenge, explain",
+      "stage": "The destination",
+      "prerequisites": [
+        "paper",
+        "laboratory"
+      ],
+      "outcome": "Defend one complete learning-and-control experiment, including its failures.",
+      "prose_words_approximate": 1558,
+      "sha256": "83ddf127013d6bb553fa3a414bf3439f7d3416a9e5d4bf4ee55d45f48748bd6a"
+    },
+    {
+      "id": "reference",
+      "title": "Keep the whole argument in view",
+      "stage": "Reference",
+      "prerequisites": [
+        "capstone"
+      ],
+      "outcome": "Return from a paper equation or unfamiliar symbol to the lesson that teaches it.",
+      "prose_words_approximate": 1769,
+      "sha256": "581f0c415b61358cde47143b6fac44090ac9f72d369693b0333770d621c1b566"
+    }
+  ],
+  "total_prose_words_approximate": 35896,
+  "counts": {
+    "chapters": 20,
+    "math_expressions": 1399,
+    "python_code_blocks": 6,
+    "svg_diagrams": 15,
+    "diagram_math_labels": 79,
+    "generated_plates": 3,
+    "foundational_desks": 6,
+    "pdf_pages": 165
+  },
+  "artifacts": [
+    {
+      "path": "world-models.html",
+      "bytes": 13822265,
+      "sha256": "2e55bf122705e3f14e638cbaa0a6f0db1f23b0678bf4366513440c772b8b4f1b"
+    },
+    {
+      "path": "second-edition.html",
+      "bytes": 13822265,
+      "sha256": "2e55bf122705e3f14e638cbaa0a6f0db1f23b0678bf4366513440c772b8b4f1b"
+    },
+    {
+      "path": "output/pdf/before-the-move-complete.pdf",
+      "bytes": 9685384,
+      "sha256": "c9677cb13398af3f0d567fc22d6a7e48db17ff730fed7e9f4a46b11ebffce6e2"
+    }
+  ]
+}

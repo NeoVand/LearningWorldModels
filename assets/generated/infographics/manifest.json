@@ -1,0 +1,156 @@
+{
+  "tool": "built-in image_gen",
+  "model": "not exposed by tool",
+  "variants": [
+    {
+      "id": "sigreg",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-1e4495d8-e008-4d7c-8b4e-f180aa0af908.png",
+      "path": "assets/generated/infographics/sigreg-1.png"
+    },
+    {
+      "id": "sigreg",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-a23b38ac-2df5-48ab-a96d-e7d1499185aa.png",
+      "path": "assets/generated/infographics/sigreg-2.png"
+    },
+    {
+      "id": "sigreg",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-421a5387-1353-4da2-a588-1e5c26f88d42.png",
+      "path": "assets/generated/infographics/sigreg-3.png"
+    },
+    {
+      "id": "sigreg",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-6ac2924f-afa2-4df9-a44b-9d15bad91fc1.png",
+      "path": "assets/generated/infographics/sigreg-4.png"
+    },
+    {
+      "id": "sigreg",
+      "variant": 5,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-d49502c0-3e70-4bee-9d55-9633353ba941.png",
+      "path": "assets/generated/infographics/sigreg-5.png"
+    },
+    {
+      "id": "occlusion",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-ccda5e22-7a63-4e84-be53-b4caa0d935a7.png",
+      "path": "assets/generated/infographics/occlusion-1.png"
+    },
+    {
+      "id": "occlusion",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-049bdbaf-fa9d-4b38-b777-499c80221c96.png",
+      "path": "assets/generated/infographics/occlusion-2.png"
+    },
+    {
+      "id": "occlusion",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-ce9ad3d1-836d-4b93-88cb-01336faa69d7.png",
+      "path": "assets/generated/infographics/occlusion-3.png"
+    },
+    {
+      "id": "occlusion",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-906583ab-80cb-4412-8586-a2b3620d3dba.png",
+      "path": "assets/generated/infographics/occlusion-4.png"
+    },
+    {
+      "id": "hierarchy",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-a9ba544f-8564-4759-947a-a7f7f45074e2.png",
+      "path": "assets/generated/infographics/hierarchy-1.png"
+    },
+    {
+      "id": "hierarchy",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-42c6ba4e-32c8-4584-9cf6-873fb6331973.png",
+      "path": "assets/generated/infographics/hierarchy-2.png"
+    },
+    {
+      "id": "hierarchy",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-488b8beb-0378-4bc1-a3d2-16c1234a77aa.png",
+      "path": "assets/generated/infographics/hierarchy-3.png"
+    },
+    {
+      "id": "hierarchy",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-34dd0101-9c81-4b48-9ef9-5d46f73f3c92.png",
+      "path": "assets/generated/infographics/hierarchy-4.png"
+    },
+    {
+      "id": "jepa",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-2571079a-f035-4324-b668-4edf8dc4da3b.png",
+      "path": "assets/generated/infographics/jepa-1.png"
+    },
+    {
+      "id": "jepa",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-ef7875b2-2c39-4c6e-8fad-5feac5ca2163.png",
+      "path": "assets/generated/infographics/jepa-2.png"
+    },
+    {
+      "id": "jepa",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-8a1430ae-fbf7-4c2b-81bb-409e939417bc.png",
+      "path": "assets/generated/infographics/jepa-3.png"
+    },
+    {
+      "id": "jepa",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-839079b2-d7c0-4818-b61c-ee45c4f25f90.png",
+      "path": "assets/generated/infographics/jepa-4.png"
+    },
+    {
+      "id": "energy",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-44d8a30b-2649-4ba0-8e10-0bb09d712772.png",
+      "path": "assets/generated/infographics/energy-1.png"
+    },
+    {
+      "id": "energy",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-303a4f45-ed32-4b3c-924b-8ed7410c0875.png",
+      "path": "assets/generated/infographics/energy-2.png"
+    },
+    {
+      "id": "energy",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-899b47f1-c89b-4a39-85e7-1750eb786cab.png",
+      "path": "assets/generated/infographics/energy-3.png"
+    },
+    {
+      "id": "energy",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-b34ffd98-1ed7-4342-9c46-04dbe74d8206.png",
+      "path": "assets/generated/infographics/energy-4.png"
+    },
+    {
+      "id": "lineage",
+      "variant": 1,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-726773dd-6b5b-4fdd-ae44-135149edaeb8.png",
+      "path": "assets/generated/infographics/lineage-1.png"
+    },
+    {
+      "id": "lineage",
+      "variant": 2,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-ea0b1fd0-943f-4024-b73f-ee1e772f19e2.png",
+      "path": "assets/generated/infographics/lineage-2.png"
+    },
+    {
+      "id": "lineage",
+      "variant": 3,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-23b15a6f-d7ba-431f-9129-4f508ce95ab7.png",
+      "path": "assets/generated/infographics/lineage-3.png"
+    },
+    {
+      "id": "lineage",
+      "variant": 4,
+      "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-9f9c14fd-f6c0-4380-8b4a-487cbd7ddf73.png",
+      "path": "assets/generated/infographics/lineage-4.png"
+    }
+  ]
+}

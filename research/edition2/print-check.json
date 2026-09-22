@@ -1,0 +1,236 @@
+[
+  {
+    "page": 1,
+    "chars": 903,
+    "start": "01 / THE IDEA WORLD MODELS, FROM FIRST PRINCIPLES Before the move To act in",
+    "outOfPage": 0
+  },
+  {
+    "page": 2,
+    "chars": 1923,
+    "start": "tablecloth. You imagine a change. You prefer one outcome to another. Finall",
+    "outOfPage": 0
+  },
+  {
+    "page": 3,
+    "chars": 2014,
+    "start": "into a vector. An embedding is the resulting vector: a list of numbers that",
+    "outOfPage": 0
+  },
+  {
+    "page": 4,
+    "chars": 1392,
+    "start": "L =\u2225z^ \u2212f (o )\u22252. pred t+1 \u03b8 t+1 The double bars mean Euclidean length: squ",
+    "outOfPage": 0
+  },
+  {
+    "page": 5,
+    "chars": 1823,
+    "start": "Environment Perception World model Cost / preference camera observations en",
+    "outOfPage": 0
+  },
+  {
+    "page": 6,
+    "chars": 458,
+    "start": "Then train the small model. Watch its representation as well as its predict",
+    "outOfPage": 0
+  },
+  {
+    "page": 7,
+    "chars": 1785,
+    "start": "02 / THE MATHEMATICS WORLD MODELS, FROM FIRST PRINCIPLES A distribution, no",
+    "outOfPage": 0
+  },
+  {
+    "page": 8,
+    "chars": 1661,
+    "start": "The summation instructs us to add the d coordinate-wise squared errors. Eve",
+    "outOfPage": 0
+  },
+  {
+    "page": 9,
+    "chars": 1686,
+    "start": "Adding a weight penalty gives L (w) = 5(w \u22121)2 +\u03bbw2. Differentiate each squ",
+    "outOfPage": 0
+  },
+  {
+    "page": 10,
+    "chars": 1528,
+    "start": "d EG \u2225z\u2212G\u22252 = \u2211 ( z j 2 +1)=\u2225z\u22252+d. j=1 The derivative with respect to coor",
+    "outOfPage": 0
+  },
+  {
+    "page": 11,
+    "chars": 1138,
+    "start": "Isotropic Diagonal covariance Full covariance \u03c32 c \u03a3=\u03c32I 2 \u03a3=diag(\u03c3 1 2 ,\u03c3 ",
+    "outOfPage": 0
+  },
+  {
+    "page": 12,
+    "chars": 1852,
+    "start": "where v = r2/2 gives dv = rdr. The last integral is one because an antideri",
+    "outOfPage": 0
+  },
+  {
+    "page": 13,
+    "chars": 1961,
+    "start": "spread with a precise definition; it is not synonymous with meaning, inform",
+    "outOfPage": 0
+  },
+  {
+    "page": 14,
+    "chars": 1645,
+    "start": "6 \u00b7 From a point on a circle to a distributional fingerprint A complex numb",
+    "outOfPage": 0
+  },
+  {
+    "page": 15,
+    "chars": 689,
+    "start": "Now average the arrows for a random variable X. Its characteristic function",
+    "outOfPage": 0
+  },
+  {
+    "page": 16,
+    "chars": 979,
+    "start": "Four samples become a complex mean The samples are \u22121, \u2212\u00bd, \u00bd, 1. Predict wh",
+    "outOfPage": 0
+  },
+  {
+    "page": 17,
+    "chars": 1191,
+    "start": "\u03c6\u2032 (\u03c9)= ixei\u03c9xp(x)dx=\u2212i ei\u03c9xp\u2032(x)dx. X \u222b \u222b Integration by parts says \u222b uv\u2032 ",
+    "outOfPage": 0
+  },
+  {
+    "page": 18,
+    "chars": 1616,
+    "start": "where C is the average cosine and S the average sine. We can compute both f",
+    "outOfPage": 0
+  },
+  {
+    "page": 19,
+    "chars": 1518,
+    "start": "2 1 1 E B \u2211 ( Y b \u2212\u03bc) = B2 \u2211 E[(Y b \u2212\u03bc)(Y c \u2212\u03bc)] . b b,c When b =\ue020 c, indep",
+    "outOfPage": 0
+  },
+  {
+    "page": 20,
+    "chars": 1566,
+    "start": "10 \u00b7 Why projections can reveal a multivariate distribution An embedding ha",
+    "outOfPage": 0
+  },
+  {
+    "page": 21,
+    "chars": 2291,
+    "start": "e\u2212\u2225x\u2212y\u22252/(2\u03f52) 1 = e\u2212iv\u22a4(x\u2212y)e\u2212\u03f52\u2225v\u22252/2dv (2\u03c0\u03f52)d/2 (2\u03c0)d \u222b Rd follows coor",
+    "outOfPage": 0
+  },
+  {
+    "page": 22,
+    "chars": 1845,
+    "start": "training broaden the measurements over time, but a small score on today's g",
+    "outOfPage": 0
+  },
+  {
+    "page": 23,
+    "chars": 1602,
+    "start": "Here C mk = B\u22121\u2211 b cos(\u03c9 k H bm ) and S mk = B\u22121\u2211 b sin(\u03c9 k H bm ). The Gau",
+    "outOfPage": 0
+  },
+  {
+    "page": 24,
+    "chars": 2160,
+    "start": "Quadrature error comes from replacing the retained curve by line segments. ",
+    "outOfPage": 0
+  },
+  {
+    "page": 25,
+    "chars": 1835,
+    "start": "For the constant-zero cloud, every pairwise difference and every sample is ",
+    "outOfPage": 0
+  },
+  {
+    "page": 26,
+    "chars": 693,
+    "start": "Consider one direction with h = sx , where the fixed x have mean zero and s",
+    "outOfPage": 0
+  },
+  {
+    "page": 27,
+    "chars": 1186,
+    "start": "14 \u00b7 Run the statistic and challenge it Same moments, different distributio",
+    "outOfPage": 0
+  },
+  {
+    "page": 28,
+    "chars": 1620,
+    "start": "15 \u00b7 Read the implementation as mathematics The following Python reference ",
+    "outOfPage": 0
+  },
+  {
+    "page": 29,
+    "chars": 2204,
+    "start": "Read the shapes as a sequence of questions. The matrix product asks, \u201cwhere",
+    "outOfPage": 0
+  },
+  {
+    "page": 30,
+    "chars": 2126,
+    "start": "results. Flattening time into the batch changes which empirical distributio",
+    "outOfPage": 0
+  },
+  {
+    "page": 31,
+    "chars": 2251,
+    "start": "The vector (X,SX) supplies a counterexample. Both coordinates have the same",
+    "outOfPage": 0
+  },
+  {
+    "page": 32,
+    "chars": 1259,
+    "start": "18 \u00b7 Return to the world model We began with a loophole: an encoder can mak",
+    "outOfPage": 0
+  },
+  {
+    "page": 33,
+    "chars": 1904,
+    "start": "03 / LEARNING LABORATORY WORLD MODELS, FROM FIRST PRINCIPLES A world model ",
+    "outOfPage": 0
+  },
+  {
+    "page": 34,
+    "chars": 769,
+    "start": "Learning from camera images First inspect the untrained model. Then train f",
+    "outOfPage": 0
+  },
+  {
+    "page": 35,
+    "chars": 2175,
+    "start": "Objective Updates Prediction MSE Spread Effective rank Prediction only 5000",
+    "outOfPage": 0
+  },
+  {
+    "page": 36,
+    "chars": 1906,
+    "start": "Let the learned model choose actions The planner receives two camera images",
+    "outOfPage": 0
+  },
+  {
+    "page": 37,
+    "chars": 1943,
+    "start": "The regularizer computes a batch-size-scaled projected discrepancy independ",
+    "outOfPage": 0
+  },
+  {
+    "page": 38,
+    "chars": 1853,
+    "start": "3 \u00b7 The arm briefly reaches the target, then leaves. What should success me",
+    "outOfPage": 0
+  },
+  {
+    "page": 39,
+    "chars": 454,
+    "start": "The laboratory runs locally in a worker so you can keep reading while it tr",
+    "outOfPage": 0
+  }
+]

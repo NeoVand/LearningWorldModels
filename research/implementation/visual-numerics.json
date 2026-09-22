@@ -1,0 +1,16 @@
+{
+  "oppositeVelocitySeparation": 0.9185196228594332,
+  "causalFutureInvariant": true,
+  "cemFinalCost": 0.0000105048918583698,
+  "neuronTraining": {
+    "updates": 2000,
+    "before": 0.8771267725716159,
+    "after": 0.012966672944391359
+  },
+  "sigregGradientError": 7.96082644249907e-12,
+  "nullFloor": {
+    "mean": 1.0422715870960217,
+    "target": 1.059425765514465,
+    "standardError": 0.036902840176877096
+  }
+}

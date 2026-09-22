@@ -1,0 +1,627 @@
+{
+  "reports": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "mathOverflow": [],
+      "badText": [],
+      "code": [
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        }
+      ],
+      "katexErrors": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "mathOverflow": [],
+      "badText": [],
+      "code": [
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        }
+      ],
+      "katexErrors": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "mathOverflow": [
+        {
+          "id": "probability",
+          "text": "I2=2π∫0∞re−r2/2 dr=2π∫0∞e−v dv=2π,I^2=2\\pi\\int_0^\\infty re^{-r^2/2}\\,dr=2\\pi\\int_0^\\infty e^{-v}\\,dv",
+          "width": 318,
+          "scroll": 372
+        },
+        {
+          "id": "probability",
+          "text": "∫x2p(x) dx=−∫xp′(x) dx=−[xp(x)]−∞∞+∫p(x) dx=1.\\int {\\htmlClass{math-obs}{x}}^2{\\htmlClass{math-obs}{",
+          "width": 344,
+          "scroll": 510
+        },
+        {
+          "id": "clouds",
+          "text": "∑i∥xi−c∥2=∑i∥xi−xˉ∥2+B∥xˉ−c∥2.\\sum_i\\|{\\htmlClass{math-obs}{x}}_i-c\\|^2=\\sum_i\\|{\\htmlClass{math-obs",
+          "width": 344,
+          "scroll": 355
+        },
+        {
+          "id": "clouds",
+          "text": "C=(2112),u=12(11),v=12(1−1).C=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix},\\qquad {\\htmlClass{math-act}{u}}=",
+          "width": 344,
+          "scroll": 445
+        },
+        {
+          "id": "clouds",
+          "text": "Q=12(111−1),Λ=(3001),C=QΛQ⊤.Q=\\frac1{\\sqrt2}\\begin{pmatrix}1&1\\\\1&-1\\end{pmatrix},\\qquad \\Lambda=\\be",
+          "width": 344,
+          "scroll": 462
+        },
+        {
+          "id": "calculus",
+          "text": "(uv)(x+h)−(uv)(x)=u(x+h)[v(x+h)−v(x)]+v(x)[u(x+h)−u(x)].({\\htmlClass{math-act}{u}}v)({\\htmlClass{mat",
+          "width": 344,
+          "scroll": 624
+        },
+        {
+          "id": "calculus",
+          "text": "L(w+h,b)−L(w,b)=12[(e+2h)2−e2]=2eh+2h2.{\\htmlClass{math-loss}{L}}(w+{\\htmlClass{math-lat}{h}},b)-{\\h",
+          "width": 344,
+          "scroll": 451
+        },
+        {
+          "id": "calculus",
+          "text": "L(x+v)=L(x)+∇L(x)⊤v+12v⊤HL(x)v+o(∥v∥2).{\\htmlClass{math-loss}{L}}({\\htmlClass{math-obs}{x}}+v)={\\htm",
+          "width": 344,
+          "scroll": 445
+        },
+        {
+          "id": "calculus",
+          "text": "f(x±h)=f(x)±hf′(x)+12h2f′′(x)+O(h3).f({\\htmlClass{math-obs}{x}}\\pm {\\htmlClass{math-lat}{h}})=f({\\ht",
+          "width": 344,
+          "scroll": 389
+        },
+        {
+          "id": "learning",
+          "text": "r=W1x+b1,h=σ(r),y^=w2⊤h+b2,ℓ=12(y^−y)2.r=W_1{\\htmlClass{math-obs}{x}}+b_1,\\quad {\\htmlClass{math-lat",
+          "width": 344,
+          "scroll": 494
+        },
+        {
+          "id": "learning",
+          "text": "δ=(ew2)⊙σ′(r),∂ℓ∂W1=δx⊤,∂ℓ∂b1=δ.\\delta=(ew_2)\\odot\\sigma'(r),\\qquad \\frac{\\partial\\ell}{\\partial W_1",
+          "width": 344,
+          "scroll": 409
+        },
+        {
+          "id": "learning",
+          "text": "mk=β1mk−1+(1−β1)gk,vk=β2vk−1+(1−β2)gk2.m_k=\\beta_1m_{k-1}+(1-\\beta_1)g_k,\\qquad v_k=\\beta_2v_{k-1}+(",
+          "width": 344,
+          "scroll": 475
+        },
+        {
+          "id": "learning",
+          "text": "m^k=mk1−β1k,v^k=vk1−β2k,θk+1=θk−ηm^kv^k+ϵ.\\hat m_k=\\frac{m_k}{1-\\beta_1^k},\\quad \\hat v_k=\\frac{v_k}",
+          "width": 344,
+          "scroll": 451
+        },
+        {
+          "id": "jepa",
+          "text": "ℓcon=−log⁡es+/τes+/τ+∑k=1Kesk/τ,τ>0.\\ell_{\\mathrm{con}}=-\\log\\frac{e^{s_+/\\tau}}{e^{s_+/\\tau}+\\sum_{",
+          "width": 344,
+          "scroll": 352
+        },
+        {
+          "id": "jepa",
+          "text": "Lpred=1BNd∑b=1B∑t=1N∑j=1d(z^b,t+1,j−zb,t+1,j)2.{\\htmlClass{math-loss}{L}}_{\\mathrm{pred}}=\\frac1{BNd",
+          "width": 344,
+          "scroll": 367
+        },
+        {
+          "id": "testing",
+          "text": "Dn=max⁡i{in−Φ(x(i)), Φ(x(i))−i−1n}.{\\htmlClass{math-loss}{D}}_n=\\max_i\\left\\{\\frac in-\\Phi({\\htmlCla",
+          "width": 344,
+          "scroll": 360
+        },
+        {
+          "id": "sigreg",
+          "text": "eit=∑n=0∞(it)nn!=∑k=0∞(−1)kt2k(2k)!+i∑k=0∞(−1)kt2k+1(2k+1)!.e^{it}=\\sum_{n=0}^{\\infty}\\frac{(it)^n}{",
+          "width": 318,
+          "scroll": 410
+        },
+        {
+          "id": "sigreg",
+          "text": "φX(ω)=E[eiωX]=E[cos⁡(ωX)]+iE[sin⁡(ωX)].\\cf_{\\htmlClass{math-obs}{X}}(\\freq)=\\mathbb E[e^{i\\freq {\\ht",
+          "width": 344,
+          "scroll": 385
+        },
+        {
+          "id": "sigreg",
+          "text": "φX′(ω)=∫ixeiωxp(x) dx=−i∫eiωxp′(x) dx.\\cf_{\\htmlClass{math-obs}{X}}'(\\freq)=\\int i{\\htmlClass{math-o",
+          "width": 344,
+          "scroll": 383
+        },
+        {
+          "id": "sigreg",
+          "text": "E∣1B∑b(Yb−μ)∣2=1B2∑b,cE[(Yb−μ)(Yc−μ)‾].\\mathbb E\\left|\\frac1B\\sum_b(Y_b-\\mu)\\right|^2=\\frac1{B^2}\\su",
+          "width": 344,
+          "scroll": 407
+        },
+        {
+          "id": "sigreg",
+          "text": "E[DB]=1B(2π−2π3),E[TB]=2π−2π3.\\mathbb E[\\disc_B]=\\frac1B\\left(\\sqrt{2\\pi}-\\sqrt{\\frac{2\\pi}{3}}\\righ",
+          "width": 344,
+          "scroll": 472
+        },
+        {
+          "id": "sigreg",
+          "text": "E[eiωu⊤Z]=∏j=1dE[eiωujZj]=∏j=1de−ω2uj2/2=e−ω2/2.\\mathbb E[e^{i\\freq\\uvec^\\top {\\htmlClass{math-lat}{",
+          "width": 344,
+          "scroll": 399
+        },
+        {
+          "id": "sigreg",
+          "text": "e−∥x−y∥2/(2ϵ2)(2πϵ2)d/2=1(2π)d∫Rde−iv⊤(x−y)e−ϵ2∥v∥2/2 dv\\frac{e^{-\\|{\\htmlClass{math-obs}{x}}-{\\html",
+          "width": 318,
+          "scroll": 383
+        },
+        {
+          "id": "sigreg",
+          "text": "pX+ϵG(x)=1(2π)d∫e−iv⊤xφX(v)e−ϵ2∥v∥2/2 dv.p_{{\\htmlClass{math-obs}{X}}+\\epsilon G}({\\htmlClass{math-o",
+          "width": 318,
+          "scroll": 374
+        },
+        {
+          "id": "sigreg",
+          "text": "R(Z)=BM∑m=1M∑k=0K−1αk q(ωk)[(Cmk−q(ωk))2+Smk2].\\reg(\\Z)=\\frac{B}{M}\\sum_{m=1}^{M}\\sum_{k=0}^{K-1}\\al",
+          "width": 344,
+          "scroll": 442
+        },
+        {
+          "id": "sigreg",
+          "text": "∫A∞e−ω2/2dω≤1A∫A∞ωe−ω2/2dω=e−A2/2A.\\int_A^\\infty e^{-{\\htmlClass{math-act}{\\omega}}^2/2}d{\\htmlClass",
+          "width": 318,
+          "scroll": 362
+        },
+        {
+          "id": "sigreg",
+          "text": "DB=2πB2∑b,ce−(hb−hc)2/2−2πB∑be−hb2/4+2π3.\\disc_B=\\frac{\\sqrt{2\\pi}}{B^2}\\sum_{b,c}e^{-(\\proj_b-\\proj",
+          "width": 344,
+          "scroll": 436
+        },
+        {
+          "id": "sigreg",
+          "text": "∂TB∂hb=2∑kwkωk[−(Ck−qk)sin⁡(ωkhb)+Skcos⁡(ωkhb)].\\frac{\\partial\\stat_B}{\\partial\\proj_b}=2\\sum_kw_k\\f",
+          "width": 344,
+          "scroll": 475
+        },
+        {
+          "id": "sigreg",
+          "text": "TB(s)=TB(0)−Bs2m2∑kwkωk2(1−qk)+O(s4).\\stat_B(s)=\\stat_B(0)-Bs^2m_2\\sum_kw_k\\freq_k^2(1-\\target_k)+O(",
+          "width": 308,
+          "scroll": 424
+        },
+        {
+          "id": "laboratory",
+          "text": "L=1Bd∑b=1B∑j=1d(z^b,j−zb,next,j)2+λ13∑r=13R(Zr),λ=0.01.\\loss=\\frac{1}{Bd}\\sum_{b=1}^B\\sum_{j=1}^d(\\p",
+          "width": 344,
+          "scroll": 518
+        },
+        {
+          "id": "planning",
+          "text": "z^t=zt,z^t+k+1=gψ(z^t+k,at+k),k=0,…,H−1.\\pred_t=\\lat_t,\\qquad \\pred_{t+k+1}=g_\\psi(\\pred_{t+k},\\act_",
+          "width": 344,
+          "scroll": 462
+        },
+        {
+          "id": "planning",
+          "text": "J(A)=∥z^t+H−zg∥2+ρ∑k=0H−1∥at+k∥2,ρ≥0.J(A)=\\|\\pred_{t+H}-\\lat_g\\|^2+\\rho\\sum_{k=0}^{H-1}\\|\\act_{t+k}\\",
+          "width": 344,
+          "scroll": 402
+        },
+        {
+          "id": "planning",
+          "text": "L(μ,σ)=∏i∈E12πσexp⁡ ⁣[−(Ai−μ)22σ2],σ>0.\\mathcal {\\htmlClass{math-loss}{L}}(\\mu,\\sigma)=\\prod_{i\\in\\m",
+          "width": 344,
+          "scroll": 419
+        },
+        {
+          "id": "planning",
+          "text": "−log⁡L=ne2log⁡(2π)+nelog⁡σ+12σ2∑i∈E(Ai−μ)2.-\\log\\mathcal {\\htmlClass{math-loss}{L}}=\\frac{n_e}{2}\\lo",
+          "width": 344,
+          "scroll": 428
+        },
+        {
+          "id": "planning",
+          "text": "Ek+1≤∥g(z^k,ak)−g(zk,ak)∥+∥g(zk,ak)−F(zk,ak)∥≤LEk+ϵ.E_{k+1}\\leq\\|g(\\hat {\\htmlClass{math-lat}{z}}_k,",
+          "width": 344,
+          "scroll": 556
+        },
+        {
+          "id": "evaluation",
+          "text": "pj∣i=e−∥zi−zj∥2/(2σi2)∑r≠ie−∥zi−zr∥2/(2σi2),pij=pj∣i+pi∣j2n.p_{j\\mid i}=\\frac{e^{-\\|{\\htmlClass{math",
+          "width": 344,
+          "scroll": 391
+        },
+        {
+          "id": "evaluation",
+          "text": "E(ot,ot+1,at)=∥gψ(fθ(ot),at)−fθ(ot+1)∥2.E(\\obs_t,\\obs_{t+1},\\act_t)=\\|g_\\psi(f_\\theta(\\obs_t),\\act_t",
+          "width": 344,
+          "scroll": 371
+        },
+        {
+          "id": "evaluation",
+          "text": "τ E[(Y−v)1{Y≥v}]=(1−τ)E[(v−Y)1{Y<v}].\\tau\\,\\mathbb E[(Y-v)\\mathbf1\\{Y\\geq v\\}]=(1-\\tau)\\mathbb E[(v-",
+          "width": 344,
+          "scroll": 440
+        },
+        {
+          "id": "theory",
+          "text": "Cov⁡(β^∣X)=G−1X⊤(σ2I)XG−1=σ2G−1.\\operatorname{Cov}(\\hat\\beta\\mid {\\htmlClass{math-obs}{X}})=G^{-1}{\\",
+          "width": 344,
+          "scroll": 360
+        },
+        {
+          "id": "theory",
+          "text": "a(q+hu)=a(q)+h∇a(q)⊤u+12h2u⊤Ha(q)u+o(h2),a(q+{\\htmlClass{math-act}{h}}{\\htmlClass{math-act}{u}})=a(q",
+          "width": 344,
+          "scroll": 454
+        },
+        {
+          "id": "theory",
+          "text": "mh(q)−m(q)=h2μ22[Δm(q)+2∇m(q)⊤∇log⁡p(q)]+o(h2).{\\htmlClass{math-pred}{m}}_{\\htmlClass{math-act}{h}}(",
+          "width": 344,
+          "scroll": 512
+        },
+        {
+          "id": "theory",
+          "text": "mr(q)−m(q)=r2d+2[∇m(q)⊤s(q)+12Δm(q)]+o(r2).{\\htmlClass{math-pred}{m}}_r(q)-{\\htmlClass{math-pred}{m}",
+          "width": 344,
+          "scroll": 468
+        },
+        {
+          "id": "transformers",
+          "text": "Q=XWQ,K=XWK,V=XWV.{\\htmlClass{math-act}{Q}}={\\htmlClass{math-obs}{X}}W_{\\htmlClass{math-act}{Q}},\\qq",
+          "width": 344,
+          "scroll": 368
+        },
+        {
+          "id": "transformers",
+          "text": "x′=x+α(a)⊙F((1+s(a))⊙LN⁡(x)+b(a)).{\\htmlClass{math-obs}{x}}'={\\htmlClass{math-obs}{x}}+\\alpha(\\act)\\",
+          "width": 344,
+          "scroll": 391
+        }
+      ],
+      "badText": [],
+      "code": [
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        }
+      ],
+      "katexErrors": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "mathOverflow": [
+        {
+          "id": "probability",
+          "text": "I2=2π∫0∞re−r2/2 dr=2π∫0∞e−v dv=2π,I^2=2\\pi\\int_0^\\infty re^{-r^2/2}\\,dr=2\\pi\\int_0^\\infty e^{-v}\\,dv",
+          "width": 318,
+          "scroll": 372
+        },
+        {
+          "id": "probability",
+          "text": "∫x2p(x) dx=−∫xp′(x) dx=−[xp(x)]−∞∞+∫p(x) dx=1.\\int {\\htmlClass{math-obs}{x}}^2{\\htmlClass{math-obs}{",
+          "width": 344,
+          "scroll": 510
+        },
+        {
+          "id": "clouds",
+          "text": "∑i∥xi−c∥2=∑i∥xi−xˉ∥2+B∥xˉ−c∥2.\\sum_i\\|{\\htmlClass{math-obs}{x}}_i-c\\|^2=\\sum_i\\|{\\htmlClass{math-obs",
+          "width": 344,
+          "scroll": 355
+        },
+        {
+          "id": "clouds",
+          "text": "C=(2112),u=12(11),v=12(1−1).C=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix},\\qquad {\\htmlClass{math-act}{u}}=",
+          "width": 344,
+          "scroll": 445
+        },
+        {
+          "id": "clouds",
+          "text": "Q=12(111−1),Λ=(3001),C=QΛQ⊤.Q=\\frac1{\\sqrt2}\\begin{pmatrix}1&1\\\\1&-1\\end{pmatrix},\\qquad \\Lambda=\\be",
+          "width": 344,
+          "scroll": 462
+        },
+        {
+          "id": "calculus",
+          "text": "(uv)(x+h)−(uv)(x)=u(x+h)[v(x+h)−v(x)]+v(x)[u(x+h)−u(x)].({\\htmlClass{math-act}{u}}v)({\\htmlClass{mat",
+          "width": 344,
+          "scroll": 624
+        },
+        {
+          "id": "calculus",
+          "text": "L(w+h,b)−L(w,b)=12[(e+2h)2−e2]=2eh+2h2.{\\htmlClass{math-loss}{L}}(w+{\\htmlClass{math-lat}{h}},b)-{\\h",
+          "width": 344,
+          "scroll": 451
+        },
+        {
+          "id": "calculus",
+          "text": "L(x+v)=L(x)+∇L(x)⊤v+12v⊤HL(x)v+o(∥v∥2).{\\htmlClass{math-loss}{L}}({\\htmlClass{math-obs}{x}}+v)={\\htm",
+          "width": 344,
+          "scroll": 445
+        },
+        {
+          "id": "calculus",
+          "text": "f(x±h)=f(x)±hf′(x)+12h2f′′(x)+O(h3).f({\\htmlClass{math-obs}{x}}\\pm {\\htmlClass{math-lat}{h}})=f({\\ht",
+          "width": 344,
+          "scroll": 389
+        },
+        {
+          "id": "learning",
+          "text": "r=W1x+b1,h=σ(r),y^=w2⊤h+b2,ℓ=12(y^−y)2.r=W_1{\\htmlClass{math-obs}{x}}+b_1,\\quad {\\htmlClass{math-lat",
+          "width": 344,
+          "scroll": 494
+        },
+        {
+          "id": "learning",
+          "text": "δ=(ew2)⊙σ′(r),∂ℓ∂W1=δx⊤,∂ℓ∂b1=δ.\\delta=(ew_2)\\odot\\sigma'(r),\\qquad \\frac{\\partial\\ell}{\\partial W_1",
+          "width": 344,
+          "scroll": 409
+        },
+        {
+          "id": "learning",
+          "text": "mk=β1mk−1+(1−β1)gk,vk=β2vk−1+(1−β2)gk2.m_k=\\beta_1m_{k-1}+(1-\\beta_1)g_k,\\qquad v_k=\\beta_2v_{k-1}+(",
+          "width": 344,
+          "scroll": 475
+        },
+        {
+          "id": "learning",
+          "text": "m^k=mk1−β1k,v^k=vk1−β2k,θk+1=θk−ηm^kv^k+ϵ.\\hat m_k=\\frac{m_k}{1-\\beta_1^k},\\quad \\hat v_k=\\frac{v_k}",
+          "width": 344,
+          "scroll": 451
+        },
+        {
+          "id": "jepa",
+          "text": "ℓcon=−log⁡es+/τes+/τ+∑k=1Kesk/τ,τ>0.\\ell_{\\mathrm{con}}=-\\log\\frac{e^{s_+/\\tau}}{e^{s_+/\\tau}+\\sum_{",
+          "width": 344,
+          "scroll": 352
+        },
+        {
+          "id": "jepa",
+          "text": "Lpred=1BNd∑b=1B∑t=1N∑j=1d(z^b,t+1,j−zb,t+1,j)2.{\\htmlClass{math-loss}{L}}_{\\mathrm{pred}}=\\frac1{BNd",
+          "width": 344,
+          "scroll": 367
+        },
+        {
+          "id": "testing",
+          "text": "Dn=max⁡i{in−Φ(x(i)), Φ(x(i))−i−1n}.{\\htmlClass{math-loss}{D}}_n=\\max_i\\left\\{\\frac in-\\Phi({\\htmlCla",
+          "width": 344,
+          "scroll": 360
+        },
+        {
+          "id": "sigreg",
+          "text": "eit=∑n=0∞(it)nn!=∑k=0∞(−1)kt2k(2k)!+i∑k=0∞(−1)kt2k+1(2k+1)!.e^{it}=\\sum_{n=0}^{\\infty}\\frac{(it)^n}{",
+          "width": 318,
+          "scroll": 410
+        },
+        {
+          "id": "sigreg",
+          "text": "φX(ω)=E[eiωX]=E[cos⁡(ωX)]+iE[sin⁡(ωX)].\\cf_{\\htmlClass{math-obs}{X}}(\\freq)=\\mathbb E[e^{i\\freq {\\ht",
+          "width": 344,
+          "scroll": 385
+        },
+        {
+          "id": "sigreg",
+          "text": "φX′(ω)=∫ixeiωxp(x) dx=−i∫eiωxp′(x) dx.\\cf_{\\htmlClass{math-obs}{X}}'(\\freq)=\\int i{\\htmlClass{math-o",
+          "width": 344,
+          "scroll": 383
+        },
+        {
+          "id": "sigreg",
+          "text": "E∣1B∑b(Yb−μ)∣2=1B2∑b,cE[(Yb−μ)(Yc−μ)‾].\\mathbb E\\left|\\frac1B\\sum_b(Y_b-\\mu)\\right|^2=\\frac1{B^2}\\su",
+          "width": 344,
+          "scroll": 407
+        },
+        {
+          "id": "sigreg",
+          "text": "E[DB]=1B(2π−2π3),E[TB]=2π−2π3.\\mathbb E[\\disc_B]=\\frac1B\\left(\\sqrt{2\\pi}-\\sqrt{\\frac{2\\pi}{3}}\\righ",
+          "width": 344,
+          "scroll": 472
+        },
+        {
+          "id": "sigreg",
+          "text": "E[eiωu⊤Z]=∏j=1dE[eiωujZj]=∏j=1de−ω2uj2/2=e−ω2/2.\\mathbb E[e^{i\\freq\\uvec^\\top {\\htmlClass{math-lat}{",
+          "width": 344,
+          "scroll": 399
+        },
+        {
+          "id": "sigreg",
+          "text": "e−∥x−y∥2/(2ϵ2)(2πϵ2)d/2=1(2π)d∫Rde−iv⊤(x−y)e−ϵ2∥v∥2/2 dv\\frac{e^{-\\|{\\htmlClass{math-obs}{x}}-{\\html",
+          "width": 318,
+          "scroll": 383
+        },
+        {
+          "id": "sigreg",
+          "text": "pX+ϵG(x)=1(2π)d∫e−iv⊤xφX(v)e−ϵ2∥v∥2/2 dv.p_{{\\htmlClass{math-obs}{X}}+\\epsilon G}({\\htmlClass{math-o",
+          "width": 318,
+          "scroll": 374
+        },
+        {
+          "id": "sigreg",
+          "text": "R(Z)=BM∑m=1M∑k=0K−1αk q(ωk)[(Cmk−q(ωk))2+Smk2].\\reg(\\Z)=\\frac{B}{M}\\sum_{m=1}^{M}\\sum_{k=0}^{K-1}\\al",
+          "width": 344,
+          "scroll": 442
+        },
+        {
+          "id": "sigreg",
+          "text": "∫A∞e−ω2/2dω≤1A∫A∞ωe−ω2/2dω=e−A2/2A.\\int_A^\\infty e^{-{\\htmlClass{math-act}{\\omega}}^2/2}d{\\htmlClass",
+          "width": 318,
+          "scroll": 362
+        },
+        {
+          "id": "sigreg",
+          "text": "DB=2πB2∑b,ce−(hb−hc)2/2−2πB∑be−hb2/4+2π3.\\disc_B=\\frac{\\sqrt{2\\pi}}{B^2}\\sum_{b,c}e^{-(\\proj_b-\\proj",
+          "width": 344,
+          "scroll": 436
+        },
+        {
+          "id": "sigreg",
+          "text": "∂TB∂hb=2∑kwkωk[−(Ck−qk)sin⁡(ωkhb)+Skcos⁡(ωkhb)].\\frac{\\partial\\stat_B}{\\partial\\proj_b}=2\\sum_kw_k\\f",
+          "width": 344,
+          "scroll": 475
+        },
+        {
+          "id": "sigreg",
+          "text": "TB(s)=TB(0)−Bs2m2∑kwkωk2(1−qk)+O(s4).\\stat_B(s)=\\stat_B(0)-Bs^2m_2\\sum_kw_k\\freq_k^2(1-\\target_k)+O(",
+          "width": 308,
+          "scroll": 424
+        },
+        {
+          "id": "laboratory",
+          "text": "L=1Bd∑b=1B∑j=1d(z^b,j−zb,next,j)2+λ13∑r=13R(Zr),λ=0.01.\\loss=\\frac{1}{Bd}\\sum_{b=1}^B\\sum_{j=1}^d(\\p",
+          "width": 344,
+          "scroll": 518
+        },
+        {
+          "id": "planning",
+          "text": "z^t=zt,z^t+k+1=gψ(z^t+k,at+k),k=0,…,H−1.\\pred_t=\\lat_t,\\qquad \\pred_{t+k+1}=g_\\psi(\\pred_{t+k},\\act_",
+          "width": 344,
+          "scroll": 462
+        },
+        {
+          "id": "planning",
+          "text": "J(A)=∥z^t+H−zg∥2+ρ∑k=0H−1∥at+k∥2,ρ≥0.J(A)=\\|\\pred_{t+H}-\\lat_g\\|^2+\\rho\\sum_{k=0}^{H-1}\\|\\act_{t+k}\\",
+          "width": 344,
+          "scroll": 402
+        },
+        {
+          "id": "planning",
+          "text": "L(μ,σ)=∏i∈E12πσexp⁡ ⁣[−(Ai−μ)22σ2],σ>0.\\mathcal {\\htmlClass{math-loss}{L}}(\\mu,\\sigma)=\\prod_{i\\in\\m",
+          "width": 344,
+          "scroll": 419
+        },
+        {
+          "id": "planning",
+          "text": "−log⁡L=ne2log⁡(2π)+nelog⁡σ+12σ2∑i∈E(Ai−μ)2.-\\log\\mathcal {\\htmlClass{math-loss}{L}}=\\frac{n_e}{2}\\lo",
+          "width": 344,
+          "scroll": 428
+        },
+        {
+          "id": "planning",
+          "text": "Ek+1≤∥g(z^k,ak)−g(zk,ak)∥+∥g(zk,ak)−F(zk,ak)∥≤LEk+ϵ.E_{k+1}\\leq\\|g(\\hat {\\htmlClass{math-lat}{z}}_k,",
+          "width": 344,
+          "scroll": 556
+        },
+        {
+          "id": "evaluation",
+          "text": "pj∣i=e−∥zi−zj∥2/(2σi2)∑r≠ie−∥zi−zr∥2/(2σi2),pij=pj∣i+pi∣j2n.p_{j\\mid i}=\\frac{e^{-\\|{\\htmlClass{math",
+          "width": 344,
+          "scroll": 391
+        },
+        {
+          "id": "evaluation",
+          "text": "E(ot,ot+1,at)=∥gψ(fθ(ot),at)−fθ(ot+1)∥2.E(\\obs_t,\\obs_{t+1},\\act_t)=\\|g_\\psi(f_\\theta(\\obs_t),\\act_t",
+          "width": 344,
+          "scroll": 371
+        },
+        {
+          "id": "evaluation",
+          "text": "τ E[(Y−v)1{Y≥v}]=(1−τ)E[(v−Y)1{Y<v}].\\tau\\,\\mathbb E[(Y-v)\\mathbf1\\{Y\\geq v\\}]=(1-\\tau)\\mathbb E[(v-",
+          "width": 344,
+          "scroll": 440
+        },
+        {
+          "id": "theory",
+          "text": "Cov⁡(β^∣X)=G−1X⊤(σ2I)XG−1=σ2G−1.\\operatorname{Cov}(\\hat\\beta\\mid {\\htmlClass{math-obs}{X}})=G^{-1}{\\",
+          "width": 344,
+          "scroll": 360
+        },
+        {
+          "id": "theory",
+          "text": "a(q+hu)=a(q)+h∇a(q)⊤u+12h2u⊤Ha(q)u+o(h2),a(q+{\\htmlClass{math-act}{h}}{\\htmlClass{math-act}{u}})=a(q",
+          "width": 344,
+          "scroll": 454
+        },
+        {
+          "id": "theory",
+          "text": "mh(q)−m(q)=h2μ22[Δm(q)+2∇m(q)⊤∇log⁡p(q)]+o(h2).{\\htmlClass{math-pred}{m}}_{\\htmlClass{math-act}{h}}(",
+          "width": 344,
+          "scroll": 512
+        },
+        {
+          "id": "theory",
+          "text": "mr(q)−m(q)=r2d+2[∇m(q)⊤s(q)+12Δm(q)]+o(r2).{\\htmlClass{math-pred}{m}}_r(q)-{\\htmlClass{math-pred}{m}",
+          "width": 344,
+          "scroll": 468
+        },
+        {
+          "id": "transformers",
+          "text": "Q=XWQ,K=XWK,V=XWV.{\\htmlClass{math-act}{Q}}={\\htmlClass{math-obs}{X}}W_{\\htmlClass{math-act}{Q}},\\qq",
+          "width": 344,
+          "scroll": 368
+        },
+        {
+          "id": "transformers",
+          "text": "x′=x+α(a)⊙F((1+s(a))⊙LN⁡(x)+b(a)).{\\htmlClass{math-obs}{x}}'={\\htmlClass{math-obs}{x}}+\\alpha(\\act)\\",
+          "width": 344,
+          "scroll": 391
+        }
+      ],
+      "badText": [],
+      "code": [
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        }
+      ],
+      "katexErrors": 0
+    }
+  ],
+  "states": {
+    "count": 186,
+    "failures": []
+  },
+  "errors": []
+}

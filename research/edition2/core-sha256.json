@@ -1,0 +1,11 @@
+{
+  "book/world/corpus.ts": "e3913ef224fb545b49ca659fed2238559ffdbee707249dfe244b3e7c511bbb1f",
+  "book/world/simulator.ts": "3d1cfd73df33333c217f8f067629e2f6495ca0ac3a726575010270443b91eda4",
+  "book/world/engine.ts": "0cec0f7cc03b1c90458d6e4f533a106c979956f7d3d5c561d58b12b20180e48a",
+  "book/world/model.ts": "f9b147a2e7ca58ecd6bf7a20a93fb6fad2d6e9251f5c1b938ee5e403f3fe30f4",
+  "book/world/runtime.ts": "d7abef879e0189535b843846793b38a53c228006a62fd113cd26ea23083ea63f",
+  "book/world/goal-cost.ts": "3c6f6976d6b2504afbfc97dfb6b3284ed10685d674478b756a7a78625e9e37f4",
+  "book/world/book-worker.ts": "d8a16c9af5b4ecd88a1875cb31b5c5420ae9aa817980020547b75ff1ffd7a649",
+  "book/world/sensor.ts": "94faec57440a339f4386babde44f0e49335f3860ce3719b21bed170eb404fe3d",
+  "book/world/planner.ts": "e6a376d229454d279000cfcdc0e19868ba0918965a5c1cc07d5ecc2187727de2"
+}

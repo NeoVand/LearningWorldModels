@@ -1,0 +1,114 @@
+[
+  {
+    "mode": "light",
+    "samples": [
+      {
+        "selector": "article>p",
+        "foreground": "rgb(93, 108, 131)",
+        "background": "rgb(237, 240, 246)",
+        "contrast": 4.671100752038796
+      },
+      {
+        "selector": ".lead",
+        "foreground": "rgb(93, 108, 131)",
+        "background": "rgb(237, 240, 246)",
+        "contrast": 4.671100752038796
+      },
+      {
+        "selector": "figcaption",
+        "foreground": "rgb(93, 108, 131)",
+        "background": "rgb(237, 240, 246)",
+        "contrast": 4.671100752038796
+      },
+      {
+        "selector": ".lab-note",
+        "foreground": "rgb(93, 108, 131)",
+        "background": "rgb(251, 252, 255)",
+        "contrast": 5.1978149036316665
+      },
+      {
+        "selector": "td",
+        "foreground": "rgb(41, 54, 75)",
+        "background": "rgb(237, 240, 246)",
+        "contrast": 10.673147910851323
+      },
+      {
+        "selector": ".code-wrap .hljs-comment",
+        "foreground": "rgb(93, 108, 131)",
+        "background": "rgb(247, 249, 253)",
+        "contrast": 5.059037232944883
+      },
+      {
+        "selector": ".code-wrap .hljs-keyword",
+        "foreground": "rgb(119, 91, 168)",
+        "background": "rgb(247, 249, 253)",
+        "contrast": 5.179970308026041
+      },
+      {
+        "selector": ".eyebrow",
+        "foreground": "rgb(66, 107, 173)",
+        "background": "rgb(251, 252, 255)",
+        "contrast": 5.19786842571058
+      }
+    ],
+    "missingAlt": 0,
+    "missingButtonName": 0,
+    "unlabeledInputs": []
+  },
+  {
+    "mode": "dark",
+    "samples": [
+      {
+        "selector": "article>p",
+        "foreground": "rgb(169, 180, 197)",
+        "background": "rgb(20, 22, 25)",
+        "contrast": 8.650284801701662
+      },
+      {
+        "selector": ".lead",
+        "foreground": "rgb(169, 180, 197)",
+        "background": "rgb(20, 22, 25)",
+        "contrast": 8.650284801701662
+      },
+      {
+        "selector": "figcaption",
+        "foreground": "rgb(169, 180, 197)",
+        "background": "rgb(20, 22, 25)",
+        "contrast": 8.650284801701662
+      },
+      {
+        "selector": ".lab-note",
+        "foreground": "rgb(169, 180, 197)",
+        "background": "rgb(29, 35, 46)",
+        "contrast": 7.5232364340697195
+      },
+      {
+        "selector": "td",
+        "foreground": "rgb(233, 237, 245)",
+        "background": "rgb(20, 22, 25)",
+        "contrast": 15.447743820025496
+      },
+      {
+        "selector": ".code-wrap .hljs-comment",
+        "foreground": "rgb(169, 180, 197)",
+        "background": "rgb(25, 31, 43)",
+        "contrast": 7.877416244863233
+      },
+      {
+        "selector": ".code-wrap .hljs-keyword",
+        "foreground": "rgb(197, 180, 237)",
+        "background": "rgb(25, 31, 43)",
+        "contrast": 8.744960959502935
+      },
+      {
+        "selector": ".eyebrow",
+        "foreground": "rgb(170, 200, 239)",
+        "background": "rgb(29, 35, 46)",
+        "contrast": 9.171430163489392
+      }
+    ],
+    "missingAlt": 0,
+    "missingButtonName": 0,
+    "unlabeledInputs": []
+  }
+]

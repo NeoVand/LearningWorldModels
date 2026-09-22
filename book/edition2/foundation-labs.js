@@ -1,0 +1,38 @@
+import { experiment } from "./normality.js";
+// Deterministic mathematical desks. These do not train or simulate learned weights.
+import { palette } from "./palette.js";
+function desk(id,inputId,render){const canvas=document.getElementById(id),input=document.getElementById(inputId);if(!canvas||!input)return;
+ function draw(){const width=canvas.clientWidth||600,height=Math.max(220,Math.min(340,width*.55)),dpr=devicePixelRatio||1;canvas.style.height=height+'px';canvas.width=width*dpr;canvas.height=height*dpr;const c=canvas.getContext('2d');c.scale(dpr,dpr);c.font='12px "DM Sans", sans-serif';render(c,width,height,Number(input.value));}
+ addEventListener('book-theme-change',draw);input.addEventListener('input',draw);new ResizeObserver(draw).observe(canvas);document.fonts.ready.then(draw);draw();}
+function line(c,x,y,X,Y,color=palette.line,width=1){c.beginPath();c.moveTo(x,y);c.lineTo(X,Y);c.strokeStyle=color;c.lineWidth=width;c.stroke();}
+function point(c,x,y,color,r=4){c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fillStyle=color;c.fill();}
+function label(c,t,x,y,color=palette.ink){c.fillStyle=color;c.fillText(t,x,y);}
+desk('geometry-canvas','geometry-angle',(c,w,h,degrees)=>{const a=degrees*Math.PI/180,cx=w/2,cy=h/2,s=Math.min(w/9,h/8);line(c,20,cy,w-20,cy);line(c,cx,15,cx,h-20);
+ for(let i=0;i<144;i++){const p=i*2.399963229728653,r=Math.sqrt((i+.5)/144)*2,xx=Math.sqrt(3)*r*Math.cos(p),yy=r*Math.sin(p),x=(xx-yy)/Math.sqrt(2),y=(xx+yy)/Math.sqrt(2);point(c,cx+s*x,cy-s*y,palette.lat,2.1);}
+ line(c,cx-3.6*s*Math.cos(a),cy+3.6*s*Math.sin(a),cx+3.6*s*Math.cos(a),cy-3.6*s*Math.sin(a),palette.act,2);const variance=2+Math.sin(2*a);label(c,'unit direction u',18,24,palette.act);document.getElementById('geometry-readout').textContent=`At ${degrees}°, projected variance uᵀCu = ${variance.toFixed(3)}. The maximum is 3 at 45°; the minimum is 1 at 135°.`;});
+desk('uncertainty-canvas','uncertainty-p',(c,w,h,p)=>{const base=h-45,left=50,right=w-50,map=x=>left+(x+1)*(right-left)/2,mean=2*p-1,v=4*p*(1-p);line(c,left-15,base,right+15,base);for(const[x,prob]of[[-1,1-p],[1,p]]){line(c,map(x),base,map(x),base-prob*(h-90),palette.obs,9);label(c,`${x>0?'+':''}${x}`,map(x)-8,base+24);label(c,`p=${prob.toFixed(2)}`,Math.min(w-70,Math.max(12,map(x)-23)),Math.max(22,base-prob*(h-90)-13),palette.obs);}point(c,map(mean),base-8,palette.pred,6);label(c,`mean ${mean.toFixed(2)}`,Math.max(12,Math.min(w-95,map(mean)-35)),h-10,palette.pred);document.getElementById('uncertainty-readout').textContent=`Optimal mean = ${mean.toFixed(2)}. Its expected squared error = ${v.toFixed(3)}. Predicting +1 instead gives error ${(4*(1-p)).toFixed(3)}; predicting −1 gives ${(4*p).toFixed(3)}.`;});
+desk('ridge-canvas','ridge-lambda',(c,w,h,lambda)=>{const scale=Math.min((w-90)/1.6,(h-60)/1.6),x=45,y=h-35,weight=1/(1+lambda);line(c,x,y,w-20,y);line(c,x,y,x,20);line(c,x,y,x+1.4*scale,y-1.4*scale*weight,palette.pred,2);point(c,x+scale,y-scale,palette.obs,5);line(c,x+scale,y-scale,x+scale,y-weight*scale,palette.loss,1.5);label(c,'observed (1, 1)',x+scale+8,y-scale,palette.obs);label(c,'x',w-22,y+22);label(c,'y',x-17,20);document.getElementById('ridge-readout').textContent=`w = 1/(1 + λ) = ${weight.toFixed(3)}. Data error = ${((weight-1)**2).toFixed(3)}; weighted penalty = ${(lambda*weight**2).toFixed(3)}; total = ${((weight-1)**2+lambda*weight**2).toFixed(3)}.`;});
+desk('rollout-canvas','rollout-lipschitz',(c,w,h,L)=>{const n=12,eps=.05,values=[0];for(let i=0;i<n;i++)values.push(L*values.at(-1)+eps);const max=Math.max(1,...values),left=45,bottom=h-40,ys=(h-75)/max,xs=(w-75)/n;line(c,left,20,left,bottom);line(c,left,bottom,w-20,bottom);values.forEach((v,i)=>{if(i)line(c,left+(i-1)*xs,bottom-values[i-1]*ys,left+i*xs,bottom-v*ys,palette.loss,2);point(c,left+i*xs,bottom-v*ys,palette.loss,3);});label(c,`bound at step 12: ${values.at(-1).toFixed(3)}`,left+8,25,palette.loss);label(c,'rollout steps',w-105,h-10);document.getElementById('rollout-readout').textContent=`One-step error ε = 0.05, sensitivity L = ${L.toFixed(2)}. The recurrence is Eₕ₊₁ ≤ L Eₕ + ε. This is a worst-case bound under stated assumptions, not a measured model trajectory.`;});
+desk('attention-canvas','attention-temperature',(c,w,h,tau)=>{const scores=[1,2,.5],raw=scores.map(s=>Math.exp((s-2)/tau)),den=raw.reduce((a,b)=>a+b,0),weights=raw.map(v=>v/den),vals=[0,10,4],mean=weights.reduce((a,v,i)=>a+v*vals[i],0),step=(w-60)/3,bottom=h-35;weights.forEach((v,i)=>{const x=30+i*step; c.fillStyle=palette.pred;c.fillRect(x+step*.28,bottom-v*(h-75),step*.44,v*(h-75));label(c,`token ${i+1}`,x+step*.3,bottom+23);label(c,v.toFixed(3),x+step*.34,Math.max(24,bottom-v*(h-75)-10));});document.getElementById('attention-readout').textContent=`Scores [1, 2, 0.5], temperature ${tau.toFixed(2)}. Weights sum to ${weights.reduce((a,b)=>a+b,0).toFixed(3)}. With scalar values [0, 10, 4], the weighted output is ${mean.toFixed(3)}.`;});
+
+let normalityMode='normal';
+desk('normality-canvas','normality-size',(c,w,h,exponent)=>{
+ const r=experiment(2**exponent,normalityMode),left=38,bottom=h-43,right=w-20,top=61;
+ const max=Math.max(r.d*1.08,r.nulls.at(-1)*1.05,.2),bins=28,counts=Array(bins).fill(0);
+ r.nulls.forEach(v=>counts[Math.min(bins-1,Math.floor(v/max*bins))]++);
+ const peak=Math.max(...counts),dx=(right-left)/bins;
+ counts.forEach((n,i)=>{const height=n/peak*(bottom-top);c.fillStyle=palette.lat+'65';c.fillRect(left+i*dx+1,bottom-height,Math.max(1,dx-2),height);});
+ line(c,left,bottom,right,bottom);const x=v=>left+v/max*(right-left);
+ line(c,x(r.threshold),top,x(r.threshold),bottom,palette.act,1.5);
+ line(c,x(r.d),top,x(r.d),bottom,palette.loss,2);
+ label(c,`Observed D = ${r.d.toFixed(3)}`,left,20,palette.loss);
+ label(c,`95% null cutoff ≈ ${r.threshold.toFixed(3)}`,left,41,palette.act);
+ label(c,'0',left,bottom+18);label(c,max.toFixed(2),right-25,bottom+18);
+ label(c,'KS discrepancy D',left,h-3);
+ document.getElementById('normality-readout').textContent=`n = ${r.n}; observed D = ${r.d.toFixed(4)}; Monte Carlo p = ${r.p.toFixed(4)}. ${r.p<=.05?'Reject the specified null at 5%.':'Do not reject the specified null at 5%.'} This is not a probability that the null is true. For a mean shift of 0.4, ${r.detected}/128 fresh trials reject (estimated power ${(r.power*100).toFixed(1)}%).`;
+});
+document.querySelectorAll('[data-normality]').forEach(b=>b.addEventListener('click',()=>{
+ normalityMode=b.dataset.normality;
+ document.querySelectorAll('[data-normality]').forEach(e=>e.setAttribute('aria-pressed',String(e===b)));
+ document.getElementById('normality-size').dispatchEvent(new Event('input',{bubbles:true}));
+}));

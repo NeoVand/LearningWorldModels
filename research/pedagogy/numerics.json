@@ -1,0 +1,35 @@
+{
+  "chapter_order": [
+    "opening",
+    "philosophy",
+    "geometry",
+    "probability",
+    "clouds",
+    "calculus",
+    "learning",
+    "jepa",
+    "testing",
+    "sigreg",
+    "implementation",
+    "laboratory",
+    "planning",
+    "evaluation",
+    "theory",
+    "transformers",
+    "lineage",
+    "paper",
+    "capstone",
+    "reference"
+  ],
+  "cdf_max_error": 1.3372158935709422e-10,
+  "ks_two_points": 0.34134474607855886,
+  "power_shift_04": {
+    "n16": 0.2890625,
+    "n256": 1
+  },
+  "gaussian_sampler": {
+    "mean": -0.0023737266797103523,
+    "variance": 0.9904253742462444
+  },
+  "canonical_alias_identical": true
+}

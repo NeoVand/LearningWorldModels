@@ -1,0 +1,46 @@
+{
+  "verified": "2026-09-21T22:37:56.749Z",
+  "numerics": {
+    "gradientError": 1.2213785538506272e-11,
+    "integralError": 5.204170427930421e-16,
+    "trace": 0.09296117038726485
+  },
+  "layouts": [
+    {
+      "width": 1400,
+      "scroll": 1400,
+      "ratios": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "formulaOverflow": 0
+    },
+    {
+      "width": 820,
+      "scroll": 820,
+      "ratios": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "formulaOverflow": 2
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "ratios": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "formulaOverflow": 45
+    }
+  ],
+  "trials": [],
+  "errors": [],
+  "remote": []
+}

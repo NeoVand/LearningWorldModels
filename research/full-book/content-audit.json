@@ -1,0 +1,126 @@
+{
+  "chapters": [
+    {
+      "id": "capstone",
+      "title": "Build, challenge, explain",
+      "words_approximate": 1531,
+      "sha256": "83ddf127013d6bb553fa3a414bf3439f7d3416a9e5d4bf4ee55d45f48748bd6a"
+    },
+    {
+      "id": "evaluation",
+      "title": "What counts as understanding?",
+      "words_approximate": 2006,
+      "sha256": "af90c04d8af6bb6380edcb03b97f43414df55e2f088b4fe0b5fb8f6ee35579aa"
+    },
+    {
+      "id": "geometry",
+      "title": "A world in coordinates",
+      "words_approximate": 1663,
+      "sha256": "e366809645e99b773b8b4f41f5d96ac03a4da1f8810b89f294f22610d4fd04f4"
+    },
+    {
+      "id": "implementation",
+      "title": "From equations to a learner",
+      "words_approximate": 1632,
+      "sha256": "1c2d10f9f72622289d907e3b24313579d0e9fad657c823a3372ab8aade14fa7a"
+    },
+    {
+      "id": "jepa",
+      "title": "Agreement without collapse",
+      "words_approximate": 1378,
+      "sha256": "505ae95cb8f6ee935a35d0a2c792a44f72b88af1606507e172f04b4da38bd86f"
+    },
+    {
+      "id": "laboratory",
+      "title": "A world model you can train",
+      "words_approximate": 1539,
+      "sha256": "67c9d6ae04afae3fb98be53ecdc7a2a3f6282ecc4b9a52d17bd49c02e81aec81"
+    },
+    {
+      "id": "learning",
+      "title": "How errors change a model",
+      "words_approximate": 1598,
+      "sha256": "5b03464e86125a91618c4f2476005aca113eca88f3766e1fadc27c55224cf910"
+    },
+    {
+      "id": "lineage",
+      "title": "The papers as a conversation",
+      "words_approximate": 1888,
+      "sha256": "4ac77832214d9428df8f2109f82b55e576277610b4e5fca65cd09b44ff7c1791"
+    },
+    {
+      "id": "opening",
+      "title": "Before the move",
+      "words_approximate": 1156,
+      "sha256": "e812f647bb2218f980d3d5abacc618b4dc192b0f1f1dfd556ae0e56d87f78579"
+    },
+    {
+      "id": "paper",
+      "title": "Read LeWorldModel closely",
+      "words_approximate": 2355,
+      "sha256": "4def4c238f3ab7a3e1d274c505a3c8050ca92d41a27671a7ecf73b2b6ca86c91"
+    },
+    {
+      "id": "philosophy",
+      "title": "Learning before labels",
+      "words_approximate": 1977,
+      "sha256": "e22b134d828e48cb8f1c1b4277e266c9c7d51714a7320917ed8c0a29ed8591bc"
+    },
+    {
+      "id": "planning",
+      "title": "From imagination to action",
+      "words_approximate": 1549,
+      "sha256": "680e6621e186eca6c97985b9664f4e916e59ba605e5ede58bf67d4f888060fec"
+    },
+    {
+      "id": "probability",
+      "title": "Prediction under uncertainty",
+      "words_approximate": 1773,
+      "sha256": "f3a299560bf257efc53267ab44d87a80432aa7772bf13451c93444a7c61e981d"
+    },
+    {
+      "id": "reference",
+      "title": "Keep the whole argument in view",
+      "words_approximate": 1883,
+      "sha256": "f0bb8841de9f77ca8a38328b4b73e996256c1014bbc4f862eb8ab1c0f9ae9984"
+    },
+    {
+      "id": "sigreg",
+      "title": "A distribution, not a destination",
+      "words_approximate": 5330,
+      "sha256": "1b1c6f6ac182f36a7b62a3cafc3dd74caf83ec4f285b438caf553da1e2d0db5e"
+    },
+    {
+      "id": "theory",
+      "title": "What Gaussian geometry can promise",
+      "words_approximate": 1619,
+      "sha256": "081a50cf63acee91cd7b48ec29f785c8c142c4ded09e589fc601e72b4f501d23"
+    },
+    {
+      "id": "transformers",
+      "title": "Inside the vision transformer",
+      "words_approximate": 1672,
+      "sha256": "e8742066d9ea467edd069458856e560e8e250e86ee51ac29db82ab8c1c35a5fc"
+    }
+  ],
+  "chapter_count": 17,
+  "words_approximate": 32549,
+  "pdf_pages": 151,
+  "inline_and_display_math_expressions": 1117,
+  "diagram_math_nodes": 79,
+  "svg_diagrams": 15,
+  "generated_plates": 3,
+  "python_code_blocks": 6,
+  "foundational_interactive_desks": 5,
+  "target_coverage": "LeWorldModel v1: main text, equations 1\u20139, Appendices A\u2013I; map in reference chapter",
+  "verification": {
+    "mathematics": "math-verification.json",
+    "browser": "browser-inspection.json",
+    "training_smoke": "training-smoke.json",
+    "full_training": "../edition2/verification.json",
+    "print": "print-inspection.json"
+  },
+  "html_sha256": "52ae36ee7efa4fe8683607df41e3ecdc1413d8a02e795c79bfee41ca2dd6f185",
+  "pdf_sha256": "5daa61edcc7592f6e7465f71797c98f319bb4945979d299c421ce1964ef7726f",
+  "word_count_method": "Markdown prose excluding math, HTML tags, comments, and link destinations; approximate."
+}

@@ -1,0 +1,35 @@
+{
+  "status": "provisional editorial selections; awaiting optional user preference",
+  "choices": {
+    "P1": [
+      "philosophy",
+      "occlusion-4",
+      "Four time stages distinguish visible past, hidden interval and two compatible continuations."
+    ],
+    "P4": [
+      "philosophy",
+      "hierarchy-1",
+      "Nested views connect a route around a block, a street crossing and a foot placement."
+    ],
+    "J1": [
+      "jepa",
+      "jepa-corrected",
+      "A common context branches into pixel reconstruction and a coordinate representation target."
+    ],
+    "S8": [
+      "sigreg",
+      "sigreg-1",
+      "Six stages of SIGReg: embeddings, projection, unit phasors, average, Gaussian comparison and integration."
+    ],
+    "E5": [
+      "evaluation",
+      "energy-final",
+      "Alternative paths around an obstacle accompany a two-valley illustrative compatibility landscape."
+    ],
+    "H3": [
+      "lineage",
+      "lineage-corrected-1",
+      "Five research methods compared by the prediction targets they use."
+    ]
+  }
+}

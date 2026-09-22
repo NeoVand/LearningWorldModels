@@ -1,0 +1,81 @@
+{
+  "checked": "2026-09-21T22:31:16.913Z",
+  "layouts": [
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "theme": "light",
+      "distorted": 0,
+      "brokenImages": 0
+    },
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "theme": "dark",
+      "distorted": 0,
+      "brokenImages": 0
+    },
+    {
+      "width": 820,
+      "scroll": 820,
+      "theme": "light",
+      "distorted": 0,
+      "brokenImages": 0
+    },
+    {
+      "width": 820,
+      "scroll": 820,
+      "theme": "dark",
+      "distorted": 0,
+      "brokenImages": 0
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "theme": "light",
+      "distorted": 0,
+      "brokenImages": 0
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "theme": "dark",
+      "distorted": 0,
+      "brokenImages": 0
+    }
+  ],
+  "errors": [],
+  "training": {
+    "backend": "webgpu",
+    "parameters": 152464,
+    "before": {
+      "step": 0,
+      "loss": 0.25535252690315247,
+      "predictionLoss": 0.03606215491890907,
+      "regularizer": 21.92903709411621,
+      "persistenceLoss": 0.03458503242383764,
+      "shuffledActionLoss": 0.0363372378051281,
+      "noHistoryLoss": 0.0361640602350235,
+      "spread": 0.23378654676914834,
+      "minimumStd": 0.16529918893427636,
+      "effectiveRank": 5.567897323847965
+    },
+    "after": {
+      "step": 20,
+      "loss": 0.11304730921983719,
+      "predictionLoss": 0.06700602173805237,
+      "regularizer": 4.604128837585449,
+      "persistenceLoss": 0.0690227841304558,
+      "shuffledActionLoss": 0.06697432696819305,
+      "noHistoryLoss": 0.06989249587059021,
+      "spread": 0.8823392609700325,
+      "minimumStd": 0.521979123206629,
+      "effectiveRank": 3.6345410039641717
+    },
+    "step": 20,
+    "control": {
+      "actions": 2,
+      "error": 0.4096258906403729
+    }
+  }
+}

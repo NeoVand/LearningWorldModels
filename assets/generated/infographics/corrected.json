@@ -1,0 +1,26 @@
+[
+  {
+    "id": "lineage",
+    "variant": 1,
+    "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-908dd2a9-78fe-4660-bd3f-31b1ee9c9d33.png",
+    "path": "assets/generated/infographics/lineage-corrected-1.png"
+  },
+  {
+    "id": "lineage",
+    "variant": 2,
+    "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-33ffcae8-048b-476c-80df-290947186c4f.png",
+    "path": "assets/generated/infographics/lineage-corrected-2.png"
+  },
+  {
+    "id": "lineage",
+    "variant": 3,
+    "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-a78c6b08-d90c-462c-b412-bbb9bad267bf.png",
+    "path": "assets/generated/infographics/lineage-corrected-3.png"
+  },
+  {
+    "id": "lineage",
+    "variant": 4,
+    "source": "/Users/neo/.codex/generated_images/01a0c29b-60e7-76a3-b23c-98c0c6ea9a5f/exec-9f1fa14e-5781-4018-9907-001d1cbef6a5.png",
+    "path": "assets/generated/infographics/lineage-corrected-4.png"
+  }
+]

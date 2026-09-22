@@ -1,0 +1,27 @@
+[
+  [
+    "occlusion",
+    "Predict the hidden interval",
+    "A blue ball rolls toward an opaque screen. Show four ordered time frames with the same camera. First visible approach, then fully hidden, then two physically plausible exits distinguished by dashed paths. Emphasize that the hidden path is uncertain. A violet representation preserves position and motion evidence. Exact labels: 'Visible past', 'Hidden interval', 'Compatible futures'. No equation or probabilities needed."
+  ],
+  [
+    "hierarchy",
+    "Plans at three scales",
+    "A pedestrian route around a city block, a close crossing of one street, and a foot carefully stepping over a puddle are nested views of the same journey. Topographic map and human-scale technical illustration integrated elegantly. Exact labels 'Route · minutes', 'Crossing · seconds', 'Foot placement · fractions of a second'. Dashed brackets connect one route segment to crossing and one crossing step to foot placement. Each level chooses a subgoal for the next."
+  ],
+  [
+    "jepa",
+    "What should a prediction keep?",
+    "The same tabletop scene with ball, moving hand, and dappled light appears once as context. Two branches compare reconstructing every future pixel with predicting a useful representation. Pixel branch shows variable shadow and texture; representation branch shows ball location and hand direction preserved, nuisance texture omitted. Exact labels 'Context', 'Pixel target', 'Representation target', 'Unpredictable detail', 'Useful structure'. Show learned encoder and predictor as clean blocks, but no claims that removing texture guarantees useful learning."
+  ],
+  [
+    "energy",
+    "One situation, several futures",
+    "A ball approaches a central obstacle and may pass left or right. Two clearly distinct physically plausible continuation panels flank a visibly implausible central path through the obstacle. Under them an illustrative energy curve has two low valleys aligned with left and right futures and high hill for the impossible center. Exact labels 'Observed past', 'Left future', 'Right future', 'Incompatible future', 'Low energy', 'High energy'. Clearly label chart 'Illustrative compatibility, not measured probability'. No numerical axes."
+  ],
+  [
+    "lineage",
+    "A family of prediction problems",
+    "A publication-quality comparative atlas with five independent columns: 'I-JEPA', 'V-JEPA', 'V-JEPA 2', 'LeJEPA', 'LeWorldModel'. I-JEPA: masked regions of a still image predict target representations. V-JEPA: masked regions across video frames predict target representations. V-JEPA 2: video pretraining followed by an action-conditioned stage. LeJEPA: multiple views of one image, agreement with isotropic Gaussian regularization. LeWorldModel: image history and actions predict next embedding with SIGReg. Distinguish roles using blue image observations, violet embeddings, amber actions, teal predictions, rose regularizer. No chronological arrows implying all are direct descendants, no dates, no performance numbers, no acronym expansions. Exact title 'Different targets, related questions'."
+  ]
+]

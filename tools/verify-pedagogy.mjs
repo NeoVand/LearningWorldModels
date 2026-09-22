@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {chapters} from '../book/edition2/curriculum.mjs';
+import {cdf,ks,experiment,rng,gaussian} from '../book/edition2/normality.js';
+const order=chapters.map(c=>c[0]);
+for(const[a,b]of[['probability','clouds'],['calculus','learning'],['jepa','testing'],['testing','sigreg'],['laboratory','theory'],['evaluation','paper'],['transformers','lineage']])assert.ok(order.indexOf(a)<order.indexOf(b));
+assert.equal(fs.readFileSync('world-models.html','utf8'),fs.readFileSync('second-edition.html','utf8'));
+const refs=[[0,.5],[1,.8413447460685429],[-1,.1586552539314571],[2,.9772498680518208],[3,.9986501019683699],[1.234,.891398547878]];
+const errors=refs.map(([x,f])=>Math.abs(cdf(x)-f));assert.ok(Math.max(...errors)<1e-6);
+assert.ok(Math.abs(ks([-1,1])-.3413447460685429)<1e-7);
+assert.equal(ks([1,-1]),ks([-1,1]));
+const small=experiment(16,'shifted'),large=experiment(256,'shifted');assert.ok(large.power>small.power+.4);
+assert.ok(experiment(256,'two-point').p<=.05);
+const random=rng(234),normal=Array.from({length:50000},()=>gaussian(random)),mean=normal.reduce((a,v)=>a+v,0)/normal.length,variance=normal.reduce((a,v)=>a+(v-mean)**2,0)/normal.length;
+assert.ok(Math.abs(mean)<.02&&Math.abs(variance-1)<.03);
+const result={chapter_order:order,cdf_max_error:Math.max(...errors),ks_two_points:ks([-1,1]),power_shift_04:{n16:small.power,n256:large.power},gaussian_sampler:{mean,variance},canonical_alias_identical:true};
+fs.writeFileSync('research/pedagogy/numerics.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));

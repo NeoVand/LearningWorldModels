@@ -1,0 +1,7 @@
+HugeIcons core-free-icons, version 4.3.2.
+Author: Hugeicons.
+The installed package declares its license as MIT in package.json.
+Source package: https://www.npmjs.com/package/@hugeicons/core-free-icons
+The npm distribution does not include a separate LICENSE file.
+
+The distributed README states: "Created by Hugeicons. All rights reserved."

@@ -1,0 +1,22 @@
+node_modules/
+tmp/
+preview-stamp
+revision-stamp
+.DS_Store
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+
+# Downloaded paper caches; URLs and checksums remain in research/sources.json.
+papers/*.pdf
+research/*-v1.txt
+research/lecun-autonomous-2022.txt
+research/leworldmodel-v1.html
+research/*.tar.gz
+
+# Superseded exports; retain the current standalone book and complete PDF.
+output/pdf/before-the-move.pdf
+output/pdf/second-edition-workshop.pdf
+research/pedagogy/before-restructure/world-models.html

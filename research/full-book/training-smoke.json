@@ -1,0 +1,8 @@
+{
+  "result": {
+    "backend": "webgpu",
+    "step": 20,
+    "loss": 0.09863857924938202
+  },
+  "errors": []
+}

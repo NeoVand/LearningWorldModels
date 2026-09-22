@@ -1,0 +1,81 @@
+[
+  {
+    "file": "papers/leworldmodel-v1.pdf",
+    "url": "https://arxiv.org/pdf/2603.19312v1",
+    "version": "2603.19312v1",
+    "bytes": 5629454,
+    "sha256": "36b6dabbf3a37a4229063e76d82854b9e696411abfa0d4bf72325bdd67d64d85",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/lejepa-v1.pdf",
+    "url": "https://arxiv.org/pdf/2511.08544v1",
+    "version": "2511.08544v1",
+    "bytes": 8757859,
+    "sha256": "43dbfdaf731c19f57ae9db321f0df368f50a756a59653d460bbdf4ea135bd91d",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/vicreg-v1.pdf",
+    "url": "https://arxiv.org/pdf/2105.04906v1",
+    "version": "2105.04906v1",
+    "bytes": 623690,
+    "sha256": "78527287d8c19210d6e4f9c52cd85d6a1ae8220644472fe2c7d4c19dce65006e",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/ijepa-v1.pdf",
+    "url": "https://arxiv.org/pdf/2301.08243v1",
+    "version": "2301.08243v1",
+    "bytes": 3527757,
+    "sha256": "17ebbd268de46874ed70fa41f00e0000fbeb7a9a5df09c8fe81c90dc27f28709",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/vjepa-v1.pdf",
+    "url": "https://arxiv.org/pdf/2404.08471v1",
+    "version": "2404.08471v1",
+    "bytes": 4601259,
+    "sha256": "fb84f79be128e7425263e8674fbc3f2ec991575c4b5880556cfb8f5fa9fd91ba",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/vjepa2-v1.pdf",
+    "url": "https://arxiv.org/pdf/2506.09985v1",
+    "version": "2506.09985v1",
+    "bytes": 20240380,
+    "sha256": "9cfcfde5fb0d9730637da5b9e7317825c3f3d09e91f3553e22eeba42c74d2226",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/dino-wm-v1.pdf",
+    "url": "https://arxiv.org/pdf/2411.04983v1",
+    "version": "2411.04983v1",
+    "bytes": 5427708,
+    "sha256": "a6efa898394ced692124bf4db0d2fcc09e741aced20d9f4dde18ba59b6c6365b",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "papers/pldm-v1.pdf",
+    "url": "https://arxiv.org/pdf/2502.14819v1",
+    "version": "2502.14819v1",
+    "bytes": 3794906,
+    "sha256": "2398e421e90ecd2ddb208bac18b086955d304531f3042556291aef313bb1d359",
+    "downloaded": "2026-09-21"
+  },
+  {
+    "file": "research/lewm-module-pinned.py",
+    "url": "https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/module.py",
+    "commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+    "sha256": "0b258a9e8dc24c29fcb1e8c50a09ec78b8ea85aeb79e21dd8adf712396646620"
+  },
+  {
+    "title": "A Path Towards Autonomous Machine Intelligence",
+    "version": "0.9.2, 2022-06-27",
+    "file": "papers/lecun-autonomous-2022.pdf",
+    "url": "https://openreview.net/forum?id=BZ5a1r-kVsf",
+    "retrieved_from": "https://www.infinityexplorers.com/wp-content/uploads/2022/10/a_path_towards_autonomous_mach.pdf",
+    "pages": 62,
+    "sha256": "5dda279009beae358f08b18b2a4374bfbe65f8c9ed773ea0b9b49f9068566022"
+  }
+]

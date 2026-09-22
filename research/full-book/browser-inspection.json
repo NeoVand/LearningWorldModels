@@ -1,0 +1,51 @@
+{
+  "chapters": 20,
+  "figures": 15,
+  "diagramMath": 79,
+  "errors": [],
+  "broken": [],
+  "malformedMath": [],
+  "collisions": [],
+  "desks": [
+    {
+      "id": "geometry",
+      "before": "At 45°, projected variance uᵀCu = 3.000. The maximum is 3 at 45°; the minimum is 1 at 135°.",
+      "after": "At 180°, projected variance uᵀCu = 2.000. The maximum is 3 at 45°; the minimum is 1 at 135°."
+    },
+    {
+      "id": "uncertainty",
+      "before": "Optimal mean = 0.00. Its expected squared error = 1.000. Predicting +1 instead gives error 2.000; predicting −1 gives 2.000.",
+      "after": "Optimal mean = 1.00. Its expected squared error = 0.000. Predicting +1 instead gives error 0.000; predicting −1 gives 4.000."
+    },
+    {
+      "id": "ridge",
+      "before": "w = 1/(1 + λ) = 0.500. Data error = 0.250; weighted penalty = 0.250; total = 0.500.",
+      "after": "w = 1/(1 + λ) = 0.167. Data error = 0.694; weighted penalty = 0.139; total = 0.833."
+    },
+    {
+      "id": "attention",
+      "before": "Scores [1, 2, 0.5], temperature 1.00. Weights sum to 1.000. With scalar values [0, 10, 4], the weighted output is 6.846.",
+      "after": "Scores [1, 2, 0.5], temperature 3.00. Weights sum to 1.000. With scalar values [0, 10, 4], the weighted output is 5.349."
+    },
+    {
+      "id": "rollout",
+      "before": "One-step error ε = 0.05, sensitivity L = 1.00. The recurrence is Eₕ₊₁ ≤ L Eₕ + ε. This is a worst-case bound under stated assumptions, not a measured model trajectory.",
+      "after": "One-step error ε = 0.05, sensitivity L = 1.50. The recurrence is Eₕ₊₁ ≤ L Eₕ + ε. This is a worst-case bound under stated assumptions, not a measured model trajectory."
+    },
+    {
+      "id": "normality",
+      "before": "n = 32; observed D = 0.1912; Monte Carlo p = 0.1660. Do not reject the specified null at 5%. This is not a probability that the null is true. For a mean shift of 0.4, 65/128 fresh trials reject (estimated power 50.8%).",
+      "after": "n = 256; observed D = 0.0619; Monte Carlo p = 0.2637. Do not reject the specified null at 5%. This is not a probability that the null is true. For a mean shift of 0.4, 128/128 fresh trials reject (estimated power 100.0%)."
+    }
+  ],
+  "desktop": {
+    "width": 1400,
+    "scroll": 1400,
+    "mathOverflow": []
+  },
+  "mobile": {
+    "width": 390,
+    "scroll": 390,
+    "visibleSelects": 0
+  }
+}

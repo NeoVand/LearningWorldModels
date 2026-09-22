@@ -1,0 +1,992 @@
+[
+  {
+    "page": 1,
+    "characters": 918,
+    "outside": 0,
+    "start": "01 / THE QUESTION WORLD MODELS, FROM FIRST PRINCIPLES\nBefore the move\nTo act intelligently, we "
+  },
+  {
+    "page": 2,
+    "characters": 1961,
+    "outside": 0,
+    "start": "choose what to do next. Our destination is LeWorldModel, version 1. We will reach its\nequations"
+  },
+  {
+    "page": 3,
+    "characters": 1656,
+    "outside": 0,
+    "start": "How to use a mathematical lesson\nBefore looking at a worked answer, try the small calculation o"
+  },
+  {
+    "page": 4,
+    "characters": 1930,
+    "outside": 0,
+    "start": "02 / THE QUESTION WORLD MODELS, FROM FIRST PRINCIPLES\nLearning before labels\nBefore asking whic"
+  },
+  {
+    "page": 5,
+    "characters": 1703,
+    "outside": 0,
+    "start": "What LeCun proposes, and what remains a\nproposal\nYann LeCun's 2022 position paper, version 0.9."
+  },
+  {
+    "page": 6,
+    "characters": 2304,
+    "outside": 0,
+    "start": "history, but not the proposed general memory system. It has no learned configurator, no\nlearned"
+  },
+  {
+    "page": 7,
+    "characters": 1115,
+    "outside": 0,
+    "start": "Probability will later let us express that statement as conditional independence. It does not\nm"
+  },
+  {
+    "page": 8,
+    "characters": 2235,
+    "outside": 0,
+    "start": "future easy to predict,\u201d a blank map is excellent: nothing changes on it. If it says only \u201creta"
+  },
+  {
+    "page": 9,
+    "characters": 1218,
+    "outside": 0,
+    "start": "\u201cReward-free training\u201d therefore does not mean preference-free behavior. The planner still\nrece"
+  },
+  {
+    "page": 10,
+    "characters": 885,
+    "outside": 0,
+    "start": "Different time scales invite different descriptions. This generated conceptual plate illustrate"
+  },
+  {
+    "page": 11,
+    "characters": 1083,
+    "outside": 0,
+    "start": "It challenges generalization of perception and prediction, not the definition of self-\nsupervis"
+  },
+  {
+    "page": 12,
+    "characters": 1628,
+    "outside": 0,
+    "start": "03 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nA world in coordinates\nA represe"
+  },
+  {
+    "page": 13,
+    "characters": 1962,
+    "outside": 0,
+    "start": "1 1 0 0\nW = , z=Wo.\n(0 0 1 1)\nFor the first row, calculate 1o +1o +0o +0o = o +o . The second r"
+  },
+  {
+    "page": 14,
+    "characters": 1705,
+    "outside": 0,
+    "start": "a matrix whose (i,j) entry is x y . This is the outer product. We will use it to record how\ni j"
+  },
+  {
+    "page": 15,
+    "characters": 1333,
+    "outside": 0,
+    "start": "x\nu\n(u\u22a4x)u\nThe perpendicular residual changes no coordinate along the measuring direction.\nA pr"
+  },
+  {
+    "page": 16,
+    "characters": 1068,
+    "outside": 0,
+    "start": "Work one complete encoding by hand\nTake an image with flattened pixels o = (2,1,0,3)\u22a4. Before c"
+  },
+  {
+    "page": 17,
+    "characters": 1655,
+    "outside": 0,
+    "start": "04 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nPrediction under uncertainty\nA p"
+  },
+  {
+    "page": 18,
+    "characters": 1780,
+    "outside": 0,
+    "start": "Independence is not needed for this identity. It is needed for a different one: if X,Y are\ninde"
+  },
+  {
+    "page": 19,
+    "characters": 1759,
+    "outside": 0,
+    "start": "P(B \u2223A)P(A)\nP(A\u2223B)= .\nP(B)\nIt is an algebraic identity, not a special learning algorithm. If 10"
+  },
+  {
+    "page": 20,
+    "characters": 696,
+    "outside": 0,
+    "start": "PREDICTION DESK\nWhen the best mean never happens\nThe outcome is either \u22121 or +1. Change the pro"
+  },
+  {
+    "page": 21,
+    "characters": 1639,
+    "outside": 0,
+    "start": "I2 = e\u2212(x2+y2)/2dxdy.\n\u222b\nR2\nThe integrand depends only on distance r from the origin. A thin ann"
+  },
+  {
+    "page": 22,
+    "characters": 2314,
+    "outside": 0,
+    "start": "We have proved only one direction: independence implies zero covariance. The\ncounterexample dis"
+  },
+  {
+    "page": 23,
+    "characters": 1857,
+    "outside": 0,
+    "start": "poorly near boundaries. For small experiments, report the count as well as any interval, and\nsp"
+  },
+  {
+    "page": 24,
+    "characters": 1607,
+    "outside": 0,
+    "start": "05 / MATHEMATICAL LANGUAGE WORLD MODELS, FROM FIRST PRINCIPLES\nThe geometry of a cloud\nOne vect"
+  },
+  {
+    "page": 25,
+    "characters": 1720,
+    "outside": 0,
+    "start": "For any direction u, multiplication gives\n1\nu\u22a4Cu= [u\u22a4(x \u2212x\u02c9)] 2 .\nB \u2211 i\ni\nThe right side is pre"
+  },
+  {
+    "page": 26,
+    "characters": 1973,
+    "outside": 0,
+    "start": "Start with a matrix we can multiply by hand:\n2 1 1 1 1 1\nC = , u= , v = .\n(1 2) 2 (1) 2 (\u22121)\nCo"
+  },
+  {
+    "page": 27,
+    "characters": 1643,
+    "outside": 0,
+    "start": "A Gaussian cloud in several dimensions\nA multivariate standard Gaussian is a vector of independ"
+  },
+  {
+    "page": 28,
+    "characters": 913,
+    "outside": 0,
+    "start": "GEOMETRY DESK\nRotate the measuring direction\nThe illustrative cloud approximates a distribution"
+  },
+  {
+    "page": 29,
+    "characters": 714,
+    "outside": 0,
+    "start": "Now replace each vector by twice itself. Covariance becomes four times larger because both\nfact"
+  },
+  {
+    "page": 30,
+    "characters": 1516,
+    "outside": 0,
+    "start": "06 / LEARNING FROM ERRORS WORLD MODELS, FROM FIRST PRINCIPLES\nHow a small change travels\nBefore"
+  },
+  {
+    "page": 31,
+    "characters": 1458,
+    "outside": 0,
+    "start": "Several knobs require partial derivatives\nConsider L(w,b) = (2w +b\u22125)2/2. A partial derivative "
+  },
+  {
+    "page": 32,
+    "characters": 1399,
+    "outside": 0,
+    "start": "decrease for Euclidean step length. Taking \u03b4 = \u2212\u03b7\u2207L gives first-order change \u2212\u03b7\u2225\u2207L\u22252.\nTry \u03b7 = 0"
+  },
+  {
+    "page": 33,
+    "characters": 1493,
+    "outside": 0,
+    "start": "At (2,3), a change (0.01,\u22120.02) predicts output change (\u22120.01,\u22120.01). The first actual\noutput c"
+  },
+  {
+    "page": 34,
+    "characters": 1473,
+    "outside": 0,
+    "start": "To derive the general form, turn a vector displacement v into a one-dimensional path r(t) =\nL(x"
+  },
+  {
+    "page": 35,
+    "characters": 1813,
+    "outside": 0,
+    "start": "Return to the cloud: why principal directions exist\nWe promised to justify the general covarian"
+  },
+  {
+    "page": 36,
+    "characters": 525,
+    "outside": 0,
+    "start": "Forward: u = 2, y = 4, and the residual is 3. Backward: \u2202L/\u2202y = 3, \u2202y/\u2202u = 4, so\n\u2202L/\u2202u = 12. Th"
+  },
+  {
+    "page": 37,
+    "characters": 1669,
+    "outside": 0,
+    "start": "07 / LEARNING FROM ERRORS WORLD MODELS, FROM FIRST PRINCIPLES\nHow errors change a model\nLearnin"
+  },
+  {
+    "page": 38,
+    "characters": 1909,
+    "outside": 0,
+    "start": "A neuron, a layer, and a network\nA layer first forms r = Wx+b, then applies an activation coord"
+  },
+  {
+    "page": 39,
+    "characters": 1998,
+    "outside": 0,
+    "start": "rule derivatives of the implemented operations, up to numerical arithmetic and conventions\nat n"
+  },
+  {
+    "page": 40,
+    "characters": 2052,
+    "outside": 0,
+    "start": "m v m^\nm^ t = 1\u2212 t \u03b2 t , v^ t = 1\u2212 t \u03b2 t , \u03b8 t+1 =\u03b8 t \u2212\u03b7 v^ + t \u03f5 .\n1 2 t\nAll operations in the"
+  },
+  {
+    "page": 41,
+    "characters": 1414,
+    "outside": 0,
+    "start": "L(w)= (wx \u2212y )2+\u03bbw2, \u03bb\u22650.\n\u2211 i i\ni\nDifferentiate and collect terms: L\u2032(w) = 2w\u2211\ni\nx\ni\n2 \u22122\u2211\ni\nx\n"
+  },
+  {
+    "page": 42,
+    "characters": 1062,
+    "outside": 0,
+    "start": "REGULARIZATION DESK\nA second preference changes the answer\nFit the single observation (1, 1) wi"
+  },
+  {
+    "page": 43,
+    "characters": 1876,
+    "outside": 0,
+    "start": "Early stopping chooses a checkpoint using held-out performance rather than training\nindefinitel"
+  },
+  {
+    "page": 44,
+    "characters": 1362,
+    "outside": 0,
+    "start": "Worked exercise: trace one update by hand\nLet x = 1, W = 2, b = 0, w = 3, b = 0, with ReLU and "
+  },
+  {
+    "page": 45,
+    "characters": 1037,
+    "outside": 0,
+    "start": "08 / A USEFUL PREDICTION TASK WORLD MODELS, FROM FIRST PRINCIPLES\nAgreement without collapse\nTw"
+  },
+  {
+    "page": 46,
+    "characters": 1222,
+    "outside": 0,
+    "start": "THE TARGET DETERMINES WHAT AN ERROR MEANS\nSupervised input Classifier Supplied label\no f \u03b8 y\nGe"
+  },
+  {
+    "page": 47,
+    "characters": 1268,
+    "outside": 0,
+    "start": "LEARN TO PREDICT, WHILE PRESERVING DISTINCTIONS\nPast and present Encoder\nzt\u22121 ,zt\nPredictor Pre"
+  },
+  {
+    "page": 48,
+    "characters": 1619,
+    "outside": 0,
+    "start": "Construct the collapse solution\nLet f (o) = c for every observation and g (c,a) = c for every a"
+  },
+  {
+    "page": 49,
+    "characters": 1761,
+    "outside": 0,
+    "start": "Contrastive learning: agreement plus alternatives\nA contrastive objective makes a positive pair"
+  },
+  {
+    "page": 50,
+    "characters": 1679,
+    "outside": 0,
+    "start": "representation is detached from differentiation by a stop-gradient operation, whose forward\nval"
+  },
+  {
+    "page": 51,
+    "characters": 1593,
+    "outside": 0,
+    "start": "One common convention defines the invariance term as B\u22121\u2211\ni\n\u2225z\ni\n\u2212z\ni\n\u2032 \u22252. For one branch,\ndef"
+  },
+  {
+    "page": 52,
+    "characters": 1903,
+    "outside": 0,
+    "start": "Why the variance penalty has a gradient caveat\nFor one coordinate with descriptive variance v ="
+  },
+  {
+    "page": 53,
+    "characters": 2281,
+    "outside": 0,
+    "start": "From covariance control to distribution matching\nSIGReg goes beyond a finite list of moments. I"
+  },
+  {
+    "page": 54,
+    "characters": 1489,
+    "outside": 0,
+    "start": "09 / DISTRIBUTIONAL REGULARIZATION WORLD MODELS, FROM FIRST PRINCIPLES\nWhen does a cloud count "
+  },
+  {
+    "page": 55,
+    "characters": 1559,
+    "outside": 0,
+    "start": "Compare accumulated probability rather than\nhistogram bins\nFor a scalar variable, the cumulativ"
+  },
+  {
+    "page": 56,
+    "characters": 1611,
+    "outside": 0,
+    "start": "Calibrate by repeating the null experiment\nGenerate many independent samples of the same size n"
+  },
+  {
+    "page": 57,
+    "characters": 1321,
+    "outside": 0,
+    "start": "TESTING DESK\nA discrepancy needs a reference\nEach histogram contains 511 simulated standard-Gau"
+  },
+  {
+    "page": 58,
+    "characters": 2124,
+    "outside": 0,
+    "start": "Where the simulated Gaussian samples come from\nThe simulation begins with seeded pseudorandom u"
+  },
+  {
+    "page": 59,
+    "characters": 1124,
+    "outside": 0,
+    "start": "average their squared deviations. The ideas of finite-sample fluctuation and a fully specified\n"
+  },
+  {
+    "page": 60,
+    "characters": 1193,
+    "outside": 0,
+    "start": "10 / DISTRIBUTIONAL REGULARIZATION WORLD MODELS, FROM FIRST PRINCIPLES\nA statistic for useful v"
+  },
+  {
+    "page": 61,
+    "characters": 1667,
+    "outside": 0,
+    "start": "A Gaussian target is a choice with consequences\nIsotropic Diagonal covariance Full covariance\n\u03c3"
+  },
+  {
+    "page": 62,
+    "characters": 1755,
+    "outside": 0,
+    "start": "inequality to u = q/p where p > 0, multiply by p, and integrate. This gives \u222b plog(q/p) \u2264\n\u222b q \u2212"
+  },
+  {
+    "page": 63,
+    "characters": 1849,
+    "outside": 0,
+    "start": "Euler's identity relates a complex exponential to the unit circle:\neit =cost+isint.\nDerivation "
+  },
+  {
+    "page": 64,
+    "characters": 994,
+    "outside": 0,
+    "start": "Four samples become a complex mean\nThe samples are \u22121, \u2212\u00bd, \u00bd, 1. Predict what happens at freque"
+  },
+  {
+    "page": 65,
+    "characters": 1206,
+    "outside": 0,
+    "start": "\u03c6\u2032 (\u03c9)= ixei\u03c9xp(x)dx=\u2212i ei\u03c9xp\u2032(x)dx.\nX \u222b \u222b\nIntegration by parts says \u222b uv\u2032 = uv \u2212\u222b u\u2032v. Use u ="
+  },
+  {
+    "page": 66,
+    "characters": 1688,
+    "outside": 0,
+    "start": "where C is the average cosine and S the average sine. We can compute both from the samples\nalon"
+  },
+  {
+    "page": 67,
+    "characters": 1621,
+    "outside": 0,
+    "start": "When b =\ue020 c, independence lets the expectation factor into two zero means. When b = c, the\nexpe"
+  },
+  {
+    "page": 68,
+    "characters": 1762,
+    "outside": 0,
+    "start": "d\nh =u\u22a4z = u z , u2 =1.\nb b \u2211 j b,j \u2211 j\nj=1 j\nThe dot product measures signed distance along th"
+  },
+  {
+    "page": 69,
+    "characters": 2392,
+    "outside": 0,
+    "start": "Average this bump over y = X. The Gaussian factor on the right is integrable, while the\noscilla"
+  },
+  {
+    "page": 70,
+    "characters": 1743,
+    "outside": 0,
+    "start": "with a point mass at zero, so it cannot be standard Gaussian. Looking only along the\ncoordinate"
+  },
+  {
+    "page": 71,
+    "characters": 1749,
+    "outside": 0,
+    "start": "Embedding batch Project Average phasors Compare and integrate\nZ \u2208R B\u00d7d H =ZU \u03c6\nm\n(\u03c9\nk\n) R(Z)\nH\u2208"
+  },
+  {
+    "page": 72,
+    "characters": 1720,
+    "outside": 0,
+    "start": "Integrating the bound gives L\u03943/12 per interval. Across K \u22121 intervals, and including\nsymmetry,"
+  },
+  {
+    "page": 73,
+    "characters": 1849,
+    "outside": 0,
+    "start": "For the constant-zero cloud, every pairwise difference and every sample is zero. Its unscaled\np"
+  },
+  {
+    "page": 74,
+    "characters": 712,
+    "outside": 0,
+    "start": "Consider one direction with h = sx , where the fixed x have mean zero and second moment\nb b b\nm"
+  },
+  {
+    "page": 75,
+    "characters": 1200,
+    "outside": 0,
+    "start": "Run the statistic and challenge it\nSame moments, different distributions\nStart with a Gaussian,"
+  },
+  {
+    "page": 76,
+    "characters": 1634,
+    "outside": 0,
+    "start": "Read the implementation as mathematics\nThe following Python reference is included directly from"
+  },
+  {
+    "page": 77,
+    "characters": 2218,
+    "outside": 0,
+    "start": "Read the shapes as a sequence of questions. The matrix product asks, \u201cwhere does each of the\nB "
+  },
+  {
+    "page": 78,
+    "characters": 2140,
+    "outside": 0,
+    "start": "results. Flattening time into the batch changes which empirical distributions are compared,\nthe"
+  },
+  {
+    "page": 79,
+    "characters": 2270,
+    "outside": 0,
+    "start": "The vector (X,SX) supplies a counterexample. Both coordinates have the same Gaussian\nmarginal, "
+  },
+  {
+    "page": 80,
+    "characters": 1313,
+    "outside": 0,
+    "start": "Return to the world model\nWe began with a loophole: an encoder can make agreement trivial by re"
+  },
+  {
+    "page": 81,
+    "characters": 1431,
+    "outside": 0,
+    "start": "11 / A WORKING WORLD MODEL WORLD MODELS, FROM FIRST PRINCIPLES\nFrom equations to a learner\nThe "
+  },
+  {
+    "page": 82,
+    "characters": 1333,
+    "outside": 0,
+    "start": "Follow one window through its shapes\nQuantity Shape Meaning\nCamera windows B\u00d73\u00d71024 Three flatt"
+  },
+  {
+    "page": 83,
+    "characters": 1885,
+    "outside": 0,
+    "start": "z^ =z +r (z ,z ,a ,a ).\nt+1 t \u03c8 t\u22121 t t\u22121 t\nIf the residual network outputs zero, this is persi"
+  },
+  {
+    "page": 84,
+    "characters": 1829,
+    "outside": 0,
+    "start": "Trace SIGReg with a tiny concrete array\n1 0\nTake B = 2,d = 2,M = 2 and embeddings Z = . Choose "
+  },
+  {
+    "page": 85,
+    "characters": 1117,
+    "outside": 0,
+    "start": "Python reference implementation\n1 import numpy as np\n2\n3\n4 def initialize(seed=7, pixels=4, lat"
+  },
+  {
+    "page": 86,
+    "characters": 1977,
+    "outside": 0,
+    "start": "Python reference implementation\n1 import numpy as np\n2 from model_reference import initialize, "
+  },
+  {
+    "page": 87,
+    "characters": 1746,
+    "outside": 0,
+    "start": "Optimization state is part of the experiment\nPython reference implementation\n1 import numpy as "
+  },
+  {
+    "page": 88,
+    "characters": 2166,
+    "outside": 0,
+    "start": "Data splitting and matched comparisons\nThe browser generates 256 training episodes of 64 transi"
+  },
+  {
+    "page": 89,
+    "characters": 1113,
+    "outside": 0,
+    "start": "Worked challenge: a bug that improves the loss\nAn implementation computes SIGReg after averagin"
+  },
+  {
+    "page": 90,
+    "characters": 1925,
+    "outside": 0,
+    "start": "12 / A WORKING WORLD MODEL WORLD MODELS, FROM FIRST PRINCIPLES\nA world model you can train\nA sm"
+  },
+  {
+    "page": 91,
+    "characters": 685,
+    "outside": 0,
+    "start": "Learning from camera images\nFirst inspect the untrained model. Then train for 5,000 updates, ev"
+  },
+  {
+    "page": 92,
+    "characters": 1978,
+    "outside": 0,
+    "start": "Objective Updates Prediction MSE Spread Effective rank\nPrediction + SIGReg 5000 5.191e-3 9.026e"
+  },
+  {
+    "page": 93,
+    "characters": 2133,
+    "outside": 0,
+    "start": "Do the prediction-only experiment even if the regularized model looks successful. It\ndemonstrat"
+  },
+  {
+    "page": 94,
+    "characters": 1975,
+    "outside": 0,
+    "start": "What the implementation actually optimizes\nFor three sequence positions, batch size B, and embe"
+  },
+  {
+    "page": 95,
+    "characters": 1731,
+    "outside": 0,
+    "start": "establish accurate responses to all counterfactual actions, especially those absent from the\nex"
+  },
+  {
+    "page": 96,
+    "characters": 665,
+    "outside": 0,
+    "start": "This is a small educational model with the same prediction-plus-SIGReg structure. It is not a\nr"
+  },
+  {
+    "page": 97,
+    "characters": 1627,
+    "outside": 0,
+    "start": "13 / ACTING AND EVALUATING WORLD MODELS, FROM FIRST PRINCIPLES\nFrom imagination to action\nA lea"
+  },
+  {
+    "page": 98,
+    "characters": 1813,
+    "outside": 0,
+    "start": "Both qualifications matter. Two physically different states can share an embedding. A goal\nimag"
+  },
+  {
+    "page": 99,
+    "characters": 1721,
+    "outside": 0,
+    "start": "CEM refits a distribution to promising plans\nFlatten a candidate action sequence into A \u2208 R Hd "
+  },
+  {
+    "page": 100,
+    "characters": 1738,
+    "outside": 0,
+    "start": "A complete reference planner\nPython reference implementation\n1 import numpy as np\n2\n3\n4 def cem"
+  },
+  {
+    "page": 101,
+    "characters": 1590,
+    "outside": 0,
+    "start": "A two-action calculation by hand\nConsider the known scalar system x = x +a , starting at zero a"
+  },
+  {
+    "page": 102,
+    "characters": 871,
+    "outside": 0,
+    "start": "Let E be the distance between the imagined and true latent state after the same actions.\nk\nInse"
+  },
+  {
+    "page": 103,
+    "characters": 1135,
+    "outside": 0,
+    "start": "PLANNING DESK\nSmall errors, repeated\nChange the assumed sensitivity of the transition. The char"
+  },
+  {
+    "page": 104,
+    "characters": 1453,
+    "outside": 0,
+    "start": "that corresponds to 25 environment actions. Read the exact setup rather than inferring \u201cone\nact"
+  },
+  {
+    "page": 105,
+    "characters": 704,
+    "outside": 0,
+    "start": "Worked exercise: arriving is not staying\nA controller enters the goal tolerance at action 12 an"
+  },
+  {
+    "page": 106,
+    "characters": 1278,
+    "outside": 0,
+    "start": "14 / ACTING AND EVALUATING WORLD MODELS, FROM FIRST PRINCIPLES\nWhat counts as understanding?\nA "
+  },
+  {
+    "page": 107,
+    "characters": 1998,
+    "outside": 0,
+    "start": "Linear and nonlinear probes\nFreeze the encoder, construct a labeled probe dataset, and fit a re"
+  },
+  {
+    "page": 108,
+    "characters": 2185,
+    "outside": 0,
+    "start": "combination of coordinates. This non-uniqueness is not itself a flaw: maps can use different\nco"
+  },
+  {
+    "page": 109,
+    "characters": 2207,
+    "outside": 0,
+    "start": "Therefore a decoded imagined frame reflects both predictor error and decoder error. The\nbrowser"
+  },
+  {
+    "page": 110,
+    "characters": 1978,
+    "outside": 0,
+    "start": "Now imagine a car approaching a fork. Its future may branch left or right. Discarding tree\ntext"
+  },
+  {
+    "page": 111,
+    "characters": 2374,
+    "outside": 0,
+    "start": "Surprise is an error before it is a probability\nThe paper's violation-of-expectation experiment"
+  },
+  {
+    "page": 112,
+    "characters": 2081,
+    "outside": 0,
+    "start": "Baselines in Appendix C: what policies learn\ninstead\nLeWM compares world-model planning with go"
+  },
+  {
+    "page": 113,
+    "characters": 1772,
+    "outside": 0,
+    "start": "Expectiles emphasize one side of an error\nAppendix C uses the asymmetric squared loss\n\u2113 (u)=\u2223\u03c4 "
+  },
+  {
+    "page": 114,
+    "characters": 2070,
+    "outside": 0,
+    "start": "To see what weighted regression learns, fix a context and differentiate with respect to a\nconst"
+  },
+  {
+    "page": 115,
+    "characters": 1322,
+    "outside": 0,
+    "start": "Construct several perturbation families with matched approximate visual-change magnitudes:\na ph"
+  },
+  {
+    "page": 116,
+    "characters": 1652,
+    "outside": 0,
+    "start": "15 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nWhat Gaussian geometry can\npromise\nA "
+  },
+  {
+    "page": 117,
+    "characters": 1683,
+    "outside": 0,
+    "start": "Its mean is \u03b2 and its variance is (\u03c32 +\u03c32)/4 = \u03c32/2. If the observed input magnitudes are\nonly "
+  },
+  {
+    "page": 118,
+    "characters": 1581,
+    "outside": 0,
+    "start": "isotropy minimizes the worst-direction ridge bias magnitude for a fixed norm of \u03b2 and\npositive "
+  },
+  {
+    "page": 119,
+    "characters": 1886,
+    "outside": 0,
+    "start": "Before introducing a named estimator, calculate one weighted average. Suppose stored\nrepresenta"
+  },
+  {
+    "page": 120,
+    "characters": 1855,
+    "outside": 0,
+    "start": "formula below must reproduce this number when m\u2032\u2032 = 2, the density derivative is zero, and\n\u03bc = "
+  },
+  {
+    "page": 121,
+    "characters": 1542,
+    "outside": 0,
+    "start": "\u222b r ad+1da d\n0 = r2.\n\u222b r ad\u22121da d+2\n0\nDivide by d identical coordinate variances to obtain r2/("
+  },
+  {
+    "page": 122,
+    "characters": 1662,
+    "outside": 0,
+    "start": "Let Z be centered with covariance \u03a3. For coordinates j,k, integrate z \u2202 p(z) with respect to\nj "
+  },
+  {
+    "page": 123,
+    "characters": 2534,
+    "outside": 0,
+    "start": "Gaussianity minimizes the density-dependent Fisher term in this bound under the specified\ncovar"
+  },
+  {
+    "page": 124,
+    "characters": 1484,
+    "outside": 0,
+    "start": "gradients, finite-batch floor, and collapsed stationary configurations were derived in the\nSIGR"
+  },
+  {
+    "page": 125,
+    "characters": 1738,
+    "outside": 0,
+    "start": "16 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nInside the vision transformer\nA trans"
+  },
+  {
+    "page": 126,
+    "characters": 1501,
+    "outside": 0,
+    "start": "If query and key width is d k , then W Q ,W K \u2208 R d\u00d7d k and Q,K \u2208 R n\u00d7d k . Values may have\nwid"
+  },
+  {
+    "page": 127,
+    "characters": 1122,
+    "outside": 0,
+    "start": "A single head therefore places each output in the convex hull of its value vectors: it is a\nnon"
+  },
+  {
+    "page": 128,
+    "characters": 1023,
+    "outside": 0,
+    "start": "ATTENTION DESK\nA weighted retrieval\nDivide three fixed scores by a temperature before softmax. "
+  },
+  {
+    "page": 129,
+    "characters": 1680,
+    "outside": 0,
+    "start": "Computing all query\u2013key dot products costs proportionally to n2d per head, ignoring\nk\nconstant "
+  },
+  {
+    "page": 130,
+    "characters": 2176,
+    "outside": 0,
+    "start": "The learned scale \u03b3 and shift \u03b2 are shared across examples. Before that affine step and with\n\u03f5 "
+  },
+  {
+    "page": 131,
+    "characters": 2066,
+    "outside": 0,
+    "start": "In AdaLN-zero initialization, the modulation output is initialized to zero. Then s = b = \u03b1 = 0\n"
+  },
+  {
+    "page": 132,
+    "characters": 1811,
+    "outside": 0,
+    "start": "Python reference implementation\n1 import numpy as np\n2\n3\n4 def attention(x, wq, wk, wv, causal="
+  },
+  {
+    "page": 133,
+    "characters": 951,
+    "outside": 0,
+    "start": "Find the shortcut\nIt can retrieve z directly, which is the target it is supposed to predict. A "
+  },
+  {
+    "page": 134,
+    "characters": 1811,
+    "outside": 0,
+    "start": "17 / RESEARCH BRIDGES WORLD MODELS, FROM FIRST PRINCIPLES\nThe papers as a conversation\nEach pap"
+  },
+  {
+    "page": 135,
+    "characters": 2376,
+    "outside": 0,
+    "start": "reading the target pixels. Large target blocks discourage a solution based only on tiny local\nt"
+  },
+  {
+    "page": 136,
+    "characters": 2023,
+    "outside": 0,
+    "start": "data and tasks, not a proof that pixel prediction is universally unnecessary.\nV-JEPA 2: large-s"
+  },
+  {
+    "page": 137,
+    "characters": 2402,
+    "outside": 0,
+    "start": "be retrained for each goal. This illustrates why latent dynamics and planning can be useful\neve"
+  },
+  {
+    "page": 138,
+    "characters": 2290,
+    "outside": 0,
+    "start": "LeJEPA: make the geometry explicit\nLeJEPA, 2511.08544v1, motivates isotropic Gaussian embedding"
+  },
+  {
+    "page": 139,
+    "characters": 1388,
+    "outside": 0,
+    "start": "Compare the contracts, not just the names\nMethod Prediction target Encoder during main dynamics"
+  },
+  {
+    "page": 140,
+    "characters": 1266,
+    "outside": 0,
+    "start": "comparison meaningful?\nBuild the comparison before interpreting it\nRecord pretraining data and "
+  },
+  {
+    "page": 141,
+    "characters": 1912,
+    "outside": 0,
+    "start": "18 / THE DESTINATION WORLD MODELS, FROM FIRST PRINCIPLES\nRead LeWorldModel closely\nWe can now r"
+  },
+  {
+    "page": 142,
+    "characters": 1536,
+    "outside": 0,
+    "start": "Section 3.1: what is actually observed?\nThe training dataset contains trajectories of images an"
+  },
+  {
+    "page": 143,
+    "characters": 1953,
+    "outside": 0,
+    "start": "Image patches ViT-Tiny tokens CLS readout Projector + BN\n224\u00d7224 256+1 R 192 z t \u2208R d\nHistory +"
+  },
+  {
+    "page": 144,
+    "characters": 2230,
+    "outside": 0,
+    "start": "Equation 1: the compact prediction notation\nThe paper writes L = \u2225z^ \u2212z \u22252. It is a definition "
+  },
+  {
+    "page": 145,
+    "characters": 1478,
+    "outside": 0,
+    "start": "[0.2,4]; the code uses 17 nodes on [0,3] with doubled positive-side trapezoid weights and\nGauss"
+  },
+  {
+    "page": 146,
+    "characters": 1432,
+    "outside": 0,
+    "start": "Configuration is part of the scientific object\nChoice v1 paper description Pinned repository de"
+  },
+  {
+    "page": 147,
+    "characters": 2271,
+    "outside": 0,
+    "start": "Equations 4 and 5: plan in the learned coordinates\nEquation 4 defines terminal squared latent d"
+  },
+  {
+    "page": 148,
+    "characters": 2096,
+    "outside": 0,
+    "start": "Appendix E describes offline data collection: 20,000 PushT expert episodes averaging 196\nsteps;"
+  },
+  {
+    "page": 149,
+    "characters": 2213,
+    "outside": 0,
+    "start": "The embedding-dimension curve tests discrete settings, including 192; the prose's\napproximate t"
+  },
+  {
+    "page": 150,
+    "characters": 1698,
+    "outside": 0,
+    "start": "19 / THE DESTINATION WORLD MODELS, FROM FIRST PRINCIPLES\nBuild, challenge, explain\nThe final te"
+  },
+  {
+    "page": 151,
+    "characters": 2015,
+    "outside": 0,
+    "start": "This separation allows a meaningful claim about learning control from pixels in the teaching\nse"
+  },
+  {
+    "page": 152,
+    "characters": 1933,
+    "outside": 0,
+    "start": "still does not prove that an exactly symmetric collapsed point has a nonzero gradient; that\nreq"
+  },
+  {
+    "page": 153,
+    "characters": 2027,
+    "outside": 0,
+    "start": "matched prediction-only model's spread was approximately 3.84\u00d710\u22125. Its extremely small\nMSE acc"
+  },
+  {
+    "page": 154,
+    "characters": 2234,
+    "outside": 0,
+    "start": "The training graph has frame encoder branches with shared parameters, an action-\nconditioned ca"
+  },
+  {
+    "page": 155,
+    "characters": 934,
+    "outside": 0,
+    "start": "invariant. Compare fixed and freshly sampled SIGReg directions. Add an appearance shift and\ntes"
+  },
+  {
+    "page": 156,
+    "characters": 1075,
+    "outside": 0,
+    "start": "20 / REFERENCE WORLD MODELS, FROM FIRST PRINCIPLES\nKeep the whole argument in\nview\nUse this map"
+  },
+  {
+    "page": 157,
+    "characters": 1569,
+    "outside": 0,
+    "start": "Stage Read Check before moving on\nA useful prediction Agreement without Construct collapse and "
+  },
+  {
+    "page": 158,
+    "characters": 1265,
+    "outside": 0,
+    "start": "Symbols and axes\nThe semantic colors are blue for observations, violet for representations, tea"
+  },
+  {
+    "page": 159,
+    "characters": 1201,
+    "outside": 0,
+    "start": "Symbol Meaning Important distinction\nu,U One unit projection direction; matrix of Columns of U "
+  },
+  {
+    "page": 160,
+    "characters": 1243,
+    "outside": 0,
+    "start": "LeWorldModel v1 coverage map\nPaper location What it contains Teaching location\nAbstract; \u00a71; Fi"
+  },
+  {
+    "page": 161,
+    "characters": 1346,
+    "outside": 0,
+    "start": "Paper location What it contains Teaching location\nAppendix B; Algorithm 2 CEM Planning: likelih"
+  },
+  {
+    "page": 162,
+    "characters": 1895,
+    "outside": 0,
+    "start": "motivation; mathematical identities require derivation; approximations require assumptions\nand "
+  },
+  {
+    "page": 163,
+    "characters": 1651,
+    "outside": 0,
+    "start": "Backpropagation. The chain rule organized in reverse through a computation graph. See the\nexpla"
+  },
+  {
+    "page": 164,
+    "characters": 1961,
+    "outside": 0,
+    "start": "Isotropy. Absence of a preferred direction; distinguish covariance isotropy from full\ndistribut"
+  },
+  {
+    "page": 165,
+    "characters": 1682,
+    "outside": 0,
+    "start": "manuscript.\nYann LeCun, A Path Towards Autonomous Machine Intelligence, version 0.9.2, June 27,"
+  }
+]

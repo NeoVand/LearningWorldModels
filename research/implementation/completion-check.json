@@ -1,0 +1,93 @@
+{
+  "initialStep": 0,
+  "paused": 76,
+  "resumed": 81,
+  "forecastsRemainAtStep": 0,
+  "trace": [
+    {
+      "stage": "Projection",
+      "lines": [
+        "h = z @ directions"
+      ]
+    },
+    {
+      "stage": "Phase",
+      "lines": [
+        "phase = h[:, :, None] * omega[None, None, :]"
+      ]
+    },
+    {
+      "stage": "Average",
+      "lines": [
+        "c = np.cos(phase).mean(axis=0)",
+        "s = np.sin(phase).mean(axis=0)"
+      ]
+    },
+    {
+      "stage": "Discrepancy",
+      "lines": [
+        "error = (c - target)**2 + s**2",
+        "return batch * (error * weights).sum(axis=-1).mean()"
+      ]
+    }
+  ],
+  "choiceStates": {
+    "count": 67,
+    "failures": []
+  },
+  "layout": [
+    {
+      "theme": "light",
+      "scroll": 1440,
+      "width": 1440,
+      "mathOverflow": [],
+      "inlineCode": [
+        {
+          "text": "cost",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "weights",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        }
+      ],
+      "mathFragments": 1730,
+      "coloredFragments": 824,
+      "distortedCircles": 0
+    },
+    {
+      "theme": "dark",
+      "scroll": 1440,
+      "width": 1440,
+      "mathOverflow": [],
+      "inlineCode": [
+        {
+          "text": "cost",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "weights",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        }
+      ],
+      "mathFragments": 1730,
+      "coloredFragments": 824,
+      "distortedCircles": 0
+    }
+  ],
+  "errors": []
+}

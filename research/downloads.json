@@ -1,0 +1,42 @@
+[
+  {
+    "file": "papers/dino-wm-v1.pdf",
+    "bytes": 5427708,
+    "sha256": "a6efa898394ced692124bf4db0d2fcc09e741aced20d9f4dde18ba59b6c6365b"
+  },
+  {
+    "file": "papers/ijepa-v1.pdf",
+    "bytes": 3527757,
+    "sha256": "17ebbd268de46874ed70fa41f00e0000fbeb7a9a5df09c8fe81c90dc27f28709"
+  },
+  {
+    "file": "papers/lejepa-v1.pdf",
+    "bytes": 8757859,
+    "sha256": "43dbfdaf731c19f57ae9db321f0df368f50a756a59653d460bbdf4ea135bd91d"
+  },
+  {
+    "file": "papers/leworldmodel-v1.pdf",
+    "bytes": 5629454,
+    "sha256": "36b6dabbf3a37a4229063e76d82854b9e696411abfa0d4bf72325bdd67d64d85"
+  },
+  {
+    "file": "papers/pldm-v1.pdf",
+    "bytes": 3794906,
+    "sha256": "2398e421e90ecd2ddb208bac18b086955d304531f3042556291aef313bb1d359"
+  },
+  {
+    "file": "papers/vicreg-v1.pdf",
+    "bytes": 623690,
+    "sha256": "78527287d8c19210d6e4f9c52cd85d6a1ae8220644472fe2c7d4c19dce65006e"
+  },
+  {
+    "file": "papers/vjepa-v1.pdf",
+    "bytes": 4601259,
+    "sha256": "fb84f79be128e7425263e8674fbc3f2ec991575c4b5880556cfb8f5fa9fd91ba"
+  },
+  {
+    "file": "papers/vjepa2-v1.pdf",
+    "bytes": 20240380,
+    "sha256": "9cfcfde5fb0d9730637da5b9e7317825c3f3d09e91f3553e22eeba42c74d2226"
+  }
+]
