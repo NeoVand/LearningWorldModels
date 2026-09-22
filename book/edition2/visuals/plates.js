@@ -9,7 +9,7 @@ import {
   dot,
   line,
   path,
-  choices,
+  takeaway,
   tex,
 } from "./core.js";
 register("P1", {
@@ -47,93 +47,114 @@ register("P1", {
     "This animation supplies one possible physical continuation, not a learned prediction. When the ball is hidden, images alone cannot establish whether an unseen interaction changes its motion.",
 });
 register("P4", {
-  title: "A subgoal connects two time scales",
+  title: "A subgoal narrows the next search",
   question:
-    "A route planner need not choose every foot placement. What must it pass to the shorter-scale planner?",
-  draw: () =>
-    row(
-      panel(
-        "Minutes",
-        svg(
-          path(
-            [
-              [45, 200],
-              [45, 60],
-              [280, 60],
-              [280, 200],
-            ],
-            "teal",
-            4,
-          ) +
-            dot(45, 200, 7, "blue") +
-            dot(280, 200, 7, "amber") +
-            text(180, 245, "Reach the next street", "ink", "middle"),
-          "A coarse route around a block",
+    "Once the route fixes a crossing, which foot-level alternatives still need to be considered?",
+  draw: () => {
+    const branch = (x, y, dx, dy, color) =>
+      path(
+        [
+          [x, y],
+          [x + dx, y + dy],
+        ],
+        color,
+        1.7,
+      );
+    const tree = (root, offsets, color) => {
+      let level = [root],
+        drawing = "";
+      offsets.forEach((offset, depth) => {
+        const next = [];
+        for (const x of level)
+          for (const sign of [-1, 1]) {
+            const child = x + sign * offset;
+            drawing += branch(x, 37 + depth * 32, sign * offset, 32, color);
+            next.push(child);
+          }
+        level = next;
+      });
+      return (
+        drawing +
+        level.map((x) => dot(x, 37 + offsets.length * 32, 3, color)).join("")
+      );
+    };
+    return (
+      row(
+        panel(
+          "Compare the remaining local choices",
+          svg(
+            text(87, 17, "No subgoal", "ink", "middle") +
+              text(269, 17, "Crossing chosen", "ink", "middle") +
+              tree(87, [42, 20, 9], "blue") +
+              tree(269, [42, 20], "teal") +
+              text(87, 168, "8 three-step paths", "blue", "middle") +
+              text(269, 168, "4 local paths", "teal", "middle"),
+            "A three-step binary action tree has eight leaves. After a high-level crossing has been selected, the illustrated two-step local search has four leaves. Selecting the crossing has its own cost.",
+            360,
+            184,
+          ),
         ),
-        "Output: a crossing location.",
-      ),
-      panel(
-        "Seconds",
-        svg(
-          [0, 1, 2, 3, 4]
-            .map(
-              (i) =>
-                `<rect x="${65 + i * 45}" y="90" width="25" height="100" fill="var(--plot-line)"/>`,
-            )
-            .join("") +
-            path(
-              [
-                [50, 140],
-                [305, 140],
-              ],
-              "teal",
-              3,
-            ) +
-            text(180, 245, "Reach the far curb", "ink", "middle"),
-          "Crossing a street",
-        ),
-        "Output: a safe landing region.",
-      ),
-      panel(
-        "Fractions of a second",
-        svg(
-          `<ellipse cx="180" cy="165" rx="85" ry="30" fill="var(--inset)" stroke="var(--blue)"/>` +
-            path(
-              [
-                [50, 170],
-                [105, 75],
-                [230, 70],
-                [305, 170],
-              ],
-              "amber",
-              3,
-            ) +
-            text(180, 245, "Place the next foot", "ink", "middle"),
-          "A foot-placement path over a puddle",
-        ),
-        "Output: a short action sequence.",
-      ),
-    ),
+      ) +
+      takeaway(
+        "A chosen subgoal can narrow the short-range question. Finding a good subgoal also takes work.",
+      )
+    );
+  },
   caption:
-    "This is the hierarchy proposal illustrated at human scales. The book’s learner and the target model use a single planning scale; the picture does not imply they already implement this hierarchy.",
+    "This is a toy conditional search, not a general savings theorem. The book’s learner and the target model use a single planning scale; the hierarchy above is a proposal.",
 });
 register("J1", {
-  title: "Two targets ask for different kinds of agreement",
-  question:
-    "Which discrepancy punishes a changed shadow even when the object motion is the same?",
-  draw: () =>
-    row(
-      panel(
-        "Pixel reconstruction",
-        `<div class="visual-equation">${tex("\\observed{o}_t\\to f_\\theta\\to g_\\psi\\to\\predicted{\\hat o}_{t+1}", true)}</div><div class="visual-equation">${tex("\\|\\predicted{\\hat o}_{t+1}-\\observed{o}_{t+1}\\|^2", true)}</div>`,
-        "The target is every observed pixel; nuisance appearance can contribute to the loss.",
-      ),
-      panel(
-        "Latent prediction",
-        `<div class="visual-equation">${tex("o_t\\to f_\\theta\\to g_\\psi\\to\\pred_{t+1}", true)}</div><div class="visual-equation">${tex("\\|\\pred_{t+1}-f_\\theta(o_{t+1})\\|^2", true)}</div>`,
-        "The target is itself encoded. This creates room to omit details, and creates the collapse loophole.",
-      ),
-    ),
+  title: "A learned target can move toward the prediction",
+  question: "If the encoder changes, which target changes with it?",
+  draw: () => {
+    const box = (x, y, a, b, color = "line") =>
+      `<rect x="${x}" y="${y}" width="107" height="50" rx="5" fill="var(--surface-raised)" stroke="var(--${color})"/>` +
+      text(x + 53.5, y + 20, a, "ink", "middle") +
+      text(x + 53.5, y + 38, b, "muted", "middle");
+    const inward = (y) =>
+      line(123, y, 158, y, "muted") +
+      `<path d="M158 ${y}l-6-4v8z" fill="var(--muted)"/>` +
+      line(237, y, 202, y, "muted") +
+      `<path d="M202 ${y}l6-4v8z" fill="var(--muted)"/>`;
+    const diagram =
+      text(12, 17, "PIXEL TARGET", "blue") +
+      box(14, 27, "Predicted", "image", "teal") +
+      inward(52) +
+      `<circle cx="180" cy="52" r="19" fill="var(--surface-raised)" stroke="var(--rose)"/>` +
+      text(180, 57, "loss", "rose", "middle") +
+      box(239, 27, "Observed", "future · fixed", "blue") +
+      line(12, 101, 348, 101) +
+      text(12, 124, "REPRESENTATION TARGET", "violet") +
+      box(14, 135, "Predicted", "embedding", "teal") +
+      inward(160) +
+      `<circle cx="180" cy="160" r="19" fill="var(--surface-raised)" stroke="var(--rose)"/>` +
+      text(180, 165, "loss", "rose", "middle") +
+      box(239, 135, "Encoded", "future · learned", "violet") +
+      text(
+        180,
+        209,
+        "Both latent branches depend on the encoder.",
+        "ink",
+        "middle",
+      );
+    return (
+      row(
+        panel(
+          "What each prediction is compared with",
+          svg(
+            diagram,
+            "A pixel prediction is compared with a fixed observed future image. A latent prediction is compared with an embedding of the future image; that target changes when the shared encoder learns.",
+            360,
+            225,
+          ),
+        ),
+      ) +
+      `<div class="visual-formula-row"><span>${tex("\\objective{L}_{\\rm pixel}=\\|\\predicted{\\hat o}-\\observed{o}'\\|^2")}</span><span>${tex("\\objective{L}_{\\rm latent}=\\|\\predicted{\\hat z}-f_\\theta(\\observed{o}')\\|^2")}</span></div>` +
+      takeaway(
+        "The future image is fixed data. Its learned embedding can move, so agreement alone can reward making both sides constant.",
+      )
+    );
+  },
   caption:
-    "The illustration expresses a desired distinction, not a guarantee that a learned embedding retains exactly the useful structure. The loss and data determine what survives.",
+    "The latent target is trainable because the same encoder is applied to the future observation. This permits nuisance suppression, but prediction loss alone does not guarantee a useful embedding.",
 });

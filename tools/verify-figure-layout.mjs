@@ -57,6 +57,33 @@ for (const [width, media, theme] of [
         })
         .map((e) => ({ id: fig.dataset.visual, text: e.textContent })),
     );
+    const legibilityTargets = new Set([
+      "B1",
+      "B7",
+      "C4",
+      "D6",
+      "L6",
+      "N2",
+      "R5",
+      "S4",
+      "S5",
+    ]);
+    const tooSmallPlots = figures.flatMap((fig) =>
+      legibilityTargets.has(fig.dataset.visual)
+        ? [...fig.querySelectorAll('svg[role="img"]')]
+            .filter(
+              (svg) =>
+                svg
+                  .getAttribute("aria-label")
+                  ?.includes(" as a function of ") &&
+                svg.getBoundingClientRect().width < 220,
+            )
+            .map((svg) => ({
+              id: fig.dataset.visual,
+              width: Math.round(svg.getBoundingClientRect().width),
+            }))
+        : [],
+    );
     const mathOverflow = [
       ...document.querySelectorAll(".teaching-visual .katex-display"),
     ]
@@ -74,6 +101,7 @@ for (const [width, media, theme] of [
       pageWidth: document.body.scrollWidth,
       figures: figures.length,
       orphanPlots,
+      tooSmallPlots,
       textOutside,
       mathOverflow,
       distorted,
@@ -94,24 +122,45 @@ for (const [width, media, theme] of [
     "R1",
     "H2",
   ])
-    await page
-      .locator(`#visual-${id}`)
-      .screenshot({
-        path: `tmp/layout-review/final-${id}-${width}-${media}-${theme}.png`,
-      });
+    await page.locator(`#visual-${id}`).screenshot({
+      path: `tmp/layout-review/final-${id}-${width}-${media}-${theme}.png`,
+    });
 }
 assert.deepEqual(errors, []);
 for (const r of layouts) {
+  const intentionalPhoneStacks = new Set([
+    "B1",
+    "B7",
+    "C4",
+    "D6",
+    "O1",
+    "R5",
+    "S4",
+    "S5",
+  ]);
   assert.deepEqual(
-    r.orphanPlots,
+    r.orphanPlots.filter(
+      (id) =>
+        !(
+          r.media === "screen" &&
+          r.width <= 620 &&
+          intentionalPhoneStacks.has(id)
+        ),
+    ),
     [],
-    `${r.width}/${r.media}: comparison plots wrapped`,
+    `${r.width}/${r.media}: comparison plots wrapped without an intentional readable layout`,
   );
   assert.deepEqual(
     r.textOutside,
     [],
     `${r.width}/${r.media}: SVG labels clipped`,
   );
+  if (r.media === "screen" && r.width <= 620)
+    assert.deepEqual(
+      r.tooSmallPlots,
+      [],
+      `${r.width}: teaching plots are too small to read`,
+    );
   assert.equal(r.distorted, 0);
   assert.deepEqual(
     r.mathOverflow,

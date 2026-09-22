@@ -59,7 +59,7 @@ First predict what happens to ordinary null discrepancies as $n$ grows. Then com
 <div class="controls"><label>Sample size <input data-value-format="power2" id="normality-size" type="range" min="4" max="8" step="1" value="5" aria-label="Sample size as a power of two"/></label></div>
 <div class="controls normality-choices" role="group" aria-label="Observed sampling distribution"><button data-normality="normal" aria-pressed="true">Standard Gaussian</button><button data-normality="shifted" aria-pressed="false">Shifted mean</button><button data-normality="two-point" aria-pressed="false">Two points</button></div>
 <canvas id="normality-canvas" aria-label="Histogram of simulated null discrepancies with an observed discrepancy and a five-percent threshold"></canvas>
-<p id="normality-readout" class="readout"></p><p class="caption">Seeded Monte Carlo simulation, not neural-network training. The Gaussian CDF is evaluated numerically. The plotted threshold and power estimate have simulation error.</p>
+<p id="normality-readout" class="readout"></p><p class="caption">Seeded Monte Carlo simulation, not neural-network training. The Gaussian CDF is evaluated numerically. The horizontal scale is fixed across the three modes at each sample size. An observed discrepancy beyond that scale is marked at the right edge, with its full value in the readout. The plotted threshold and power estimate have simulation error.</p>
 </div>
 
 Under the correct null, a small p-value is still possible. Approximately one in twenty independent null experiments can cross a 5% rejection threshold. Increasing sample size does not make false alarms impossible when the test keeps the same nominal level.

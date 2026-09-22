@@ -181,28 +181,31 @@ register("N4", {
       h = Math.tanh(u),
       y = s.v * h,
       e = y - 0.6,
-      g = e * s.v * (1 - h * h) * s.x;
-    return row(
-      panel(
-        "Forward",
-        cards([
-          ["Preactivation", tex(`u=wx+0.1=${f(u)}`)],
-          ["Hidden value", tex(`h=\\tanh u=${f(h)}`)],
-          ["Output and target", tex(`\\hat y=vh=${f(y)},\\quad y=0.6`)],
-        ]),
-      ),
-      panel(
-        "Backward",
-        eq(
-          "\\frac{\\partial L}{\\partial w}=\\underbrace{(\\hat y-y)}_{\\text{error}}\\underbrace{v(1-h^2)}_{\\text{hidden sensitivity}}\\underbrace{x}_{\\text{input}}",
-        ) +
-          eq(`=${f(e)}\\cdot${f(s.v * (1 - h * h))}\\cdot${f(s.x)}=${f(g, 4)}`),
-        "Loss is one half squared error. The sign says whether increasing this weight initially raises or lowers the loss.",
-      ),
+      sensitivity = s.v * (1 - h * h),
+      g = e * sensitivity * s.x;
+    const stage = (label, symbol, value) =>
+      `<div class="gradient-stage"><span>${label}</span><strong>${tex(symbol)}</strong><output>${f(value, 3)}</output></div>`;
+    const factor = (label, expression, value) =>
+      `<div class="gradient-factor"><span>${label}</span><strong>${tex(expression)}</strong><output>${f(value, 3)}</output></div>`;
+    return (
+      `<div class="gradient-circuit" aria-label="Forward calculation from input through preactivation and nonlinearity to prediction">` +
+      stage("Input", "x", s.x) +
+      stage("Weighted sum", "u", u) +
+      stage("Nonlinearity", "h", h) +
+      stage("Prediction", "\\hat y", y) +
+      `</div>` +
+      eq("u=wx+0.1,\\quad h=\\tanh u,\\quad\\hat y=vh") +
+      `<p class="gradient-target">Target ${tex("y=0.6")} · loss ${tex("L=\\frac12(\\hat y-y)^2")}</p>` +
+      eq("\\frac{\\partial L}{\\partial w}=(\\hat y-y)\\,v(1-h^2)\\,x") +
+      `<div class="gradient-backward"><span class="eyebrow">Follow the gradient back to the input weight</span><div class="gradient-factors">` +
+      factor("Output error", "\\hat y-y", e) +
+      factor("Hidden sensitivity", "v(1-h^2)", sensitivity) +
+      factor("Input carried forward", "x", s.x) +
+      `</div><div class="gradient-total">${tex("\\partial L/\\partial w")} <strong>${f(g, 4)}</strong></div></div>`
     );
   },
   caption:
-    "Every displayed factor is recomputed. A shared weight would receive a sum of such contributions from all of its uses and all batch examples.",
+    "The forward rail and backward factors are recomputed together. The loss is half squared error; the gradient sign tells whether a small increase in w initially raises or lowers loss. A shared weight sums contributions from every use and every batch example.",
 });
 register("N5", optimizerSpec);
 
@@ -259,32 +262,45 @@ register("N7", normalizationSpec);
 register("P2", {
   title: "Follow one decision through the proposed agent",
   question:
-    "Which modules are needed for this decision, and which are actually built in the laboratory?",
-  controls: [range("stage", "Stage", 1, 5, 1, 1)],
-  draw: (s) =>
-    cards(
+    "A choice needs information about the present, possible futures, and a way to compare them. Follow one closed loop.",
+  draw: () => {
+    const steps = [
       [
-        ["1 · Perception", "Camera image → representation. Implemented."],
-        [
-          "2 · Memory",
-          "Recent image and action history. Implemented as a short context; not a general memory system.",
-        ],
-        [
-          "3 · World model",
-          "Candidate actions → predicted representations. Implemented.",
-        ],
-        [
-          "4 · Cost",
-          "Goal distance plus effort. Implemented; no learned intrinsic-cost module.",
-        ],
-        [
-          "5 · Actor",
-          "Search, act once, observe again. Implemented with CEM and replanning.",
-        ],
-      ].map((x, i) => [`${i + 1 === s.stage ? "● " : ""}${x[0]}`, x[1]]),
-    ),
+        "01",
+        "Observe",
+        String.raw`\obs_{t-1},\obs_t`,
+        "Two camera frames provide a short history.",
+      ],
+      [
+        "02",
+        "Represent",
+        String.raw`\lat_{t-1},\lat_t`,
+        "The same encoder maps each frame into latent space.",
+      ],
+      [
+        "03",
+        "Imagine",
+        String.raw`\pred_{t+1:t+H}`,
+        "Try candidate actions in the learned predictor.",
+      ],
+      [
+        "04",
+        "Choose & act",
+        String.raw`\act_t`,
+        "Score futures against the goal; execute one action.",
+      ],
+    ];
+    return `<div class="agent-flow" role="group" aria-label="Observation, representation, imagined future, and one physical action form a repeated decision loop">${steps
+      .map(
+        ([index, title, symbol, explanation]) =>
+          `<div class="agent-flow-step"><span class="agent-flow-index">${index} / ${title}</span><div class="agent-flow-symbol">${tex(symbol)}</div><p>${explanation}</p></div>`,
+      )
+      .join(
+        "",
+      )}</div><div class="agent-flow-return"><span>New observation</span><span class="agent-flow-return-line" aria-hidden="true"></span><span>Plan again from what happened</span></div>`;
+  },
   caption:
-    "LeCun’s broader proposal includes more than this toy learner. Highlighting a stage makes the dataflow explicit without claiming that the book implements the entire architecture.",
+    "The laboratory uses two frames and recent actions as its short context, predicts in latent space, and searches with CEM. Its goal-distance and effort costs are specified by hand. LeCun’s larger agent proposal also considers richer memory and learned costs; the small laboratory does not implement those parts.",
 });
 register("J2", {
   title: "Both uses of shared weights contribute",
@@ -308,14 +324,23 @@ register("J2", {
         cards([
           [
             "Context branch",
-            tex(`\\observed{x}=1\\to\\encoded{z}=\\theta\\observed{x}\\to\\predicted{\\hat z}=1.5\\encoded{z}=${f(pred)}`),
+            tex(
+              `\\observed{x}=1\\to\\encoded{z}=\\theta\\observed{x}\\to\\predicted{\\hat z}=1.5\\encoded{z}=${f(pred)}`,
+            ),
           ],
-          ["Target branch", tex(`\\observed{x}'=2\\to\\encoded{z}'=\\theta\\observed{x}'=${f(target)}`)],
+          [
+            "Target branch",
+            tex(
+              `\\observed{x}'=2\\to\\encoded{z}'=\\theta\\observed{x}'=${f(target)}`,
+            ),
+          ],
         ]),
       ),
       panel(
         "Derivative through the graph",
-        eq(`\\objective{L}=(\\predicted{\\hat z}-\\encoded{z}')^2=${f(error * error)}`) +
+        eq(
+          `\\objective{L}=(\\predicted{\\hat z}-\\encoded{z}')^2=${f(error * error)}`,
+        ) +
           eq(
             `\\frac{d\\objective{L}}{d\\theta}=2(\\predicted{\\hat z}-\\encoded{z}')\\left(1.5-${s.target === "Stopped" ? "0" : "2"}\\right)=${f(g)}`,
           ),
@@ -450,7 +475,9 @@ register("J5", {
       ),
       panel(
         "Prediction target",
-        eq("\\predicted{\\hat z}_{t+2}=g(\\encoded{z}_t,\\encoded{z}_{t+1},\\action{a}_t,\\action{a}_{t+1})"),
+        eq(
+          "\\predicted{\\hat z}_{t+2}=g(\\encoded{z}_t,\\encoded{z}_{t+1},\\action{a}_t,\\action{a}_{t+1})",
+        ),
         s.alignment === "Correct"
           ? "Each action is paired with the transition it produced."
           : "The displayed labels assign later commands to earlier transitions. This changes the learning problem even though array shapes still match.",

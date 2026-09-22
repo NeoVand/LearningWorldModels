@@ -98,7 +98,7 @@ Starting with $E_0=0$, repeated substitution gives $E_H\leq\epsilon\sum_{j=0}^{H
 
 This bound is useful for understanding the mechanism, but its assumptions may fail. The learned representation may not admit deterministic Markov dynamics, or the imagined state may leave the domain where one-step error was bounded. Model exploitation occurs when the planner finds action sequences that look favorable mainly because they enter such inaccurate regions.
 
-<div class="lab" id="rollout-lab"><div class="lab-head"><span class="eyebrow">Planning desk</span><h3>Small errors, repeated</h3><p>Change the assumed sensitivity of the transition. The chart computes a bound, not an observed performance curve.</p></div><div class="controls"><label>Transition sensitivity <input id="rollout-lipschitz" type="range" min="0.5" max="1.5" step="0.02" value="1"/></label></div><canvas id="rollout-canvas" aria-label="Worst-case rollout error bound over twelve steps"></canvas><p id="rollout-readout" class="readout"></p></div>
+<div class="lab" id="rollout-lab"><div class="lab-head"><span class="eyebrow">Planning desk</span><h3>Small errors, repeated</h3><p>Change the assumed sensitivity of the transition. The chart compares every bound on the same fixed, log-spaced error axis; the dashed line holds L = 1.</p></div><div class="controls"><label>Transition sensitivity <input id="rollout-lipschitz" type="range" min="0.5" max="1.5" step="0.02" value="1"/></label></div><canvas id="rollout-canvas" aria-label="Worst-case rollout error bound over twelve steps, compared with L equals one"></canvas><p id="rollout-readout" class="readout"></p></div>
 
 <!-- VISUAL: A3 -->
 

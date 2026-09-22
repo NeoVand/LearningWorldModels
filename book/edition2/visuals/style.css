@@ -534,24 +534,6 @@
   gap: 0.75rem 1.25rem;
   padding: 0.8rem 0 0.25rem;
 }
-#uncertainty-lab {
-  padding: 1.25rem 1.4rem;
-  margin: 2rem 0;
-}
-#uncertainty-lab .lab-head p {
-  margin: 0.5rem 0;
-}
-#uncertainty-lab .controls {
-  margin: 0.75rem 0;
-}
-#uncertainty-lab canvas {
-  height: 150px !important;
-  max-height: 150px;
-}
-#uncertainty-lab .readout {
-  margin: 0.6rem 0 0;
-  font-size: 0.85rem;
-}
 [data-theme="dark"] .sensor-image {
   filter: invert(1);
 }
@@ -958,6 +940,121 @@
   display: block;
   color: var(--muted);
 }
+
+/* Keep all recorded outcomes visible while giving one L6 trajectory room to read. */
+#visual-L6 .trajectory-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+#visual-L6 .trajectory-summary {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rose);
+  border-radius: 6px;
+  font:
+    400 0.75rem/1.35 "DM Sans",
+    sans-serif;
+}
+#visual-L6 .trajectory-summary.within {
+  border-top-color: var(--teal);
+}
+#visual-L6 .trajectory-summary.left {
+  border-top-color: var(--amber);
+}
+#visual-L6 .trajectory-summary.selected {
+  background: color-mix(in srgb, var(--teal) 7%, var(--surface));
+  outline: 1px solid var(--ink);
+}
+#visual-L6 .trajectory-summary strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+#visual-L6 .trajectory-summary small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+#visual-L6 .visual-panels {
+  grid-template-columns: 1fr;
+}
+#visual-L6 .visual-panel > svg {
+  max-width: 580px;
+  max-height: none;
+}
+#visual-L6 .visual-panel h4 {
+  min-height: 0;
+}
+
+/* H1 compares methods along matched axes rather than repeating nine cards. */
+#visual-H1 .method-comparison {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font:
+    400 0.8rem/1.5 "DM Sans",
+    sans-serif;
+}
+#visual-H1 .method-comparison th,
+#visual-H1 .method-comparison td {
+  padding: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+#visual-H1 .method-comparison thead th {
+  color: var(--muted);
+  font-weight: 500;
+}
+#visual-H1 .method-comparison tbody th {
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+@media screen and (max-width: 620px) {
+  #visual-L6 .trajectory-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #visual-L6 .trajectory-summary {
+    padding: 0.5rem;
+    font-size: 0.72rem;
+  }
+  #visual-H1 .method-comparison thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  #visual-H1 .method-comparison,
+  #visual-H1 .method-comparison tbody,
+  #visual-H1 .method-comparison tr,
+  #visual-H1 .method-comparison th,
+  #visual-H1 .method-comparison td {
+    display: block;
+  }
+  #visual-H1 .method-comparison tr {
+    border-bottom: 1px solid var(--line);
+    padding: 0.55rem 0;
+  }
+  #visual-H1 .method-comparison th,
+  #visual-H1 .method-comparison td {
+    border: 0;
+    padding: 0.15rem 0;
+  }
+  #visual-H1 .method-comparison tbody th {
+    margin-bottom: 0.25rem;
+  }
+  #visual-H1 .method-comparison td::before {
+    content: attr(data-axis) ": ";
+    color: var(--muted);
+    font-weight: 500;
+  }
+}
 @media screen and (max-width: 620px) {
   .visual-panels {
     gap: 0.5rem;
@@ -1096,10 +1193,639 @@
 }
 
 /* Analytical distinctions are separate from the model's semantic palette. */
-:root { --math-aux-one:#4c6073; --math-aux-two:#73604d; --math-aux-three:#6b5a74; }
-:root[data-theme="dark"] { --math-aux-one:#b0c1cd; --math-aux-two:#d0baa4; --math-aux-three:#c8b5d0; }
-.math-aux-one { color:var(--math-aux-one); }
-.math-aux-two { color:var(--math-aux-two); }
-.math-aux-three { color:var(--math-aux-three); }
-.math-mark { color:var(--ink); background:var(--selection); border-radius:2px; }
-@media print { :root,:root[data-theme="dark"] { --math-aux-one:#4c6073; --math-aux-two:#73604d; --math-aux-three:#6b5a74; } }
+:root {
+  --math-aux-one: #4c6073;
+  --math-aux-two: #73604d;
+  --math-aux-three: #6b5a74;
+}
+:root[data-theme="dark"] {
+  --math-aux-one: #b0c1cd;
+  --math-aux-two: #d0baa4;
+  --math-aux-three: #c8b5d0;
+}
+.math-aux-one {
+  color: var(--math-aux-one);
+}
+.math-aux-two {
+  color: var(--math-aux-two);
+}
+.math-aux-three {
+  color: var(--math-aux-three);
+}
+.math-mark {
+  color: var(--ink);
+  background: var(--selection);
+  border-radius: 2px;
+}
+.affinity-comparison {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0.85rem 0 0.45rem;
+  font:
+    400 0.72rem/1.35 "DM Sans",
+    sans-serif;
+}
+.affinity-row-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.32rem;
+}
+.affinity-row-heading strong {
+  color: var(--ink);
+  font-weight: 550;
+}
+.affinity-row-heading span {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.affinity-bar {
+  height: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--amber);
+}
+.affinity-bar span {
+  display: block;
+  height: 100%;
+  background: var(--teal);
+  border-radius: 99px 0 0 99px;
+}
+.affinity-key {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+.affinity-key span::before {
+  content: "";
+  display: inline-block;
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+  background: var(--teal);
+}
+.affinity-key span + span::before {
+  background: var(--amber);
+}
+.intervention-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  margin: 0.2rem 0 0.45rem;
+  color: var(--muted);
+  font:
+    400 0.68rem/1.3 "DM Sans",
+    sans-serif;
+}
+.intervention-key span::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  margin-right: 0.3rem;
+  background: var(--teal);
+}
+.intervention-key .camera::before {
+  background: var(--blue);
+}
+.intervention-key .recolored::before {
+  background: var(--amber);
+}
+.intervention-protocol {
+  margin: 0.35rem 0;
+}
+.intervention-protocol > div {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.intervention-protocol dt {
+  font:
+    550 0.68rem/1.4 "DM Sans",
+    sans-serif;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.intervention-protocol dd {
+  margin: 0.18rem 0 0;
+  font:
+    400 0.79rem/1.45 "DM Sans",
+    sans-serif;
+  color: var(--ink);
+}
+.gradient-circuit {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.35rem;
+  margin: 1.25rem 0 0.55rem;
+}
+.gradient-stage {
+  position: relative;
+  min-width: 0;
+  padding: 0.7rem 0;
+  border-top: 2px solid var(--blue);
+}
+.gradient-stage:nth-child(2) {
+  border-color: var(--violet);
+}
+.gradient-stage:nth-child(3) {
+  border-color: var(--teal);
+}
+.gradient-stage:nth-child(4) {
+  border-color: var(--amber);
+}
+.gradient-stage:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 2.05rem;
+  right: -1.1rem;
+  color: var(--muted);
+  font:
+    1.2rem/1 Georgia,
+    serif;
+}
+.gradient-stage > span,
+.gradient-factor > span {
+  display: block;
+  margin-bottom: 0.38rem;
+  color: var(--muted);
+  font:
+    500 0.68rem/1.3 "DM Sans",
+    sans-serif;
+}
+.gradient-stage strong,
+.gradient-factor strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 400;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+.gradient-stage output,
+.gradient-factor output {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--teal);
+  font:
+    500 1.2rem/1.25 "DM Sans",
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.gradient-target {
+  color: var(--muted);
+  font:
+    400 0.76rem/1.4 "DM Sans",
+    sans-serif;
+}
+#visual-N4 .visual-equation {
+  padding: 0.4rem 0;
+}
+.gradient-backward {
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
+}
+.gradient-factors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 0.7rem;
+}
+.gradient-factor {
+  position: relative;
+  padding-top: 0.55rem;
+  border-top: 2px solid var(--rose);
+}
+.gradient-factor:not(:last-child)::after {
+  content: "×";
+  position: absolute;
+  right: -1rem;
+  top: 1.75rem;
+  color: var(--muted);
+  font:
+    1.1rem/1 Georgia,
+    serif;
+}
+.gradient-total {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  margin-top: 0.85rem;
+  color: var(--ink);
+  font-size: 1rem;
+}
+.gradient-total strong {
+  color: var(--teal);
+  font:
+    500 1.5rem/1.2 "DM Sans",
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.claim-path {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.05rem;
+  margin: 1.25rem 0 0.85rem;
+}
+.claim-step {
+  position: relative;
+  padding: 0.75rem 0 0;
+  border-top: 2px solid var(--teal);
+  min-width: 0;
+}
+.claim-step:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -0.9rem;
+  top: 1rem;
+  color: var(--teal);
+  font:
+    1.1rem/1 Georgia,
+    serif;
+}
+.claim-step strong,
+.claim-step span {
+  display: block;
+  font:
+    400 0.75rem/1.45 "DM Sans",
+    sans-serif;
+}
+.claim-step strong {
+  margin-bottom: 0.3rem;
+  font-weight: 550;
+  color: var(--ink);
+}
+.claim-step span {
+  color: var(--muted);
+}
+.claim-boundary {
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--rose);
+  background: color-mix(in srgb, var(--rose) 5%, transparent);
+}
+.claim-boundary strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--ink);
+  font:
+    500 1rem/1.4 "DM Sans",
+    sans-serif;
+}
+.claim-boundary p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font:
+    400 0.78rem/1.5 "DM Sans",
+    sans-serif;
+}
+.experiment-contrast {
+  border-top: 1px solid var(--line);
+}
+.experiment-route {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.experiment-index {
+  color: var(--teal);
+  font:
+    600 0.68rem/1.6 "DM Sans",
+    sans-serif;
+}
+.experiment-route strong {
+  color: var(--ink);
+  font:
+    550 0.81rem/1.4 "DM Sans",
+    sans-serif;
+}
+.experiment-route p {
+  margin: 0.18rem 0 0;
+  color: var(--muted);
+  font:
+    400 0.75rem/1.5 "DM Sans",
+    sans-serif;
+}
+.experiment-formula .katex-display {
+  text-align: left;
+  margin: 0;
+  font-size: 1rem;
+}
+.experiment-formula small {
+  display: block;
+  margin-top: 0.38rem;
+  color: var(--muted);
+  font:
+    400 0.72rem/1.45 "DM Sans",
+    sans-serif;
+}
+@media screen and (max-width: 620px) {
+  .gradient-circuit {
+    gap: 0.75rem;
+  }
+  .gradient-stage strong {
+    font-size: 0.73rem;
+  }
+  .gradient-stage:not(:last-child)::after {
+    right: -0.65rem;
+  }
+  .gradient-stage output {
+    font-size: 0.99rem;
+  }
+  .gradient-factors {
+    gap: 0.85rem;
+  }
+  .gradient-factor strong {
+    font-size: 0.75rem;
+  }
+  .gradient-factor:not(:last-child)::after {
+    right: -0.7rem;
+  }
+  .gradient-factor output {
+    font-size: 1rem;
+  }
+  #visual-S5 .visual-panels {
+    grid-template-columns: 1fr;
+  }
+  #visual-S4 .visual-panels {
+    grid-template-columns: 1fr;
+  }
+  #visual-S4 .visual-panel h4 {
+    min-height: 0;
+  }
+  #visual-S5 .visual-panel h4 {
+    min-height: 0;
+  }
+  #visual-R5 .visual-panels {
+    grid-template-columns: 1fr;
+  }
+  #visual-R5 .visual-panel h4 {
+    min-height: 0;
+  }
+  .claim-path {
+    grid-template-columns: 1fr;
+    gap: 0.42rem;
+  }
+  .claim-step {
+    padding: 0.4rem 0 0.4rem 0.75rem;
+    border-top: 0;
+    border-left: 2px solid var(--teal);
+  }
+  .claim-step:not(:last-child)::after {
+    content: "↓";
+    top: auto;
+    right: auto;
+    bottom: -0.48rem;
+    left: 0.14rem;
+  }
+  .experiment-route {
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+    gap: 0.35rem 0.55rem;
+  }
+  .experiment-formula {
+    grid-column: 2;
+  }
+  .experiment-formula .katex-display {
+    font-size: 0.94rem;
+  }
+}
+@media print {
+  #visual-B1 .visual-panels {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  :root,
+  :root[data-theme="dark"] {
+    --math-aux-one: #4c6073;
+    --math-aux-two: #73604d;
+    --math-aux-three: #6b5a74;
+  }
+}
+
+/* P2: an architectural sequence with a visible return to observation. */
+.agent-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.55rem;
+  margin: 1.4rem 0 1rem;
+}
+.agent-flow-step {
+  position: relative;
+  min-width: 0;
+  border-top: 2px solid var(--line);
+  padding: 0.8rem 0 0;
+}
+.agent-flow-step::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  top: -5px;
+  left: 0;
+}
+.agent-flow-step:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -1.22rem;
+  top: 2.8rem;
+  color: var(--teal);
+  font:
+    24px/1 Georgia,
+    serif;
+}
+.agent-flow-index {
+  font:
+    600 0.7rem/1.35 "DM Sans",
+    sans-serif;
+  color: var(--teal);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.agent-flow-symbol {
+  margin: 0.75rem 0 0.45rem;
+  font:
+    1.3rem/1.3 Newsreader,
+    serif;
+  min-height: 1.8rem;
+}
+.agent-flow-step p {
+  margin: 0;
+  color: var(--ink);
+  font:
+    0.84rem/1.55 "DM Sans",
+    sans-serif;
+}
+.agent-flow-return {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--muted);
+  font:
+    0.74rem/1.4 "DM Sans",
+    sans-serif;
+  padding: 0.7rem 0 0;
+}
+.agent-flow-return-line {
+  flex: 1;
+  height: 1px;
+  background: var(--teal);
+  position: relative;
+  opacity: 0.75;
+}
+.agent-flow-return-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -3px;
+  border: 4px solid transparent;
+  border-right-color: var(--teal);
+  border-left: 0;
+}
+@media (max-width: 700px) {
+  .agent-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.45rem 1.7rem;
+  }
+  .agent-flow-step:nth-child(2)::after {
+    display: none;
+  }
+}
+@media (max-width: 430px) {
+  .agent-flow {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .agent-flow-step {
+    padding: 0.6rem 0 0.4rem 1rem;
+    border-top: 0;
+    border-left: 2px solid var(--line);
+  }
+  .agent-flow-step::before {
+    top: 0.8rem;
+    left: -5px;
+  }
+  .agent-flow-step:not(:last-child)::after {
+    content: "↓";
+    top: auto;
+    right: auto;
+    left: 0.45rem;
+    bottom: -0.8rem;
+    font-size: 19px;
+  }
+  .agent-flow-step:nth-child(2)::after {
+    display: block;
+  }
+  .agent-flow-symbol {
+    margin: 0.25rem 0;
+    min-height: 0;
+  }
+  .agent-flow-return {
+    padding-top: 0.25rem;
+  }
+}
+/* A chapter route whose links follow the prerequisites in reading order. */
+#visual-O3 .prereq-route {
+  max-width: 720px;
+  margin: 0 auto;
+}
+#visual-O3 .prereq-route ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--line);
+}
+#visual-O3 .prereq-route li {
+  display: grid;
+  grid-template-columns: 2.1rem 7.6rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.6rem 0 0.65rem 1rem;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+#visual-O3 .prereq-route li::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 1.08rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+#visual-O3 .route-index {
+  color: var(--teal);
+  font:
+    500 0.7rem/1.7 "DM Sans",
+    sans-serif;
+}
+#visual-O3 .prereq-route strong {
+  color: var(--ink);
+  font:
+    500 1.12rem/1.2 Newsreader,
+    serif;
+}
+#visual-O3 .prereq-route p {
+  margin: 0 0 0.1rem;
+  color: var(--ink);
+  font:
+    400 0.8rem/1.4 "DM Sans",
+    sans-serif;
+}
+#visual-O3 .route-links {
+  color: var(--muted);
+  font:
+    400 0.73rem/1.4 "DM Sans",
+    sans-serif;
+}
+#visual-O3 .route-links a {
+  color: var(--teal);
+  text-underline-offset: 0.18em;
+}
+@media screen and (max-width: 620px) {
+  #visual-O3 .prereq-route li {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0 0.45rem;
+    padding: 0.5rem 0 0.55rem 0.8rem;
+  }
+  #visual-O3 .prereq-route li > div {
+    grid-column: 2;
+  }
+  #visual-O3 .prereq-route strong {
+    font-size: 1rem;
+  }
+}
+
+/* D6 pairs the selected variance tangent with its geometric direction. */
+#visual-D6 .visual-panels {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+
+/* C4 keeps the projection comparison legible on a phone. */
+#visual-C4 .visual-panels {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+#visual-C4 .c4-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font:
+    400 0.72rem/1.4 "DM Sans",
+    sans-serif;
+}
+#visual-C4 .c4-key span::before {
+  content: "";
+  display: inline-block;
+  width: 1.1rem;
+  margin: 0 0.4rem 0.22rem 0;
+  border-top: 2px solid var(--key-color);
+}

@@ -44,13 +44,13 @@ $$P(A\mid B)=\frac{P(B\mid A)P(A)}{P(B)}.$$
 
 It is an algebraic identity, not a special learning algorithm. If 10 of 100 arm states move right and a noisy sensor reports “right” for 8 of those but also for 18 of the remaining 90, a positive report indicates rightward motion with probability $8/(8+18)$, not $8/10$. The base frequency matters.
 
+<!-- VISUAL: B3 -->
+
 A conditional expectation $m(x)=\mathbb E[Y\mid X=x]$ is the mean appropriate after observing $X=x$. In practice we learn an approximation to that function from examples. If the same image can accompany different velocities, the conditional distribution of the next image can remain broad even in a deterministic simulator.
 
 For discrete outcomes, that conditional mean is $\sum_y yP(Y=y\mid X=x)$. If, after one sensor reading, the two possible velocities are $-1$ and $+1$ with probabilities $1/4$ and $3/4$, the mean velocity is $(-1)/4+3/4=1/2$. It is an average of compatible possibilities, not necessarily an actual velocity.
 
 For continuous measurements, the event $X=x$ itself has probability zero, so we cannot divide its event probability into another. Instead use a joint density $p_{X,Y}(x,y)$. Integrate out $y$ to obtain $p_X(x)=\int p_{X,Y}(x,y)\,dy$. Where $p_X(x)>0$, define $p(y\mid x)=p_{X,Y}(x,y)/p_X(x)$ and $m(x)=\int y p(y\mid x)\,dy$. This conditional density integrates to one because its numerator integrates to its denominator. It is also the limit of conditioning on increasingly narrow intervals around $x$ when the densities are continuous there.
-
-<!-- VISUAL: B3 -->
 
 ## Why squared error predicts a mean
 
@@ -63,8 +63,6 @@ The first term does not depend on the prediction. The second is minimized at $c=
 If $Y=-1$ or $+1$ with equal probability, the best squared-error prediction is zero, although zero never occurs. Its expected error is 1. Predicting either endpoint gives expected error 2. A mean can be the optimal answer to one loss and a physically impossible outcome. This explains blurred pixel predictions and also warns that a deterministic latent predictor can average incompatible latent futures.
 
 <figure class="plate"><img src="assets/generated/renewed/branch.png" alt="One amber marble approaches a fork in a wooden track. Two branches lead to separate empty bowls."/><figcaption>A generated illustration of two possible destinations. Their average position can lie between the tracks, where neither outcome occurs. The numerical example below assigns the two destinations coordinates −1 and +1.</figcaption></figure>
-
-<div class="lab" id="uncertainty-lab"><div class="lab-head"><span class="eyebrow">Prediction desk</span><h3>When the best mean never happens</h3><p>The outcome is either −1 or +1. Change the probability of +1 and compare a mean prediction with choosing a branch.</p></div><div class="controls"><label>Probability of +1 <input id="uncertainty-p" type="range" min="0" max="1" step="0.01" value="0.5"/></label></div><canvas id="uncertainty-canvas" aria-label="Two possible outcomes and their squared-error optimal mean"></canvas><p id="uncertainty-readout" class="readout"></p></div>
 
 <!-- VISUAL: B4 -->
 

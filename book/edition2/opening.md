@@ -26,11 +26,7 @@ These questions stay with us throughout the book. Every new piece of mathematics
 
 ## The route through the book
 
-We start with LeCun’s reason for learning from observations rather than relying entirely on human labels. Next we learn to encode an image as numbers, measure distances, describe uncertainty, and inspect a cloud of representations. Calculus then gives us a way to change a model from its errors.
-
-With those tools, we construct a predictive learning objective and discover its loophole: two networks can agree by saying nothing. We develop distributional regularization, derive SIGReg, and train an actual small model. We then make it choose actions and learn how to judge its successes and failures.
-
-Only after that complete working example do we study the harder Gaussian theory and transformer architecture. We return to the research lineage with enough knowledge to compare the methods, read the target paper in full, and complete a worked capstone.
+The linked route follows the ideas each later chapter needs. It reaches a small trainable world model before the harder Gaussian theory and transformer architecture, so those abstractions have a concrete job when we return to the research paper.
 
 <!-- VISUAL: O3 -->
 

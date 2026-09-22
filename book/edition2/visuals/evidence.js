@@ -19,12 +19,6 @@ import {
 } from "./core.js";
 import { cloud, sigreg, rng, normal } from "../numerics.js";
 const eq = (s) => `<div class="visual-equation">${tex(s, true)}</div>`;
-const cards = (items) =>
-  '<div class="visual-steps">' +
-  items
-    .map(([a, b]) => `<div class="visual-card"><strong>${a}</strong>${b}</div>`)
-    .join("") +
-  "</div>";
 register("E1", {
   title: "A probe measures accessibility to a chosen decoder",
   question:
@@ -161,8 +155,8 @@ function probabilities(pts, kernel) {
 register("E4", {
   title: "Neighbor probabilities are not ruler distances",
   question:
-    "Move the two groups farther apart. Which within-group relationships stay intact?",
-  controls: [range("gap", "Display gap", 1, 5, 0.1, 3)],
+    "Move the groups apart while keeping each group’s shape. Why does the normalized display probability still move?",
+  controls: [range("gap", "Display gap", 1, 5, 0.1, 1.5)],
   draw(s) {
     const input = [
         [-2, -0.1],
@@ -181,7 +175,23 @@ register("E4", {
       kl = P.flat().reduce(
         (a, p, i) => a + (p ? p * Math.log(p / Q.flat()[i]) : 0),
         0,
-      );
+      ),
+      withinMass = (matrix) =>
+        matrix.reduce(
+          (sum, row, i) =>
+            sum +
+            row.reduce(
+              (subtotal, value, j) =>
+                subtotal + (i !== j && i < 3 === j < 3 ? value : 0),
+              0,
+            ),
+          0,
+        ),
+      massBars = (label, matrix) => {
+        const within = Math.min(1, Math.max(0, withinMass(matrix))),
+          across = 1 - within;
+        return `<div class="affinity-row"><div class="affinity-row-heading"><strong>${label}</strong><span>${f(within * 100, 1)}% within · ${f(across * 100, 1)}% across</span></div><div class="affinity-bar" role="img" aria-label="${label}: ${f(within * 100, 1)} percent within group, ${f(across * 100, 1)} percent across groups"><span style="width:${within * 100}%"></span></div></div>`;
+      };
     return row(
       panel(
         "An illustrative display",
@@ -195,15 +205,15 @@ register("E4", {
         "Six points with two close neighborhoods. The displayed gap is a control, not a physical measurement.",
       ),
       panel(
-        "Compute the probability comparison",
-        number("KL(P || Q)", f(kl, 4)) +
-          `<table><tbody>${P.map((r) => "<tr>" + r.map((v) => "<td>" + f(v, 2) + "</td>").join("") + "</tr>").join("")}</tbody></table>`,
-        "P is a normalized symmetric Gaussian-affinity matrix in this illustration. Q uses inverse quadratic distances in the display; zero diagonal terms are excluded.",
+        "Compare the same pair categories",
+        `<div class="affinity-comparison">${massBars("Input P · fixed", P)}${massBars("Display Q · changes", Q)}<div class="affinity-key"><span>Within a group</span><span>Across groups</span></div></div>` +
+          number("Full pairwise KL(P || Q)", f(kl, 4)),
+        "Each bar totals one across all ordered distinct pairs. Within-group distances stay fixed, but normalized Q reallocates mass when cross-group weights shrink. The bars aggregate 6 × 6 matrices; KL still uses every pair. P uses one fixed Gaussian bandwidth here.",
       ),
     );
   },
   caption:
-    "This demonstrates the neighborhood objective, not a complete t-SNE optimizer or its adaptive perplexity procedure. Local affinities constrain the layout; rotations and visually large gaps are not calibrated physical distances.",
+    "This demonstrates the neighborhood objective, not a complete t-SNE optimizer or its adaptive perplexity procedure. P remains fixed; Q changes through a shared normalizer even for unchanged within-group distances. Rotations and visually large gaps are not calibrated physical distances.",
 });
 register("E5", {
   title: "Turn compatibility into a probability only after normalization",
@@ -254,121 +264,174 @@ register("E5", {
 register("E6", {
   title: "Change appearance or break continuity?",
   question:
-    "A larger prediction error needs an explanation. What alternative explanations would this intervention leave open?",
+    "Change one thing at frame 6. Which camera observations change, and what would a frozen-model test need to measure?",
   controls: [
-    choices("event", "Intervention", [
-      "Normal",
-      "Color change",
+    choices(
+      "event",
+      "Intervention",
+      ["Normal", "Color change", "Occlusion", "Teleport"],
       "Occlusion",
-      "Teleport",
-    ]),
+    ),
   ],
   draw(s) {
     const actual = Array.from({ length: 12 }, (_, i) => [
-        i,
-        0.15 * i + (s.event === "Teleport" && i >= 6 ? 1 : 0),
-      ]),
-      observed = actual.map(([i, x]) =>
-        s.event === "Occlusion" && i >= 6 && i < 9 ? [i, NaN] : [i, x],
-      ),
-      errors = actual.map(([i, x]) => [
-        i,
-        s.event === "Occlusion" && i >= 6 && i < 9
-          ? NaN
-          : i === 0
-            ? 0
-            : (x - (actual[i - 1][1] + 0.15)) ** 2 +
-              (s.event === "Color change" && i === 6 ? 0.12 : 0),
-      ]);
+      i,
+      0.15 * i + (s.event === "Teleport" && i >= 6 ? 1 : 0),
+    ]);
+    const visible = actual.filter(
+      ([i]) => s.event !== "Occlusion" || i < 6 || i > 8,
+    );
+    const intervention = {
+      Normal: [
+        "Nothing",
+        "Smooth motion and the blue appearance",
+        "A reference error curve for the same starting state and actions",
+      ],
+      "Color change": [
+        "Only the object's color",
+        "Its position, velocity, and camera geometry",
+        "Does error rise at recoloring despite unchanged motion?",
+      ],
+      Occlusion: [
+        "Visibility for frames 6–8",
+        "The physical path behind the obstruction",
+        "Does the predictor preserve a plausible hidden state, and how is an absent target scored?",
+      ],
+      Teleport: [
+        "Physical position at frame 6",
+        "Color and the earlier path",
+        "Does error rise relative to a matched visual perturbation without broken motion?",
+      ],
+    }[s.event];
     return row(
       panel(
-        "Controlled conceptual sequence",
+        "A proposed matched sequence",
         plot({
           xmin: 0,
           xmax: 11,
           ymin: 0,
           ymax: 3,
-          curves: [{ data: observed, color: "blue" }],
+          curves: [{ data: actual, color: "teal" }],
+          points: visible.map(([i, x]) => [
+            i,
+            x,
+            s.event === "Color change" && i >= 6 ? "amber" : "blue",
+            4,
+          ]),
           xlabel: "frame",
           ylabel: "position",
-        }),
-        s.event === "Occlusion"
-          ? "Frames 6–8 are hidden; no observation is available there."
-          : "Intervention begins at frame 6.",
+          height: 240,
+          extra: line(
+            55 + (6 * 270) / 11,
+            35,
+            55 + (6 * 270) / 11,
+            195,
+            "muted",
+            "3 4",
+          ),
+        }) +
+          `<div class="intervention-key"><span class="physical">Physical path</span><span class="camera">Visible camera point</span>${s.event === "Color change" ? '<span class="recolored">Recolored point</span>' : ""}</div>`,
+        `Teal traces the physical path known to the experimenter; dots are visible camera observations. ${s.event === "Occlusion" ? "The missing dots are hidden camera observations." : s.event === "Color change" ? "Amber dots mark recoloring." : ""} The dotted line marks frame 6.`,
       ),
       panel(
-        "Explicit illustrative predictor",
-        plot({
-          xmin: 0,
-          xmax: 11,
-          ymin: 0,
-          ymax: 1.2,
-          curves: [{ data: errors, color: "rose" }],
-          xlabel: "frame",
-          ylabel: "illustrative discrepancy",
-        }),
-        "Rule: predict a +0.15 position step. Color adds a stipulated nuisance penalty of 0.12; this is not a measured neural-model response.",
+        "What a test must establish",
+        `<dl class="intervention-protocol"><div><dt>Change</dt><dd>${intervention[0]}</dd></div><div><dt>Hold matched</dt><dd>${intervention[1]}</dd></div><div><dt>Measure on the frozen model</dt><dd>${intervention[2]}</dd></div></dl>`,
+        "This is an experiment design. It contains no measured neural-model error; a clean comparison would also match pixel-change magnitude and test held-out perturbations.",
       ),
     );
   },
   caption:
-    "This conceptual control design shows what to compare, not a reported experiment. For an empirical claim, run matched interventions through the frozen model and measure its actual errors, including occlusion handling.",
+    "A surprise spike alone cannot identify its cause. The diagram separates an intervention on physical continuity from one on appearance or visibility; only a matched run through the trained, frozen model could support an empirical claim.",
 });
 register("E7", {
-  title: "Geometry, asymmetric loss, and experimental controls",
+  title: "Straightness measures a turn, not prediction accuracy",
   question:
-    "Each diagnostic has a different target. Do not collapse them into one quality score.",
-  controls: [
-    range("angle", "Turn angle", 0, 3.14, 0.02, 1.57),
-    range("tau", "Expectile asymmetry", 0.1, 0.9, 0.05, 0.7),
-  ],
+    "Turn the second displacement. What happens to the cosine when the path bends or reverses?",
+  controls: [range("angle", "Turn angle", 0, 3.14, 0.02, 1.57)],
   draw(s) {
-    const y = [-1, 0, 2],
-      L = (m) =>
-        y.reduce((a, v) => a + (v >= m ? s.tau : 1 - s.tau) * (v - m) ** 2, 0) /
-        3;
-    let best = -1;
-    for (let x = -1; x <= 2; x += 0.002) if (L(x) < L(best)) best = x;
+    const cosine = Math.cos(s.angle);
     return row(
       panel(
-        "Temporal straightness",
+        "Two nonzero displacements, then their cosine",
         svg(
           path(
             [
-              [65, 210],
-              [180, 210],
-              [180 + 100 * Math.cos(s.angle), 210 - 100 * Math.sin(s.angle)],
+              [70, 165],
+              [180, 165],
             ],
-            "violet",
+            "blue",
             3,
-          ) + dot(180, 210, 4, "amber"),
-          "Two displacement vectors with adjustable turn angle",
+          ) +
+            path(
+              [
+                [180, 165],
+                [180 + 105 * cosine, 165 - 105 * Math.sin(s.angle)],
+              ],
+              "violet",
+              3,
+            ) +
+            dot(180, 165, 4, "amber") +
+            line(70, 230, 290, 230) +
+            line(70, 224, 70, 236) +
+            line(180, 224, 180, 236) +
+            line(290, 224, 290, 236) +
+            dot(180 + 110 * cosine, 230, 6, "teal") +
+            text(70, 254, "−1") +
+            text(180, 254, "0", "muted", "middle") +
+            text(290, 254, "+1", "muted", "end") +
+            text(70, 27, "First move", "blue") +
+            text(290, 27, "Next move", "violet", "end"),
+          "Two consecutive nonzero displacements with an adjustable turn and a cosine scale from minus one to one",
         ),
-        `Cosine = ${f(Math.cos(s.angle))}. Zero motion would leave the angle undefined.`,
+        `Turn ${f(s.angle, 2)} rad; cosine ${f(cosine, 3)}. A stationary displacement has no direction, so its cosine is undefined.`,
       ),
+    );
+  },
+  caption:
+    "This angle is a geometric property of the representation trajectory. Even a perfectly straight path can lead to the wrong future, so report prediction error separately.",
+});
+register("E8", {
+  title: "An expectile moves when the two sides cost differently",
+  question:
+    "Increase the cost of underestimating the outcomes −1, 0, and 2. Where does the best single prediction move?",
+  controls: [range("tau", "Expectile weight τ", 0.1, 0.9, 0.05, 0.5)],
+  draw(s) {
+    const outcomes = [-1, 0, 2];
+    const loss = (m, tau) =>
+      outcomes.reduce(
+        (sum, y) => sum + (y >= m ? tau : 1 - tau) * (y - m) ** 2,
+        0,
+      ) / outcomes.length;
+    let best = -1;
+    for (let m = -1; m <= 2; m += 0.001)
+      if (loss(m, s.tau) < loss(best, s.tau)) best = m;
+    return row(
       panel(
-        "Expectile",
+        "One prediction for three possible outcomes",
         plot({
           xmin: -1,
           xmax: 2,
           ymin: 0,
           ymax: 4,
-          curves: [{ fn: L, color: "rose" }],
-          points: [[best, L(best), "teal", 5]],
-          xlabel: "prediction",
-          ylabel: "asymmetric squared loss",
-        }),
-        `For outcomes −1, 0, 2, minimizing location ≈ ${f(best)}.`,
-      ),
-      panel(
-        "Ablation design",
-        '<div class="visual-card">Use matched data, seed, budget and evaluation. Change the specified component. Keep all seeds and failures visible.</div>',
-        "A difference can support a conclusion only under the comparison actually run.",
+          curves: [
+            { fn: (m) => loss(m, 0.5), color: "muted" },
+            { fn: (m) => loss(m, s.tau), color: "rose" },
+          ],
+          points: [[best, loss(best, s.tau), "teal", 5]],
+          xlabel: "chosen prediction",
+          ylabel: "mean weighted loss",
+        }) +
+          results(
+            ["Penalty on underestimates", f(s.tau)],
+            ["Penalty on overestimates", f(1 - s.tau)],
+            ["Best prediction", f(best, 3)],
+          ),
+        "Gray is ordinary squared loss (τ = 0.5); rose uses the selected asymmetry. Teal marks its minimum. The three outcomes are equally likely.",
       ),
     );
   },
   caption:
-    "Straightness is about angles in representation space. Expectiles minimize an asymmetric squared loss. Ablations compare interventions on a learning procedure; these are distinct kinds of evidence.",
+    "At τ = 0.5 the optimum is the mean, 1/3. Raising τ penalizes predictions below a realized outcome more heavily, shifting the optimum upward. An expectile balances weighted residual magnitudes; it is not a quantile.",
 });
 register("R1", {
   title: "Small input spread makes a slope noisy",
@@ -399,6 +462,10 @@ register("R1", {
         ticks: 2,
         points: values.map((v, i) => [i + 1, v, color, 2.5]),
         curves: [{ fn: () => beta, color: "blue" }],
+        extra:
+          line(55, 110 - 75 / extent, 325, 110 - 75 / extent, "blue", "4 3") +
+          line(55, 110 + 75 / extent, 325, 110 + 75 / extent, "blue", "4 3"),
+        snapDomain: false,
         xlabel: "independent noise draw",
         ylabel: "estimated slope",
       });
@@ -421,12 +488,12 @@ register("R1", {
       eq("x=(-a,a),\\quad y_i=\\beta x_i+\\epsilon_i") +
       eq("\\operatorname{Var}(\\hat\\beta)=\\frac{1}{2a^2}") +
       takeaway(
-        "Both plots share a vertical scale and the same noise draws. Halving the input magnitude doubles the slope’s standard deviation and quadruples its variance.",
+        "Both plots share a vertical scale and the same noise draws. The dashed lines remain one slope unit above and below the true value; their shrinking screen gap makes the changing axis scale visible. Halving input magnitude doubles slope standard deviation and quadruples its variance.",
       )
     );
   },
   caption:
-    "The vertical range adjusts to keep every estimate visible. The true slope stays two and label-noise variance stays one; only the input spacing changes. These are least-squares fits for a two-point fixed design.",
+    "The vertical range adjusts to keep every estimate visible; the fixed ±1 dashed reference band shows when that range expands. The true slope stays two and label-noise variance stays one; only the input spacing changes. These are least-squares fits for a two-point fixed design.",
 });
 register("R2", {
   title: "A covariance preference needs a task assumption",
@@ -558,6 +625,10 @@ register("R5", {
   controls: [range("sigma", "Gaussian scale σ", 0.3, 2, 0.05, 1)],
   draw(s) {
     const v = s.sigma * s.sigma;
+    const logDensity = (x) =>
+      -0.5 * Math.log(2 * Math.PI * v) - (x * x) / (2 * v);
+    const score = (x) => -x / v;
+    const logRange = logDensity(0) - logDensity(3);
     return row(
       panel(
         "Density",
@@ -581,65 +652,65 @@ register("R5", {
         plot({
           xmin: -3,
           xmax: 3,
-          ymin: -15,
-          ymax: 1,
+          ymin: logDensity(3) - logRange * 0.06,
+          ymax: logDensity(0) + logRange * 0.06,
           curves: [
             {
-              fn: (x) => -0.5 * Math.log(2 * Math.PI * v) - (x * x) / (2 * v),
+              fn: logDensity,
               color: "violet",
             },
           ],
           ylabel: "log p(x)",
         }),
+        `At x = 3, log p(x) = ${f(logDensity(3))}. The vertical axis expands as σ narrows.`,
       ),
       panel(
         "Density score",
         plot({
           xmin: -3,
           xmax: 3,
-          ymin: -12,
-          ymax: 12,
-          curves: [{ fn: (x) => -x / v, color: "teal" }],
+          ymin: score(3) * 1.08,
+          ymax: -score(3) * 1.08,
+          curves: [{ fn: score, color: "teal" }],
           ylabel: "d log p / dx",
         }),
-        `Average squared score = 1/σ² = ${f(1 / v)}.`,
+        `At x = 3, score = ${f(score(3))}. Average squared score = 1/σ² = ${f(1 / v)}.`,
       ),
     );
   },
   caption:
-    "The score differentiates with respect to the sample coordinate. It is not an attention weight or a classification confidence. Comparing Fisher information without fixing covariance changes the optimization question.",
+    "All three panels keep the same physical x-range, −3 to 3. The log-density and score axes adapt so their tails never clip; read their tick labels when comparing scales. The score differentiates with respect to the sample coordinate. Comparing Fisher information without fixing covariance changes the optimization question.",
 });
 register("R6", {
-  title: "Follow the assumptions all the way to the claim",
+  title: "Where the theorem stops",
   question:
-    "Which arrow would be unjustified if we concluded that every downstream task is optimal?",
+    "Which conditions support the Gaussian result, and which tempting conclusion does the result not establish?",
   draw: () =>
-    cards([
+    `<div class="claim-path" aria-label="Assumption chain to the limited theorem">` +
+    [
       [
-        "Regularity assumptions",
-        "Smooth positive density; controlled boundary terms; finite quantities.",
+        "1 · Regularity",
+        "Smooth positive density, controlled boundary terms, finite integrals.",
       ],
       [
-        "Covariance constraint",
-        "Fix the covariance when comparing density-score magnitude.",
+        "2 · Hold covariance fixed",
+        "Compare distributions with the same covariance, not arbitrary scales.",
       ],
       [
-        "Fisher inequality",
-        "Under those assumptions, the Gaussian achieves the score-information lower bound.",
+        "3 · Fisher result",
+        "The Gaussian attains the score-information lower bound under those conditions.",
       ],
       [
-        "Probe-bias bound",
-        "Insert the bound into the stated local-probe approximation. This controls one term, under its own smoothness assumptions.",
+        "4 · Local probe",
+        "The bound enters one term of a smooth local-probe approximation.",
       ],
-      [
-        "No universal-task arrow",
-        "Gaussian geometry alone does not identify useful information.",
-      ],
-      [
-        "Counterexample",
-        "An encoder can output a Gaussian nuisance variable independent of the physical target. Perfect marginal geometry then coexists with no target information.",
-      ],
-    ]),
+    ]
+      .map(
+        ([title, explanation]) =>
+          `<div class="claim-step"><strong>${title}</strong><span>${explanation}</span></div>`,
+      )
+      .join("") +
+    `</div><div class="claim-boundary"><span class="eyebrow">The inference stops here</span><strong>Good Gaussian geometry does not imply useful information for every task.</strong><p>Counterexample: an encoder outputs Gaussian nuisance noise independent of the physical target. Its marginal distribution is exactly Gaussian, yet its code says nothing about that target.</p></div>`,
   caption:
-    "A bound on a term in a risk expansion is not a proof that every learning task or planner is optimal. The dependency chain keeps the mathematical result separate from a broader research motivation.",
+    "The chain distinguishes a mathematical bound on one risk term from a broader world-modeling motivation. A planner still needs a representation that preserves task-relevant state and supports accurate dynamics.",
 });

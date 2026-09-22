@@ -10,11 +10,12 @@ import {
   range,
   button,
   choices,
+  takeaway,
   tex,
   f,
 } from "./core.js";
 import { armDrawing, armGeometry } from "../../../tools/arm-plates.mjs";
-import { stepArm, armPoints } from "../../world/simulator.ts";
+import { stepArm } from "../../world/simulator.ts";
 import { renderSensor, SENSOR_SIZE } from "../../world/sensor.ts";
 // Draw the native sensor samples; omit white background pixels to keep animation light.
 function cameraImage(pixels) {
@@ -59,7 +60,7 @@ const ghost = (p, c = "teal") => {
 register("O1", {
   title: "Observe → encode → imagine",
   question:
-    "One physical pose; three different descriptions. Play the scene, then change the proposed command.",
+    "Play the camera sequence and change the command. Which parts are seen, constructed, or simulated?",
   controls: [
     button("play", "Play"),
     button("reset", "Replay"),
@@ -71,25 +72,30 @@ register("O1", {
     const p = histories[0][Math.round(s.time)],
       pixels = renderSensor(p),
       vals = [
-        Math.sin(p.q1),
-        Math.cos(p.q1),
-        Math.sin(p.q2),
-        Math.cos(p.q2),
-        Math.sin(p.q1 + p.q2),
-        Math.cos(p.q1 + p.q2),
-        Math.tanh(p.v1),
-        Math.tanh(p.v2),
+        ["\\sin q_1", Math.sin(p.q1)],
+        ["\\cos q_1", Math.cos(p.q1)],
+        ["\\sin q_2", Math.sin(p.q2)],
+        ["\\cos q_2", Math.cos(p.q2)],
       ];
-    const camera = cameraImage(pixels);
-    let bars = vals
-      .map(
-        (v, i) =>
-          line(80, 55 + i * 24, 280, 55 + i * 24) +
-          `<rect x="${180 + Math.min(0, v) * 85}" y="${48 + i * 24}" width="${Math.abs(v) * 85}" height="14" rx="3" fill="var(--violet)"/>` +
-          text(55, 59 + i * 24, String(i + 1)) +
-          text(315, 59 + i * 24, f(v), "violet", "end"),
-      )
-      .join("");
+    const coordinates =
+      '<div style="display:grid;gap:0.4rem;padding:0.4rem 0">' +
+      vals
+        .map(([label, value]) => {
+          const left = 50 + Math.min(0, value) * 46,
+            width = Math.abs(value) * 46;
+          return (
+            '<div style="display:grid;grid-template-columns:4.7em minmax(0,1fr) 3.1em;gap:0.4rem;align-items:center;font:400 0.77rem/1.3 DM Sans,sans-serif">' +
+            `<span>${tex(label)}</span>` +
+            '<span style="position:relative;height:13px;border-bottom:1px solid var(--plot-line)">' +
+            '<i style="position:absolute;left:50%;top:1px;width:1px;height:12px;background:var(--line)"></i>' +
+            `<i style="position:absolute;left:${left}%;top:2px;width:${width}%;height:10px;border-radius:2px;background:var(--violet)"></i>` +
+            "</span>" +
+            `<span style="text-align:right;white-space:nowrap;color:var(--violet);font-variant-numeric:tabular-nums">${f(value)}</span>` +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>";
     const action =
         s.command === "Push"
           ? [0.55, -0.45]
@@ -98,24 +104,30 @@ register("O1", {
             : [0, 0],
       future = trajectory(p, action, 90);
     return (
-      row(
-        panel("Observe", mechanism(p), "The camera records pixels."),
-        panel(
-          "Encode",
-          svg(bars, "Eight explicitly constructed illustrative coordinates"),
-          "Eight numbers are eight coordinates, not eight joints. Here they are hand-chosen functions of the state.",
-        ),
-        panel(
-          "Imagine",
-          mechanism(p, [30, 60, 90].map((k) => ghost(future[k])).join("")),
-          s.command + " · simulated consequences, not learned predictions.",
+      "<style>@media screen and (max-width:620px){#visual-O1 .visual-panel:first-child>svg{max-height:205px}#visual-O1 .visual-panel:last-child>svg{max-height:155px}}</style>" +
+      '<div class="visual-panels" data-panels="3" style="--panel-count:3;--graphic-count:2;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))">' +
+      panel(
+        `Observe · ${SENSOR_SIZE} × ${SENSOR_SIZE} camera`,
+        svg(
+          cameraImage(pixels),
+          `Actual ${SENSOR_SIZE} by ${SENSOR_SIZE} grayscale camera image of the arm`,
+          SENSOR_SIZE,
+          SENSOR_SIZE,
         ),
       ) +
-      `<div class="camera-inset">${svg(camera, `Actual ${SENSOR_SIZE} by ${SENSOR_SIZE} sensor image`, SENSOR_SIZE, SENSOR_SIZE)}<p>The actual ${SENSOR_SIZE} × ${SENSOR_SIZE} camera image—the same resolution used by the trainable encoder.</p></div>`
+      `<div class="visual-panel"><h4>Constructed pose code · not trained</h4>${coordinates}</div>` +
+      panel(
+        `Simulator reveal · ${s.command.toLowerCase()}`,
+        mechanism(p, [30, 60, 90].map((k) => ghost(future[k])).join("")),
+      ) +
+      "</div>" +
+      takeaway(
+        "Only the camera image is observed. The pose bars and exposed arm use simulator state.",
+      )
     );
   },
   caption:
-    "A simulator drives this introductory illustration at fixed time intervals. The encoder bars are an explanatory mapping; only the laboratory trains an encoder and forecasts with learned weights.",
+    "The hand-built code omits velocity. The faint arms show consequences simulated for the selected action; the laboratory later learns its own encoder and predictor from pixels.",
 });
 register("O2", {
   title: "The picture hides the velocity",
@@ -154,49 +166,85 @@ register("O2", {
 register("P3", {
   title: "Keep a distinction; ignore a distraction",
   question:
-    "Change the table, then change the elbow. Which change should a motion representation preserve?",
+    "Change the surface, then change the elbow. Which difference should a motion code keep?",
   controls: [
-    choices("surface", "Surface", ["Plain", "Striped", "Dotted"]),
+    choices("surface", "New surface", ["Striped", "Dotted"]),
     range("angle", "Elbow angle", -0.8, 2.2, 0.01, 1.45),
   ],
   draw(s) {
-    const p = { ...initial, q2: s.angle };
-    let bg = "";
-    for (let i = 0; i < 10; i++)
-      bg +=
-        s.surface === "Striped"
-          ? line(40 + i * 30, 30, 40 + i * 30, 250)
-          : s.surface === "Dotted"
-            ? Array.from({ length: 8 }, (_, j) =>
-                dot(40 + i * 30, 35 + j * 30, 1, "plot-line"),
+    const reference = { ...initial, q2: 0.25 },
+      changed = { ...initial, q2: s.angle },
+      position = (angle) => 65 + ((angle + 0.8) / 3) * 245;
+    const scene = (x, pose, surface, name, color) => {
+      const { base, elbow, tip } = armGeometry(pose, x + 51, 51, 60);
+      const texture =
+        surface === "Striped"
+          ? Array.from({ length: 7 }, (_, i) =>
+              line(x + 16 + i * 12, 24, x + 16 + i * 12, 109),
+            ).join("")
+          : surface === "Dotted"
+            ? Array.from({ length: 30 }, (_, i) =>
+                dot(
+                  x + 17 + (i % 6) * 14,
+                  29 + Math.floor(i / 6) * 17,
+                  1.2,
+                  "plot-line",
+                ),
               ).join("")
             : "";
-    return row(
-      panel("Pixels", mechanism(p, bg)),
-      panel(
-        "A useful distinction",
-        svg(
-          [Math.sin(p.q1), Math.cos(p.q1), Math.sin(p.q2), Math.cos(p.q2)]
-            .map(
-              (v, i) =>
-                `<rect x="70" y="${45 + i * 45}" width="${100 + 80 * v}" height="20" rx="3" fill="var(--violet)"/>` +
-                text(60, 60 + i * 45, String(i + 1), "muted", "end"),
-            )
-            .join(""),
-          "Pose-dependent coordinates",
+      return (
+        text(x + 51, 17, name, color, "middle") +
+        `<rect x="${x + 7}" y="22" width="88" height="90" rx="5" fill="var(--surface-raised)" stroke="var(--line)"/>` +
+        texture +
+        `<path d="M${base.x} ${base.y}L${elbow.x} ${elbow.y}L${tip.x} ${tip.y}" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>` +
+        `<circle cx="${base.x}" cy="${base.y}" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>` +
+        dot(elbow.x, elbow.y, 3, "ink") +
+        dot(tip.x, tip.y, 3.5, color)
+      );
+    };
+    const picture =
+      scene(0, reference, "Plain", "A · plain", "blue") +
+      scene(
+        120,
+        reference,
+        s.surface,
+        `A′ · ${s.surface.toLowerCase()}`,
+        "violet",
+      ) +
+      scene(
+        240,
+        changed,
+        s.surface,
+        Math.abs(s.angle - reference.q2) < 0.005
+          ? "B · same pose"
+          : "B · new pose",
+        "amber",
+      ) +
+      text(8, 139, "Keep the elbow angle", "ink") +
+      line(50, 174, 315, 174) +
+      dot(position(reference.q2), 174, 7, "blue") +
+      `<circle cx="${position(reference.q2)}" cy="174" r="11" fill="none" stroke="var(--violet)" stroke-width="2"/>` +
+      dot(position(s.angle), 174, 6.5, "amber") +
+      text(8, 219, "Erase everything", "ink") +
+      line(50, 250, 315, 250) +
+      dot(180, 250, 6, "blue") +
+      `<circle cx="180" cy="250" r="10" fill="none" stroke="var(--violet)" stroke-width="2"/>` +
+      `<circle cx="180" cy="250" r="14" fill="none" stroke="var(--amber)" stroke-width="2"/>`;
+    return (
+      row(
+        panel(
+          "Three pictures, two maps",
+          svg(
+            picture,
+            "A and A prime show the same arm pose on different surfaces; B changes the elbow. The pose code overlaps A and A prime but separates B, while the constant code merges all three.",
+          ),
         ),
-        "This hand-designed pose code ignores the surface.",
-      ),
-      panel(
-        "Destructive collapse",
-        svg(
-          [0, 1, 2, 3].map((i) => dot(180, 60 + i * 45, 5, "rose")).join(""),
-          "Constant code",
-        ),
-        "A constant code ignores the surface and the pose. Invariance alone cannot tell these solutions apart.",
-      ),
+      ) +
+      takeaway(
+        "The surface change disappears in the first code; the elbow change remains. A constant code erases both.",
+      )
     );
   },
   caption:
-    "These are constructed examples, not claims about measured invariance of the trained model. A representation must ignore some changes while preserving others.",
+    "The first line uses the elbow angle as a hand-designed code for this one comparison; it is not a complete motion state. The second line is a constant code. Neither line shows learned encoder output.",
 });

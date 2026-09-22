@@ -44,23 +44,23 @@ for (const width of [1440, 390])
       dispatchEvent(new Event("book-theme-change"));
     }, theme);
     for (const selector of [
-      "#visual-O1 .camera-inset",
+      "#visual-O1 .visual-panels > .visual-panel:first-child svg",
       "#visual-V1",
       "#control-lab .sensor-pair",
       "#future-choices",
     ]) {
-      await p
-        .locator(selector)
-        .screenshot({
-          path: `tmp/camera/${width}-${theme}-${selector.replace(/[^a-z0-9]/gi, "")}.png`,
-        });
+      await p.locator(selector).screenshot({
+        path: `tmp/camera/${width}-${theme}-${selector.replace(/[^a-z0-9]/gi, "")}.png`,
+      });
     }
     assert.equal(
       await p.evaluate(() => document.body.scrollWidth > innerWidth),
       false,
     );
   }
-const camera = p.locator("#visual-O1 .camera-inset");
+const camera = p.locator(
+  "#visual-O1 .visual-panels > .visual-panel:first-child svg",
+);
 const before = await camera.innerHTML();
 await p.locator('#visual-O1 input[data-key="time"]').evaluate((e) => {
   e.value = "120";
@@ -87,5 +87,5 @@ fs.writeFileSync(
 );
 await b.close();
 console.log(
-  "All 16 camera canvases are native 64 × 64; previews animate, both themes fit desktop and mobile.",
+  "All 16 camera canvases are native 64 × 64; the primary camera figure animates, and both themes fit desktop and mobile.",
 );

@@ -8,61 +8,77 @@ import {
   dot,
   line,
   path,
-  plot,
   scatter,
   range,
   choices,
-  button,
   tex,
   f,
   number,
+  takeaway,
   esc,
 } from "./core.js";
 import { ecf, ep, rng, normal } from "../numerics.js";
 const eq = (s) => `<div class="visual-equation">${tex(s, true)}</div>`;
-const cards = (items) =>
-  '<div class="visual-steps">' +
-  items
-    .map(([a, b]) => `<div class="visual-card"><strong>${a}</strong>${b}</div>`)
-    .join("") +
-  "</div>";
 register("I1", {
-  title: "A window keeps its axes through the graph",
+  title: "The same frames, two memory layouts",
   question:
-    "Select a time position. Which entries are context, and which supply the next target?",
-  controls: [range("time", "Sequence position", 0, 2, 1, 1)],
-  draw: (s) =>
-    row(
-      panel(
-        "Three images, two transitions",
-        cards([
-          [
-            "Camera window",
-            tex("[3,B,4096]") + "<br>time × batch × flattened pixels",
-          ],
-          ["Shared encoder", tex("[3,B,8]") + "<br>time × batch × coordinates"],
-          ["Selected slice", tex(`Z_{${s.time}}\\in\\mathbb R^{B\\times8}`)],
-        ]),
-      ),
-      panel(
-        "Predict one next embedding",
-        cards([
-          [
-            "Concatenate",
-            tex("[\\encoded{z}_0,\\encoded{z}_1,\\action{a}_0,\\action{a}_1]") +
-              "<br>8 + 8 + 2 + 2 = 20 entries per example",
-          ],
-          ["Predict a residual", tex("g:\\mathbb R^{20}\\to\\mathbb R^8")],
-          [
-            "Add and compare",
-            tex("\\predicted{\\hat z}_2=\\encoded{z}_1+g(\\cdot)") +
-              "<br>Compare against encoder output z₂. Gradients reach both.",
-          ],
-        ]),
-      ),
-    ),
+    "Reordering axes changes the array layout. Does it change which frames belong together?",
+  draw: () => {
+    const colors = ["blue", "violet", "teal"],
+      cells = [];
+    for (let b = 0; b < 2; b++)
+      for (let t = 0; t < 3; t++)
+        cells.push(
+          `<rect x="${40 + t * 38}" y="${55 + b * 43}" width="32" height="32" rx="3" fill="var(--${colors[t]})" opacity=".68"/>`,
+        );
+    for (let t = 0; t < 3; t++)
+      for (let b = 0; b < 2; b++)
+        cells.push(
+          `<rect x="${235 + b * 38}" y="${39 + t * 43}" width="32" height="32" rx="3" fill="var(--${colors[t]})" opacity=".68"/>`,
+        );
+    const diagram =
+      text(96, 18, "Example first", "ink", "middle") +
+      text(272, 18, "Time first", "ink", "middle") +
+      text(56, 45, "0", "muted", "middle") +
+      text(94, 45, "1", "muted", "middle") +
+      text(132, 45, "2", "muted", "middle") +
+      text(23, 76, "1", "muted", "middle") +
+      text(23, 119, "2", "muted", "middle") +
+      text(251, 31, "1", "muted", "middle") +
+      text(289, 31, "2", "muted", "middle") +
+      [0, 1, 2]
+        .map((t) => text(218, 59 + t * 43, String(t), "muted", "middle"))
+        .join("") +
+      cells.join("") +
+      line(169, 99, 207, 99, "ink") +
+      `<path d="M207 99l-7-4v8z" fill="var(--ink)"/>` +
+      text(
+        180,
+        177,
+        "Each square is one frame; colors mark time.",
+        "muted",
+        "middle",
+      );
+    return (
+      row(
+        panel(
+          "A transpose keeps each example’s sequence intact",
+          svg(
+            diagram,
+            "Two example rows each contain frames at times zero, one, and two. A transpose groups the same six frames by time instead of by example.",
+            360,
+            190,
+          ),
+          "Two examples are drawn; the batch can have any size. The third time slice supplies the target, while the first two and their aligned actions supply context.",
+        ),
+      ) +
+      eq(
+        "[B,3,4096]\\;\\longrightarrow\\;[3,B,4096]\\;\\xrightarrow{f_\\theta}\\;[3,B,8]",
+      )
+    );
+  },
   caption:
-    "The browser layout is time-first. The paper and libraries may store axes differently; a permutation must preserve which axis each reduction refers to.",
+    "The manuscript names examples in batch-first order. The browser transposes to time-first order before the shared encoder, so SIGReg can inspect a separate batch of embeddings at each time. Transposing axes does not swap actions between transitions.",
 });
 register("I2", {
   title: "Average before squaring",
@@ -177,127 +193,142 @@ register("I3", {
     "The selected lines are copied from the tested reference above. This calculation inspects one frequency; the final line weights all frequency knots, sums them, multiplies by batch size and averages direction columns.",
 });
 register("I4", {
-  title: "A split can leak a frame without copying a window",
+  title: "Different windows can share the same frame",
   question:
-    "Two different windows can still share most of their camera frames.",
+    "Can a held-out window contain a camera frame that training has already seen?",
   controls: [choices("split", "Split", ["Random windows", "Whole episodes"])],
   draw(s) {
-    let g = "";
-    for (let r = 0; r < 3; r++) {
-      g += text(18, 40 + r * 75, "Episode " + (r + 1));
-      for (let i = 0; i < 8; i++) {
-        const test = s.split === "Whole episodes" ? r === 2 : (i + r) % 3 === 0;
-        g += `<rect x="${110 + i * 27}" y="${20 + r * 75}" width="22" height="24" rx="3" fill="var(--${s.split === "Whole episodes" ? (test ? "amber" : "blue") : "plot-line"})" opacity=".65"/>`;
-      }
-      g +=
-        line(
-          110,
-          60 + r * 75,
-          183,
-          60 + r * 75,
-          s.split === "Whole episodes" && r === 2 ? "amber" : "blue",
-        ) +
-        line(
-          137,
-          67 + r * 75,
-          210,
-          67 + r * 75,
-          s.split === "Random windows" || r === 2 ? "amber" : "blue",
-        );
-    }
-    return row(
-      panel(
-        "Frames and overlapping windows",
-        svg(g, "Episode split versus interleaved frame membership"),
-        "Blue training; amber held out. Adjacent length-three windows overlap.",
-      ),
-      panel(
-        "What independence is claimed",
-        s.split === "Whole episodes"
-          ? "Holding out whole episodes removes shared frames between those episodes. It still does not test new physics, cameras, action ranges, or tasks."
-          : "Assigning adjacent windows independently can put the same observation on both sides of the split. “Different windows” is insufficient.",
-      ),
+    const whole = s.split === "Whole episodes";
+    const frame = (x, y, id, color, shared) =>
+      `<rect x="${x}" y="${y}" width="66" height="47" rx="4" fill="var(--surface-raised)" stroke="var(--${shared ? "rose" : color})" stroke-width="${shared ? 2 : 1.5}"/>` +
+      text(x + 33, y + 29, "frame " + id, "ink", "middle");
+    const strip =
+      dot(23, 25, 4, "blue") +
+      text(36, 29, "Training · episode 1", "ink") +
+      dot(23, 104, 4, "amber") +
+      text(36, 108, `Validation · episode ${whole ? "2" : "1"}`, "ink") +
+      [1, 2, 3]
+        .map((id, i) => frame(82 + i * 82, 38, id, "blue", !whole && id > 1))
+        .join("") +
+      [2, 3, 4]
+        .map((id, i) => frame(82 + i * 82, 117, id, "amber", !whole && id < 4))
+        .join("") +
+      text(
+        180,
+        190,
+        whole ? "0 shared source frames" : "2 shared source frames",
+        whole ? "teal" : "rose",
+        "middle",
+      );
+    return (
+      row(
+        panel(
+          "Inspect the source of each frame",
+          svg(
+            strip,
+            whole
+              ? "Training uses frames one through three from episode one; validation uses frames two through four from episode two, so no source frame repeats."
+              : "Training uses frames one through three from episode one; validation uses frames two through four from the same episode, so frames two and three repeat.",
+            360,
+            205,
+          ),
+        ),
+      ) +
+      takeaway(
+        whole
+          ? "Holding out episode 2 prevents this frame leak. It does not test a new camera or new physics."
+          : "The windows differ, but frames 2 and 3 appear in both. Validation has already seen part of its input.",
+      )
     );
   },
   caption:
-    "The diagram illustrates the leakage mechanism. The actual laboratory splits episodes before sampling its windows.",
+    "These are illustrative windows of length three. The laboratory splits whole episodes before sampling its training and validation windows.",
 });
 register("I5", {
   title: "A checkpoint is more than weights",
   question:
     "What must survive a pause for the next update to be a continuation?",
   draw: () =>
-    cards([
-      ["Parameters θ", "The learned encoder and predictor."],
-      [
-        "Adam moments",
-        "First and second moving averages retain optimizer history.",
-      ],
-      [
-        "Update count",
-        "Bias correction depends on the number of completed updates.",
-      ],
-      [
-        "Random streams",
-        "Batch and projection streams determine which update comes next.",
-      ],
-      ["Resume", "All four remain in memory when you pause this browser run."],
-      [
-        "Reset",
-        "A seed reconstructs an initial experiment; it does not continue the trained checkpoint.",
-      ],
-    ]),
-  caption:
-    "Saving measurements exports observations about a run, not a restorable parameter checkpoint. The browser’s Pause/Train continuation retains the actual optimizer state in its worker.",
-});
-register("A1", {
-  title: "The graph stays; the movable quantities change",
-  question:
-    "During planning, which values are optimized and which remain fixed?",
-  controls: [choices("mode", "Mode", ["Learning", "Planning"])],
-  draw: (s) =>
     row(
       panel(
-        "Information flow",
-        cards([
-          [
-            "Observe",
-            tex(
-              "\\observed{o}_t\\to f_\\theta(\\observed{o}_t)=\\encoded{z}_t",
-            ),
-          ],
-          [
-            "Predict",
-            tex(
-              "(\\encoded{z}_t,\\action{a}_t)\\to g_\\psi(\\encoded{z}_t,\\action{a}_t)",
-            ),
-          ],
-          [
-            "Compare",
-            s.mode === "Learning"
-              ? tex(
-                  "\\|\\predicted{\\hat z}_{t+1}-\\encoded{z}_{t+1}\\|^2+\\lambda\\objective{R}",
-                )
-              : tex(
-                  "\\|\\predicted{\\hat z}_{t+H}-f_\\theta(\\observed{o}_{\\rm goal})\\|^2",
-                ),
-          ],
-        ]),
-      ),
-      panel(
-        "What moves",
-        eq(
-          s.mode === "Learning"
-            ? "(\\theta,\\psi)\\leftarrow\\operatorname{optimizer}(\\nabla L)"
-            : "a_{t:t+H-1}\\leftarrow\\operatorname{search}(C)",
+        "What crosses the pause",
+        svg(
+          `<rect x="12" y="20" width="150" height="139" rx="6" fill="var(--surface-raised)" stroke="var(--line)"/>` +
+            text(26, 43, "Weights", "ink") +
+            text(26, 73, "Adam averages", "ink") +
+            text(26, 103, "Update count", "ink") +
+            text(26, 133, "Random streams", "ink") +
+            [54, 84, 114].map((y) => line(25, y, 148, y)).join("") +
+            line(169, 89, 225, 89, "teal") +
+            `<path d="M225 89l-8-5v10z" fill="var(--teal)"/>` +
+            text(197, 73, "pause", "muted", "middle") +
+            `<rect x="233" y="53" width="114" height="72" rx="6" fill="var(--surface-raised)" stroke="var(--teal)"/>` +
+            text(290, 81, "Resume", "ink", "middle") +
+            text(290, 101, "same run", "teal", "middle") +
+            line(88, 165, 88, 192, "muted") +
+            line(88, 192, 225, 192, "muted") +
+            `<path d="M225 192l-8-5v10z" fill="var(--muted)"/>` +
+            text(279, 185, "Metrics export", "muted", "middle") +
+            text(279, 205, "record only", "muted", "middle"),
+          "Weights, optimizer averages, update count, and random streams remain in memory across a pause and allow the next update to continue the same run. Exported measurements are a record, not a restorable checkpoint.",
+          360,
+          220,
         ),
-        s.mode === "Learning"
-          ? "Actions and observations are supplied by the fixed dataset. Encoder and predictor parameters change."
-          : "Encoder and predictor parameters are frozen. Candidate action sequences change. The goal image is encoded by the same frozen encoder.",
       ),
     ),
   caption:
-    "CEM searches without differentiating through the actions. Gradient-based planning is another possible choice, but it is not the browser’s search algorithm.",
+    "The browser’s Pause/Train continuation retains this state in its worker. Resetting from a seed reconstructs an initial run; saving measurements exports observations, not a restorable checkpoint.",
+});
+register("A1", {
+  title: "The same model, different things to change",
+  question:
+    "Both use the encoder and predictor. What does each process adjust?",
+  draw: () => {
+    const box = (x, y, w, a, b, color = "line") =>
+      `<rect x="${x}" y="${y}" width="${w}" height="43" rx="5" fill="var(--surface-raised)" stroke="var(--${color})"/>` +
+      text(x + w / 2, y + 18, a, "ink", "middle") +
+      text(x + w / 2, y + 34, b, "muted", "middle");
+    const arrow = (x1, x2, y, color = "plot-line") =>
+      line(x1, y, x2, y, color) +
+      `<path d="M${x2} ${y}l-6-4v8z" fill="var(--${color})"/>`;
+    const flow =
+      text(12, 17, "LEARNING", "teal") +
+      box(12, 28, 91, "Recorded", "transitions") +
+      arrow(105, 128, 49, "teal") +
+      box(130, 28, 101, "Encoder +", "predictor", "teal") +
+      arrow(233, 256, 49, "teal") +
+      box(258, 28, 89, "Prediction", "error") +
+      `<path d="M303 75V91H181V75" fill="none" stroke="var(--teal)" stroke-width="1.7"/>` +
+      `<path d="M181 75l-4 7h8z" fill="var(--teal)"/>` +
+      text(242, 108, "update model weights", "teal", "middle") +
+      text(12, 137, "PLANNING", "amber") +
+      box(12, 148, 91, "Candidate", "actions", "amber") +
+      arrow(105, 128, 169, "amber") +
+      box(130, 148, 101, "Same frozen", "model", "teal") +
+      arrow(233, 256, 169, "amber") +
+      box(258, 148, 89, "Goal", "cost") +
+      `<path d="M303 195V211H57V195" fill="none" stroke="var(--amber)" stroke-width="1.7"/>` +
+      `<path d="M57 195l-4 7h8z" fill="var(--amber)"/>` +
+      text(180, 232, "search candidate actions", "amber", "middle");
+    return (
+      row(
+        panel(
+          "Follow the two feedback loops",
+          svg(
+            flow,
+            "In learning, recorded images and actions pass through the encoder and predictor; prediction error updates model weights. In planning, candidate actions pass through the frozen model; goal cost changes the candidates.",
+            360,
+            246,
+          ),
+        ),
+      ) +
+      takeaway(
+        "Learning changes model weights using recorded transitions. Planning searches actions using those fixed weights.",
+      )
+    );
+  },
+  caption:
+    "The browser’s planner uses CEM to search candidate action sequences and encodes the goal image with the frozen encoder. It does not differentiate through the actions.",
 });
 export function cem(iter) {
   const random = rng(209),
@@ -398,46 +429,52 @@ register("A4", {
     "Planning horizon controls how far the model looks ahead. Execution prefix controls how long it acts before getting new evidence. Neither guarantees accurate long-horizon prediction.",
 });
 register("A5", {
-  title: "A cheap latent move can be physically wrong",
-  question:
-    "Erase one physical coordinate from the representation. Can the planner still detect an error there?",
-  controls: [
-    range("scale", "Second-coordinate scale", 0, 1, 0.01, 0.1),
-    range("velocity", "Velocity on arrival", 0, 2, 0.05, 1),
-  ],
+  title: "A cheap endpoint can hide two failures",
+  question: "What can a small latent goal cost miss about the physical state?",
+  controls: [range("scale", "Keep the second coordinate", 0, 1, 0.01, 0.1)],
   draw(s) {
-    return row(
-      panel(
-        "Latent cost hides a direction",
-        plot({
-          xmin: -2,
-          xmax: 2,
-          ymin: 0,
-          ymax: 4,
-          curves: [
-            { fn: (y) => y * y, color: "blue" },
-            { fn: (y) => (s.scale * y) ** 2, color: "rose" },
-          ],
-          xlabel: "physical second-coordinate error",
-          ylabel: "squared cost",
-        }),
-        "Blue physical squared error; rose latent squared distance. At scale zero, this direction becomes invisible.",
-      ),
-      panel(
-        "Reaching is not remaining",
-        plot({
-          xmin: 0,
-          xmax: 3,
-          ymin: -1,
-          ymax: 6,
-          curves: [{ fn: (t) => s.velocity * t, color: "blue" }],
-          xlabel: "time after reaching position",
-          ylabel: "distance from goal",
-        }),
-        `Arrival velocity ${f(s.velocity)}. With no braking in this simple illustration, reaching the correct position does not keep it there.`,
-      ),
+    const physical = 1.5 ** 2,
+      latent = (1.5 * s.scale) ** 2;
+    const diagram =
+      text(10, 22, "1 · A hidden physical error", "ink") +
+      text(10, 53, "Physical cost", "blue") +
+      `<rect x="160" y="43" width="165" height="13" rx="3" fill="var(--blue)" opacity=".82"/>` +
+      text(10, 84, "Latent cost", "violet") +
+      `<rect x="160" y="74" width="165" height="13" rx="3" fill="var(--inset)"/>` +
+      `<rect x="160" y="74" width="${165 * s.scale * s.scale}" height="13" rx="3" fill="var(--violet)"/>` +
+      line(10, 113, 350, 113) +
+      text(10, 139, "2 · The right place, but still moving", "ink") +
+      text(345, 139, "speed = 1", "amber", "end") +
+      [0, 1, 2]
+        .map((t) => {
+          const x = 26 + t * 108;
+          return (
+            text(x + 32, 164, "time " + t, "muted", "middle") +
+            line(x - 10, 220, x + 95, 220) +
+            `<circle cx="${x + 20}" cy="205" r="11" fill="none" stroke="var(--teal)" stroke-width="2"/>` +
+            dot(x + 20 + t * 18, 205, 6, "blue")
+          );
+        })
+        .join("") +
+      text(180, 248, "Teal rings mark the goal position.", "muted", "middle");
+    return (
+      row(
+        panel(
+          "Two checks that endpoint cost omits",
+          svg(
+            diagram,
+            `A fixed physical second-coordinate error of 1.5 has squared cost 2.25, but latent cost ${latent.toFixed(3)} when that coordinate is scaled by ${s.scale.toFixed(2)}. In a separate case, an object begins at the goal position and moves away because its arrival speed is one.`,
+            360,
+            260,
+          ),
+        ),
+      ) +
+      `<div class="visual-results"><div><span>Physical error squared</span><strong>${f(physical, 2)}</strong></div><div><span>Latent error squared</span><strong>${f(latent, 3)}</strong></div></div>` +
+      takeaway(
+        "A representation can hide a wrong position. Even with the right position, motion can carry the arm away.",
+      )
     );
   },
   caption:
-    "These explicit counterexamples separate representation distortion from dynamics error and stopping behavior. A low imagined terminal cost alone cannot establish successful physical control.",
+    "Top: a toy encoder scales one physical coordinate by the control value, while its actual error stays at 1.5. Bottom: with no braking, a toy object reaches the goal at time 0 with speed 1 and then drifts. Both are explicit counterexamples, not measured browser rollouts.",
 });

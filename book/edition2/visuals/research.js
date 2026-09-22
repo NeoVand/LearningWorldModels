@@ -225,36 +225,18 @@ register("V5", {
   question:
     "Which token collection supplies queries, and which supplies keys and values?",
   draw: () =>
-    row(
-      panel(
-        "Temporal predictor heads",
-        cards([
-          ["Common token width", "192 input/output coordinates."],
-          [
-            "Independent projections",
-            "16 heads × 64 channels = 1,024 internal channels in the pinned predictor.",
-          ],
-          [
-            "Combine heads",
-            "Concatenate then project back to width 192. Do not assume 192/16 channels per head.",
-          ],
-        ]),
-      ),
-      panel(
-        "Separate diagnostic decoder",
-        cards([
-          ["Queries", "Learned patch queries identify output image positions."],
-          [
-            "Keys and values",
-            "The frozen representation supplies information to read.",
-          ],
-          [
-            "Training boundary",
-            "Fit the decoder after representation learning. Its reconstruction loss is not the main model’s training objective.",
-          ],
-        ]),
-      ),
-    ),
+    `<div class="attention-architecture">
+      <section><h4>Temporal predictor · self-attention</h4><div class="attention-flow">
+        <div><strong>One token sequence</strong><span>192 coordinates in and out</span></div><span aria-hidden="true">→</span>
+        <div><strong>Independent Q, K, V projections</strong><span>All read the same sequence; each learns its own map</span></div><span aria-hidden="true">→</span>
+        <div><strong>16 heads × 64</strong><span>1,024 internal channels</span></div><span aria-hidden="true">→</span>
+        <div><strong>Output projection</strong><span>Back to width 192, not 192 ÷ 16 per head</span></div>
+      </div></section>
+      <section><h4>Diagnostic decoder · cross-attention</h4><div class="attention-feeds">
+        <div><strong>Q · learned patch queries</strong><span>Specify output image positions</span></div>
+        <div><strong>K and V · frozen representation</strong><span>Supply information to read</span></div>
+      </div><p class="attention-boundary">Fit this decoder after representation learning. Its reconstruction loss does not train the main world model.</p></section>
+    </div>`,
   caption:
     "Self-attention obtains Q, K and V from the same sequence. Cross-attention can obtain queries from one collection and keys/values from another. The distinction is a dataflow distinction, not an extra mystical operation.",
 });
@@ -262,43 +244,13 @@ register("H1", {
   title: "What is hidden, and what supplies the target?",
   question: "Compare the prediction problem before comparing model sizes.",
   draw: () =>
-    row(
-      panel(
-        "I-JEPA",
-        cards([
-          ["Context", "Visible regions of a still image."],
-          ["Target", "Representations of masked image regions."],
-          [
-            "Stability mechanism",
-            "Moving-average target encoder with stopped target gradients.",
-          ],
-        ]),
-      ),
-      panel(
-        "V-JEPA",
-        cards([
-          ["Context", "Visible space–time regions in video."],
-          ["Target", "Representations of masked video regions."],
-          [
-            "Stability mechanism",
-            "Moving-average teacher and target detachment.",
-          ],
-        ]),
-      ),
-      panel(
-        "V-JEPA 2",
-        cards([
-          ["Pretraining", "Large-scale video representation learning."],
-          [
-            "Action stage",
-            "Post-training on robot interaction conditions predictions on actions.",
-          ],
-          [
-            "Scope",
-            "The action-conditioned stage and video-pretraining stage have distinct data and objectives.",
-          ],
-        ]),
-      ),
+    `<table class="method-comparison"><thead><tr><th scope="col">Method</th><th scope="col">Context supplied</th><th scope="col">Representation target</th><th scope="col">Training boundary</th></tr></thead><tbody>
+      <tr><th scope="row">I-JEPA</th><td data-axis="Context">Visible regions of one image</td><td data-axis="Target">Masked image regions</td><td data-axis="Boundary">Moving-average target encoder; target gradients stopped</td></tr>
+      <tr><th scope="row">V-JEPA</th><td data-axis="Context">Visible space–time regions of video</td><td data-axis="Target">Masked video regions</td><td data-axis="Boundary">Moving-average teacher; targets detached</td></tr>
+      <tr><th scope="row">V-JEPA 2</th><td data-axis="Context">Video first; robot observations and actions later</td><td data-axis="Target">Masked video features first; action-conditioned future features later</td><td data-axis="Boundary">Video pretraining and robot post-training have distinct data and objectives</td></tr>
+    </tbody></table>` +
+    takeaway(
+      "The key change is the prediction question: hidden image content → hidden video content → the effect of an action. V-JEPA 2's action stage is separate from its video pretraining.",
     ),
   caption:
     "These are matched summaries of the research training setups described in the surrounding sections. They are not a claim that every version, downstream stage, or adaptation uses the same graph.",
@@ -334,25 +286,20 @@ register("H3", {
   question:
     "A paper family is easier to read as a matrix of design choices than a ladder of successors.",
   draw: () =>
-    cards([
-      [
-        "Masked spatial target",
-        "I-JEPA asks about hidden regions of one image.",
-      ],
-      ["Masked temporal target", "V-JEPA asks about hidden video content."],
-      [
-        "Action-conditioned target",
-        "V-JEPA 2 post-training and LeWM ask what a supplied action changes.",
-      ],
-      [
-        "Distributional geometry",
-        "LeJEPA and LeWM use Gaussian regularization to constrain learned representations.",
-      ],
-      [
-        "Frozen versus joint",
-        "DINO-WM and joint-learning methods make different choices about where representation learning occurs.",
-      ],
-    ]),
+    `<div class="lineage-axis-map" role="group" aria-label="Three independent axes for comparing research methods">
+      <section><h4>What is predicted?</h4><div class="lineage-options">
+        <div><strong>Hidden image region</strong><span>I-JEPA</span></div>
+        <div><strong>Hidden video content</strong><span>V-JEPA</span></div>
+        <div><strong>Effect of a supplied action</strong><span>V-JEPA 2 post-training · LeWM</span></div>
+      </div></section>
+      <section><h4>How is representation geometry constrained?</h4><div class="lineage-options">
+        <div><strong>Gaussian regularization</strong><span>LeJEPA · LeWM</span></div>
+      </div></section>
+      <section><h4>Does the visual encoder update with dynamics?</h4><div class="lineage-options">
+        <div><strong>Frozen pretrained features</strong><span>DINO-WM</span></div>
+        <div><strong>Joint representation and dynamics learning</strong><span>PLDM · LeWM</span></div>
+      </div></section>
+    </div>`,
   caption:
     "The generated atlas accompanies this exact comparison. Read each method’s source for stage-specific targets, gradient routing, and training data; a visual family resemblance is not equivalence.",
 });
@@ -360,29 +307,20 @@ register("W1", {
   title: "The research model’s dimensions fit together",
   question: "Where does the paper’s compact notation hide a whole tensor axis?",
   draw: () =>
-    cards([
-      ["Observe", "Batch × time × 3 × 224 × 224."],
-      [
-        "Patchify",
-        "256 image patches plus CLS; token width 192. Shared image encoder over frames.",
-      ],
-      [
-        "Project",
-        "CLS → projector → d-dimensional representation, with d = 192 in the inspected default.",
-      ],
-      [
-        "Predict",
-        "Context embeddings and action conditioning → shifted next embeddings. Shared targets remain trainable.",
-      ],
-      [
-        "Regularize",
-        "Time × batch × d, multiplied by d × 1,024 directions, then by 17 frequency knots.",
-      ],
-      [
-        "Reduce",
-        "Average batch phasors before squaring; sum weighted frequencies; multiply by B; average directions and time.",
-      ],
-    ]),
+    `<div class="tensor-routes">
+      <section><h4>Prediction route · keep batch and time</h4><ol class="tensor-flow">
+        <li><strong>Observe</strong><code>B × T × 3 × 224 × 224</code><span>RGB frames</span></li>
+        <li><strong>Patchify + encode</strong><code>B × T × 257 × 192</code><span>256 patches + CLS; one shared image encoder across frames</span></li>
+        <li><strong>Project CLS</strong><code>B × T × d</code><span>Projector output; d = 192 in the inspected default</span></li>
+        <li><strong>Predict shifted targets</strong><code>B × N × d</code><span>N shifted positions; context embeddings + actions predict them, while the shared target encoder stays trainable</span></li>
+      </ol></section>
+      <section><h4>SIGReg route · retain each axis until its reduction</h4><ol class="tensor-flow">
+        <li><strong>Reorder</strong><code>T × B × d</code><span>Regularize each time position separately</span></li>
+        <li><strong>Project</strong><code>T × B × 1,024</code><span>Multiply by d × 1,024 sampled directions</span></li>
+        <li><strong>Sample frequencies</strong><code>T × B × 1,024 × 17</code><span>Seventeen frequency knots per projection</span></li>
+        <li><strong>Reduce</strong><code>scalar loss</code><span>Average batch phasors before squaring; sum weighted frequencies, multiply by B, then average directions and time</span></li>
+      </ol></section>
+    </div>`,
   caption:
     "Dimensions refer to the pinned implementation described in this chapter. Paper prose and code defaults differ in documented details; this graph does not claim a rerun of the benchmark.",
 });
@@ -466,46 +404,85 @@ register("W3", {
 register("L6", {
   title: "Keep the failed trajectories in view",
   question: "Does “reached once” agree with “still there at the end”?",
-  controls: [choices("seed", "Recorded seed", ["17", "41", "73"], "17")],
+  controls: [
+    choices("seed", "Recorded seed", ["17", "41", "73"], "17"),
+    choices(
+      "goal",
+      "Trajectory to inspect",
+      ["Local 1", "Local 2", "Local 3", "Distant"],
+      "Local 1",
+    ),
+  ],
   draw(s) {
     const run = recorded.find((r) => String(r.seed) === s.seed);
+    const goalLabels = [
+      "Local goal 1",
+      "Local goal 2",
+      "Local goal 3",
+      "Distant stress goal",
+    ];
+    const selected = Math.max(
+      0,
+      ["Local 1", "Local 2", "Local 3", "Distant"].indexOf(s.goal),
+    );
+    const current = run.controls[selected];
     const localTop =
       1.12 *
       Math.max(
         0.15,
         ...run.controls.slice(0, 3).flatMap((r) => [r.initial, ...r.errors]),
       );
+    const final = current.errors.at(-1);
+    const minimum = Math.min(...current.errors);
+    const status = (r) =>
+      r.errors.at(-1) < 0.15
+        ? ["Within goal at end", "within"]
+        : r.errors.some((x) => x < 0.15)
+          ? ["Reached, then left", "left"]
+          : ["Did not reach", "missed"];
     return (
+      `<div class="trajectory-overview" aria-label="Outcomes for all four goals">${run.controls
+        .map((r, i) => {
+          const [label, kind] = status(r);
+          return `<div class="trajectory-summary ${kind}${i === selected ? " selected" : ""}"><strong>${goalLabels[i]}</strong><span>${label}</span><small>Final ${f(r.errors.at(-1), 3)} rad</small></div>`;
+        })
+        .join("")}</div>` +
       row(
-        ...run.controls.map((r, i) =>
-          panel(
-            i === 3 ? "Distant stress goal" : "Local goal " + (i + 1),
-            plot({
-              xmin: 0,
-              xmax: 40,
-              ymin: 0,
-              ymax:
-                i === 3
-                  ? Math.max(0.2, r.initial, ...r.errors) * 1.12
-                  : localTop,
-              height: 230,
-              ticks: 2,
-              curves: [
-                {
-                  data: [[0, r.initial], ...r.errors.map((x, j) => [j + 1, x])],
-                  color: i === 3 ? "rose" : "teal",
-                },
-                { fn: () => 0.15, color: "amber" },
-              ],
-              xlabel: "action",
-              ylabel: "RMS error · rad",
-            }) +
-              `<div class="trajectory-verdict"><strong>${r.errors.at(-1) < 0.15 ? "Within goal at end" : r.errors.some((x) => x < 0.15) ? "Reached, then left" : "Did not reach"}</strong><span>Final ${f(r.errors.at(-1), 3)} rad</span></div>`,
-          ),
+        panel(
+          goalLabels[selected] +
+            (selected === 3 ? " · independent scale" : " · shared local scale"),
+          plot({
+            xmin: 0,
+            xmax: 40,
+            ymin: 0,
+            ymax:
+              selected === 3
+                ? Math.max(0.2, current.initial, ...current.errors) * 1.12
+                : localTop,
+            height: 250,
+            ticks: 4,
+            curves: [
+              {
+                data: [
+                  [0, current.initial],
+                  ...current.errors.map((x, j) => [j + 1, x]),
+                ],
+                color: selected === 3 ? "rose" : "teal",
+              },
+              { fn: () => 0.15, color: "amber" },
+            ],
+            xlabel: "action",
+            ylabel: "RMS error · rad",
+          }),
         ),
       ) +
+      results(
+        ["Lowest error", f(minimum, 3) + " rad"],
+        ["Final error", f(final, 3) + " rad"],
+        ["Outcome", status(current)[0]],
+      ) +
       takeaway(
-        "The three local plots share a vertical scale. The distant stress goal uses its own labeled scale. Amber marks the same 0.15-radian tolerance in every plot; reaching it once and staying there are separate outcomes.",
+        "All four outcomes stay visible above. Choose a goal to inspect its complete trajectory. Local goals share one vertical scale; the distant stress goal has its own labeled scale. Amber marks the same 0.15-radian tolerance.",
       )
     );
   },
@@ -568,17 +545,15 @@ register("X1", {
   question:
     "Use a symbol’s defined role, not its letter alone, to read the mathematics.",
   draw: () =>
-    cards([
-      ["Observation", tex("\\obs") + " · blue"],
-      ["Representation", tex("\\lat,\\quad\\Z") + " · violet"],
-      ["Prediction", tex("\\pred") + " · teal"],
-      ["Action", tex("\\act") + " · amber"],
-      ["Error / objective", tex("\\loss,\\quad\\reg,\\quad\\disc") + " · rose"],
-      [
-        "Analytical tools",
-        tex("\\uvec,\\quad\\freq,\\quad\\cf") + " · muted local palette",
-      ],
-    ]),
+    `<div class="notation-example">${eq("\\lat_t=f_\\theta(\\obs_t)")}${eq("\\pred_{t+1}=g_\\psi(\\lat_t,\\act_t)")}${eq("\\loss=\\|\\pred_{t+1}-\\lat_{t+1}\\|^2+\\lambda\\reg(\\Z)")}</div>
+    <div class="notation-legend" role="group" aria-label="Semantic color roles in the equations">
+      <div class="notation-entry observation"><strong>Observation</strong>${tex("\\obs")}</div>
+      <div class="notation-entry representation"><strong>Representation</strong>${tex("\\lat,\\quad\\Z")}</div>
+      <div class="notation-entry prediction"><strong>Prediction</strong>${tex("\\pred")}</div>
+      <div class="notation-entry action"><strong>Action</strong>${tex("\\act")}</div>
+      <div class="notation-entry objective"><strong>Error / objective</strong>${tex("\\loss,\\quad\\reg,\\quad\\disc")}</div>
+      <div class="notation-entry analytical"><strong>Analytical tools</strong>${tex("\\uvec,\\quad\\freq,\\quad\\cf")}<small>Muted local palette</small></div>
+    </div>`,
   caption:
     "Operators, dimensions, indices and unassigned mathematical parameters remain neutral. Color supplements the defined symbols and labels; it never replaces them.",
 });

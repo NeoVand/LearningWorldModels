@@ -160,29 +160,39 @@ register("T3", {
     "Fitting often reduces apparent discrepancy but need not reduce KS in every sample. A valid fitted-null calibration must repeat the same fitting step for every simulated null sample. The fixed-null KS threshold is not automatically valid.",
 });
 register("T4", {
-  title: "Three questions, three experiments",
+  title: "The same discrepancy can answer three different questions",
   question:
-    "What changes when a discrepancy becomes a differentiable training penalty?",
+    "What is repeated, what is held fixed, and what does the resulting number mean?",
   draw: () =>
-    row(
-      panel(
-        "Testing",
-        eq("P_{H_0}(\\text{reject})\\leq\\alpha"),
-        "Hold the null and calibration fixed. Across repetitions, control the false-alarm rate.",
-      ),
-      panel(
+    `<div class="experiment-contrast">` +
+    [
+      [
+        "Test calibration",
+        "Fix a null model → repeat null samples → set a cutoff",
+        "P_{H_0}(\\text{reject})\\leq\\alpha",
+        "How often would this rule false-alarm under the null?",
+      ],
+      [
         "Power",
-        eq("P_{H_1}(\\text{reject})"),
-        "Specify an alternative. Ask how often the chosen test detects it at this sample size.",
-      ),
-      panel(
-        "Optimization",
-        eq("\\theta\\leftarrow\\theta-\\eta\\nabla_\\theta R"),
-        "Move the representation to reduce a penalty. A lower training value is not a hypothesis-test verdict.",
-      ),
-    ),
+        "Specify an alternative → repeat its samples → count detections",
+        "P_{H_1}(\\text{reject})",
+        "How often would the test notice this particular departure?",
+      ],
+      [
+        "Training penalty",
+        "Draw batches → differentiate discrepancy → update encoder",
+        "\\theta\\leftarrow\\theta-\\eta\\nabla_\\theta R",
+        "Which parameter move lowers the chosen objective?",
+      ],
+    ]
+      .map(
+        ([name, route, math, meaning], i) =>
+          `<div class="experiment-route"><span class="experiment-index">0${i + 1}</span><div><strong>${name}</strong><p>${route}</p></div><div class="experiment-formula">${tex(math, true)}<small>${meaning}</small></div></div>`,
+      )
+      .join("") +
+    `</div>`,
   caption:
-    "Sample size, fitting choices and repeated testing affect statistical interpretation. A regularizer can be useful without returning a calibrated p-value.",
+    "A small training penalty is not a p-value. Calibration and power require specified distributions and repetitions; optimization asks for a differentiable direction. Sample size and fitting choices affect the first two interpretations.",
 });
 register("S1", {
   title: "Turn each sample into an arrow",
@@ -530,6 +540,10 @@ register("S7", {
   draw(s) {
     const h = [-1, -0.3, 0.3, 1].map((x) => x * s.spread),
       r = ep(h, { gradient: true }),
+      gradientExtent = Math.max(
+        0.02,
+        ...r.gradient.map((g) => Math.abs(g) * 1.25),
+      ),
       i = s.selected - 1,
       eps = 1e-5,
       a = [...h],
@@ -543,8 +557,8 @@ register("S7", {
         plot({
           xmin: -1.5,
           xmax: 1.5,
-          ymin: -5,
-          ymax: 5,
+          ymin: -gradientExtent,
+          ymax: gradientExtent,
           points: h.map((x, j) => [
             x,
             r.gradient[j],

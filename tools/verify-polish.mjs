@@ -88,7 +88,7 @@ const ids = [
   "visual-N7",
   "visual-A3",
   "visual-V1",
-  "uncertainty-lab",
+  "visual-B4",
 ];
 for (const width of [1440, 390])
   for (const theme of ["light", "dark"]) {
@@ -193,12 +193,10 @@ await page.locator("#world-lab").scrollIntoViewIfNeeded();
 await page.waitForFunction(() => WorldWorkshop.snapshot().evaluation, {
   timeout: 120000,
 });
-report.sensor = await page
-  .locator("#world-current")
-  .evaluate((e) => ({
-    filter: getComputedStyle(e).filter,
-    className: e.className,
-  }));
+report.sensor = await page.locator("#world-current").evaluate((e) => ({
+  filter: getComputedStyle(e).filter,
+  className: e.className,
+}));
 assert.equal(report.sensor.filter, "invert(1)");
 assert.deepEqual(errors, []);
 report.errors = errors;

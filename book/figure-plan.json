@@ -1,5 +1,5 @@
 {
-  "scope": "Implementation ledger for the 97 approved visual briefs across 20 chapters; 92 teaching figures plus five integrations in the live laboratory.",
+  "scope": "Implementation ledger for 98 visual briefs across 20 chapters; 93 teaching figures plus five integrations in the live laboratory.",
   "items": [
     {
       "id": "O1",
@@ -1429,7 +1429,7 @@
       "medium": "SVG + simulator",
       "priority": "P1",
       "action": "New",
-      "brief": "Show matched video strips for normal motion, color change, occlusion and teleportation. Plot actual model errors with the intervention marked; label illustrative data if a setup is purely conceptual.",
+      "brief": "Compare normal motion, recoloring, occlusion and teleportation as matched experimental conditions. Distinguish the physical path from camera observations and specify the frozen-model measurements required for a result.",
       "status": "complete",
       "source": "book/edition2/visuals/evidence.js",
       "anchor": "visual-E6",
@@ -1438,17 +1438,17 @@
         "research/implementation/visual-audit.json",
         "research/implementation/REVIEW.md"
       ],
-      "implementation_note": "A constructed intervention example separates history/action sensitivity and occlusion; it is not presented as measured neural performance."
+      "implementation_note": "An experiment-design diagram separates physical motion, visible observations, controlled variables and measurements; it contains no invented neural-model error curve."
     },
     {
       "id": "E7",
       "chapter": "evaluation",
-      "section": "Temporal straightness; expectiles; ablations",
-      "title": "Read the metric, not the picture",
-      "medium": "SVG small multiples",
+      "section": "Temporal straightness: derive Equation 9",
+      "title": "Straightness measures a turn, not prediction accuracy",
+      "medium": "Interactive SVG",
       "priority": "P2",
       "action": "New",
-      "brief": "Three compact panels: displacement angles and straightness; asymmetric squared loss and its expectile; controlled seed/ablation comparisons. Each directly accompanies its corresponding formula.",
+      "brief": "Two consecutive displacement vectors and a cosine scale make the turning statistic concrete, including the reversal and zero-motion cases.",
       "status": "complete",
       "source": "book/edition2/visuals/evidence.js",
       "anchor": "visual-E7",
@@ -1457,7 +1457,25 @@
         "research/implementation/visual-audit.json",
         "research/implementation/REVIEW.md"
       ],
-      "implementation_note": "Rendered from editable source, with a visible initial state and a text explanation; numerical controls are computed in the browser where supplied."
+      "implementation_note": "The unrelated expectile and ablation content was removed; the expectile has its own figure at the relevant derivation."
+    },
+    {
+      "id": "E8",
+      "chapter": "evaluation",
+      "section": "Expectiles emphasize one side of an error",
+      "title": "An expectile moves when the two sides cost differently",
+      "medium": "Interactive SVG",
+      "priority": "P1",
+      "action": "New",
+      "brief": "Use one asymmetry control to move the minimum of a weighted squared-loss curve. Compare it with the ordinary mean on the same axes and name the two residual weights.",
+      "status": "complete",
+      "source": "book/edition2/visuals/evidence.js",
+      "anchor": "visual-E8",
+      "verification": [
+        "research/widget-audit/AUDIT.md",
+        "research/layout-review/verification.json"
+      ],
+      "implementation_note": "Separated from E7 so the visual appears beside the expectile derivation rather than the temporal straightness section."
     },
     {
       "id": "R1",

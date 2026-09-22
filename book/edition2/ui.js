@@ -392,15 +392,35 @@ let busy = false,
   comparison = null,
   scene = null,
   controlHistory = [],
+  controlStart = null,
+  controlContext = null,
+  controlScale = 0.6,
+  recordedGoalContext = null,
   lastMetrics = null;
+let cameraInspection = null;
+const CONTROL_TOLERANCE = 0.15;
+const activeGoalContext = () => {
+  if (printSnapshot) return recordedGoalContext;
+  const select = $("#world-goal");
+  return {
+    index: Number(select.value),
+    label: select.selectedOptions[0]?.textContent.trim() ?? "Unknown goal",
+    pose: scene?.goal ? { q1: scene.goal.q1, q2: scene.goal.q2 } : null,
+  };
+};
 const exportState = () => ({
   recorded: new Date().toISOString(),
   info,
   backend,
+  activeGoal: activeGoalContext(),
+  modelCheckpoint: evaluation?.step ?? null,
   history,
   evaluation,
   comparison,
   controlHistory,
+  controlRun: controlStart
+    ? { ...controlContext, start: controlStart, history: controlHistory }
+    : null,
   forecasts: forecastRecord,
   forecastStep,
 });
@@ -482,6 +502,7 @@ function setBusy(value) {
 }
 function evaluateView(v) {
   evaluation = v;
+  updateCameraProvenance();
   drawFutureChoices(v.futureMatching);
   updateReport();
   $("#world-step").textContent = v.step.toLocaleString();
@@ -509,6 +530,78 @@ function comparisonView(r) {
         "",
       )}</tbody></table></div><p class="lab-note">${r.complete ? "Matched update counts." : "Comparison paused early: update counts differ."} Training data and parameter initialization are matched; resulting latent coordinate systems differ.</p>`;
 }
+function refreshCameraInspection() {
+  if (!cameraInspection?.live) return;
+  cameraInspection.frames.forEach((frame, i) => {
+    const source = frame.source(),
+      canvas = $("#world-camera-dialog-frames").querySelectorAll("canvas")[i],
+      detail = $("#world-camera-dialog-frames").querySelectorAll(
+        "figcaption span",
+      )[i];
+    if (!source || !canvas) return;
+    canvas.width = source.width;
+    canvas.height = source.height;
+    canvas.getContext("2d").drawImage(source, 0, 0);
+    detail.textContent = frame.detail();
+  });
+}
+function openCameraInspector(trigger, title, note, frames, live = false) {
+  const dialog = $("#world-camera-dialog"),
+    host = $("#world-camera-dialog-frames");
+  if (!dialog) return;
+  $("#world-camera-dialog-title").textContent = title;
+  $("#world-camera-dialog-note").textContent = note;
+  host.replaceChildren(
+    ...frames.map((frame, i) => {
+      const figure = document.createElement("figure"),
+        canvas = document.createElement("canvas"),
+        caption = document.createElement("figcaption"),
+        name = document.createElement("strong"),
+        detail = document.createElement("span");
+      canvas.className = "sensor-image";
+      canvas.setAttribute("role", "img");
+      canvas.setAttribute("aria-label", frame.name);
+      canvas.setAttribute(
+        "aria-describedby",
+        `world-camera-dialog-caption-${i}`,
+      );
+      caption.id = `world-camera-dialog-caption-${i}`;
+      name.textContent = frame.name;
+      detail.textContent = frame.detail();
+      caption.append(name, detail);
+      figure.append(canvas, caption);
+      return figure;
+    }),
+  );
+  cameraInspection = { trigger, frames, live };
+  cameraInspection.frames.forEach((frame, i) => {
+    const source = frame.source(),
+      canvas = host.querySelectorAll("canvas")[i];
+    canvas.width = source.width;
+    canvas.height = source.height;
+    canvas.getContext("2d").drawImage(source, 0, 0);
+  });
+  dialog.showModal();
+  $("#world-camera-dialog-close").focus();
+}
+function updateCameraProvenance() {
+  const current = $("#world-current-provenance"),
+    goal = $("#world-goal-provenance");
+  if (!current || !goal) return;
+  current.textContent = printSnapshot
+    ? "Recorded worked example · saved simulator frame"
+    : !info
+      ? "Simulator preview · no model prepared"
+      : scene?.step > 0
+        ? `Live simulator observation · after action ${scene.step}`
+        : evaluation?.step > 0
+          ? `Live simulator observation · model at ${evaluation.step.toLocaleString()} updates`
+          : "Live simulator observation · untrained model";
+  goal.textContent = printSnapshot
+    ? "Recorded goal reference · not a forecast"
+    : "Simulated goal reference · not a forecast";
+  refreshCameraInspection();
+}
 function sensor(canvas, values) {
   canvas.classList.add("sensor-image");
   values =
@@ -532,12 +625,57 @@ function sensor(canvas, values) {
   if (label)
     label.textContent = `${canvas.id === "world-current" ? "Current" : "Goal"} camera · ${r} × ${r}`;
 }
+function traceCeiling(error) {
+  return (
+    [0.3, 0.6, 1, 1.5, 2, 2.5, Math.PI].find((v) => v >= error) ??
+    Math.ceil(error * 10) / 10
+  );
+}
+function resetControlRun() {
+  controlHistory = [];
+  controlStart = scene ? { step: scene.step, error: scene.error } : null;
+  controlContext = scene
+    ? { goal: activeGoalContext(), checkpoint: evaluation?.step ?? 0 }
+    : null;
+  controlScale = traceCeiling(scene?.error ?? 0);
+}
+function drawGoalTrace() {
+  const svg = $("#world-goal-trace"),
+    summary = $("#world-goal-trace-summary");
+  if (!svg || !summary || !controlStart) return;
+  const errors = [controlStart.error, ...controlHistory.map((r) => r.error)],
+    count = controlHistory.length,
+    xMax = Math.max(10, Math.ceil(count / 10) * 10),
+    left = 34,
+    right = 302,
+    top = 18,
+    bottom = 140;
+  controlScale = Math.max(controlScale, traceCeiling(Math.max(...errors)));
+  const x = (i) => left + ((right - left) * i) / xMax,
+    y = (error) => bottom - ((bottom - top) * error) / controlScale,
+    thresholdY = y(CONTROL_TOLERANCE),
+    current = errors.at(-1),
+    path = errors
+      .map(
+        (error, i) =>
+          `${i ? "L" : "M"}${x(i).toFixed(2)} ${y(error).toFixed(2)}`,
+      )
+      .join(" ");
+  svg.setAttribute(
+    "aria-label",
+    `Physical goal error from ${controlStart.error.toFixed(3)} radians at action 0 to ${current.toFixed(3)} radians after ${count} actions. Goal tolerance is ${CONTROL_TOLERANCE.toFixed(2)} radians.`,
+  );
+  svg.innerHTML = `<rect x="${left}" y="${thresholdY}" width="${right - left}" height="${bottom - thresholdY}" fill="var(--amber)" fill-opacity=".08"/><path d="M${left} ${top}V${bottom}H${right}" class="goal-trace-axis"/><path d="M${left} ${thresholdY}H${right}" class="goal-trace-threshold"/><path d="${path}" class="goal-trace-line"/><circle cx="${x(0)}" cy="${y(errors[0])}" r="3" class="goal-trace-start"/><circle cx="${x(count)}" cy="${y(current)}" r="4.5" class="goal-trace-current"/><text x="${left}" y="12" class="goal-trace-label">${controlScale.toFixed(2)} rad</text><text x="${right}" y="${thresholdY - 5}" text-anchor="end" class="goal-trace-tolerance">≤ ${CONTROL_TOLERANCE.toFixed(2)} rad</text><text x="${left}" y="158" class="goal-trace-label">0</text><text x="${right}" y="158" text-anchor="end" class="goal-trace-label">action ${xMax}</text>`;
+  summary.textContent = `Action 0: ${controlStart.error.toFixed(3)} rad · action ${count}: ${current.toFixed(3)} rad. Success threshold ≤ ${CONTROL_TOLERANCE.toFixed(2)} rad.`;
+}
 function drawScene() {
   if (!scene) return;
   updateReport();
   sensor($("#world-current"), scene.frame);
   sensor($("#world-goal-image"), scene.goalFrame);
+  updateCameraProvenance();
   paint($("#world-control-plot"));
+  drawGoalTrace();
   $("#world-control-output").textContent =
     `Action ${scene.step} · physical joint RMS error ${scene.error.toFixed(3)} rad${scene.action ? " · normalized action = [" + scene.action.map((x) => x.toFixed(3)).join(", ") + "]" : ""}\n${scene.readoutError !== undefined ? "Separate drawing-readout RMS error " + scene.readoutError.toFixed(3) + " rad. " : ""}Physical error is evaluation only; the planner scores predicted latent distance.`;
 }
@@ -558,6 +696,7 @@ const api = {
     if (!matchMedia("print").matches)
       throw Error("Recorded snapshots are only for the static print edition.");
     printSnapshot = true;
+    recordedGoalContext = record.activeGoal ?? null;
     info = record.info;
     history = record.history;
     evaluation = record.evaluation;
@@ -579,10 +718,13 @@ const api = {
     return guarded(async () => {
       status("Generating observations and preparing the numerical backend…");
       printSnapshot = false;
+      recordedGoalContext = null;
       info = null;
       history = [];
       comparison = null;
       evaluation = null;
+      controlStart = null;
+      controlContext = null;
       controlHistory = [];
       $("#world-comparison").innerHTML = "";
       createWorker();
@@ -592,7 +734,10 @@ const api = {
       });
       info = r.info;
       backend = r.backend;
-      scene = r.scene;
+      scene = +$("#world-goal").value
+        ? await request("scene", { goal: +$("#world-goal").value })
+        : r.scene;
+      resetControlRun();
       drawScene();
       const initialEvaluation = await request("evaluate");
       evaluateView(initialEvaluation);
@@ -661,6 +806,15 @@ const api = {
   },
   async control(steps = 40) {
     return guarded(async () => {
+      if (
+        controlHistory.length === 0 ||
+        !controlContext ||
+        controlContext.checkpoint !== evaluation?.step ||
+        controlContext.goal.index !== +$("#world-goal").value
+      ) {
+        resetControlRun();
+        drawScene();
+      }
       status(
         "Planning through the learned model; preparing the separate drawing readout…",
       );
@@ -679,7 +833,7 @@ const api = {
   async resetScene() {
     return guarded(async () => {
       scene = await request("scene", { goal: +$("#world-goal").value });
-      controlHistory = [];
+      resetControlRun();
       drawScene();
       return scene;
     });
@@ -709,6 +863,60 @@ const api = {
   },
 };
 if ($("#world-lab")) {
+  const inspectButton = $("#world-camera-inspect");
+  inspectButton.onclick = () => {
+    openCameraInspector(
+      inspectButton,
+      "Live camera frames",
+      "The same 64 × 64 sensor pixels are enlarged for inspection; no new detail is added. Forecasts below are pose drawings, not camera frames.",
+      [
+        {
+          name: "Current camera",
+          source: () => $("#world-current"),
+          detail: () => $("#world-current-provenance").textContent,
+        },
+        {
+          name: "Goal camera",
+          source: () => $("#world-goal-image"),
+          detail: () => $("#world-goal-provenance").textContent,
+        },
+      ],
+      true,
+    );
+  };
+  const cameraDialog = $("#world-camera-dialog");
+  $("#world-camera-dialog-close").onclick = () => cameraDialog.close();
+  cameraDialog.addEventListener("close", () => {
+    const trigger = cameraInspection?.trigger;
+    cameraInspection = null;
+    if (trigger?.isConnected) trigger.focus();
+  });
+  $("#future-choices").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-inspect-future]");
+    if (!button) return;
+    const canvas = button.querySelector("canvas"),
+      example = +canvas.dataset.example + 1,
+      current = canvas.hasAttribute("data-current"),
+      name = current
+        ? `Example ${example} · observed current frame`
+        : `Example ${example} · simulated candidate ${+canvas.dataset.candidate + 1}`,
+      source = printSnapshot
+        ? "Recorded worked example"
+        : "Fixed held-out evaluation example";
+    openCameraInspector(
+      button,
+      "Held-out future-choice frame",
+      "These are the same 64 × 64 evaluation pixels, enlarged without added detail. The model scores simulator-rendered candidates; it does not render a camera forecast.",
+      [
+        {
+          name,
+          source: () => canvas,
+          detail: () =>
+            `${source} ${example} · ${current ? "observed before the action" : "one possible simulator future"}.`,
+        },
+      ],
+    );
+  });
   surface($("#world-curves"), (c) => {
     line(c, [
       [60, 30],
@@ -850,6 +1058,7 @@ if ($("#world-lab")) {
     error: poseError(start, goal),
     step: 0,
   };
+  resetControlRun();
   drawScene();
   $("#world-forecasts").innerHTML =
     '<div class="visual-panels">' +
@@ -888,13 +1097,15 @@ window.BookHasExperiment = () => Boolean(info) || busy;
 function drawFutureChoices(probe) {
   const host = $("#future-choices");
   if (!host || !probe) return;
+  const inspectable = (canvas, label) =>
+    `<button type="button" class="future-camera-button" data-inspect-future aria-haspopup="dialog" aria-controls="world-camera-dialog" aria-label="${label}">${canvas}<small>Inspect pixels</small></button>`;
   host.innerHTML =
-    `<h4>A fixed future-image question</h4><p class="lab-note">Same held-out examples at every checkpoint. Blue outlines mark the true future; teal marks the model’s choice. A tie is reported, not broken to inflate accuracy.</p>` +
+    `<h4>A fixed future-image question</h4><p class="lab-note">Same held-out examples at every checkpoint. Blue outlines mark the true future; teal marks the model’s choice. A tie is reported, not broken to inflate accuracy. Select an image to inspect its pixels.</p>` +
     probe.examples
       .slice(0, 2)
       .map(
         (e, i) =>
-          `<div class="future-case"><div><span>Current image</span><canvas data-example="${i}" data-current></canvas></div>${e.candidates.map((_, j) => `<div class="${j === e.correctIndex ? "true-future " : ""}${j === e.selectedIndex ? "chosen-future" : ""}"><span>Candidate ${j + 1}</span><canvas data-example="${i}" data-candidate="${j}"></canvas><small>distance ${e.distances[j].toExponential(2)}</small></div>`).join("")}</div><p class="lab-note">${e.selectedIndex === null ? "Model tied" : `Model chose ${e.selectedIndex + 1}`} · persistence ${e.persistenceIndex === null ? "tied" : e.persistenceIndex + 1} · true future ${e.correctIndex + 1} · action [${e.action.map((x) => x.toFixed(2)).join(", ")}]</p>`,
+          `<div class="future-case"><div><span>Current image</span>${inspectable(`<canvas data-example="${i}" data-current></canvas>`, `Inspect observed frame from held-out example ${i + 1}`)}</div>${e.candidates.map((_, j) => `<div class="${j === e.correctIndex ? "true-future " : ""}${j === e.selectedIndex ? "chosen-future" : ""}"><span>Candidate ${j + 1}</span>${inspectable(`<canvas data-example="${i}" data-candidate="${j}"></canvas>`, `Inspect simulated candidate ${j + 1} from held-out example ${i + 1}`)}<small>distance ${e.distances[j].toExponential(2)}</small></div>`).join("")}</div><p class="lab-note">${e.selectedIndex === null ? "Model tied" : `Model chose ${e.selectedIndex + 1}`} · persistence ${e.persistenceIndex === null ? "tied" : e.persistenceIndex + 1} · true future ${e.correctIndex + 1} · action [${e.action.map((x) => x.toFixed(2)).join(", ")}]</p>`,
       )
       .join("");
   host.querySelectorAll("canvas").forEach((c) => {
@@ -916,19 +1127,26 @@ function drawForecasts(results, step = evaluation?.step ?? 0) {
     playing = false,
     last = 0;
   host.innerHTML =
-    `<p class="lab-note">${printSnapshot ? "Recorded" : "Frozen"} at update ${step}. Blue is the physical outcome; teal is the learned forecast drawn through a separately fitted pose readout. Both begin at the observed pose. The forecast stays fixed during further training.</p><div class="visual-controls screen-only"><button type="button" data-forecast-play aria-pressed="false">${icon("play")}<span>Replay</span></button><label class="visual-range"><span>Forecast step <output>0</output></span><input type="range" min="0" max="12" step="1" value="0" aria-label="Forecast step"></label></div><div class="visual-panels">` +
+    `<p class="lab-note">${printSnapshot ? "Recorded" : "Frozen"} at update ${step}. Blue is the physical outcome; teal is the learned forecast drawn through a separately fitted pose readout. Each pair shares one origin, so their displacement is visible directly. Both begin at the observed pose. The forecast stays fixed during further training.</p><div class="visual-controls screen-only"><button type="button" data-forecast-play aria-pressed="false">${icon("play")}<span>Replay</span></button><label class="visual-range"><span>Forecast step <output>0</output></span><input type="range" min="0" max="12" step="1" value="0" aria-label="Forecast step"></label></div><div class="visual-panels">` +
     results
       .map(
         (r, i) =>
-          `<div class="visual-panel"><h4>${r.name}</h4><svg data-forecast-arm="${i}" viewBox="0 0 360 250" role="img" aria-label="${r.name}: blue physical arm and teal learned forecast"></svg><p class="lab-note">Readout RMS ${r.readoutError.toFixed(3)} rad. Forecast drawing error includes this separate readout.</p></div>`,
+          `<div class="visual-panel"><h4>${r.name}</h4><svg data-forecast-arm="${i}" viewBox="0 0 300 300" role="img" aria-label="${r.name}: actual and learned arm poses overlaid at one origin"></svg><div class="forecast-legend"><span>Solid · actual</span><span>Dashed · learned</span></div><p class="lab-note"><span data-forecast-gap="${i}"></span> Readout RMS ${r.readoutError.toFixed(3)} rad; the drawing gap includes this separate readout.</p></div>`,
       )
       .join("") +
     "</div>";
   const slider = host.querySelector("input"),
     button = host.querySelector("button");
-  const tips = (states, cx) =>
+  const forecastOrigin = 150;
+  const forecastScale = 150;
+  const tips = (states) =>
     states.map((s) => {
-      const p = armGeometry(s, cx, 110, 95).tip;
+      const p = armGeometry(
+        s,
+        forecastOrigin,
+        forecastOrigin,
+        forecastScale,
+      ).tip;
       return [p.x, p.y];
     });
   const trace = (pts, color, dash) =>
@@ -938,11 +1156,25 @@ function drawForecasts(results, step = evaluation?.step ?? 0) {
     host.querySelector("output").textContent = frame;
     results.forEach((r, i) => {
       const actual = [r.start, ...r.actual],
-        predicted = [r.start, ...r.poses];
+        predicted = [r.start, ...r.poses],
+        actualTip = armGeometry(
+          actual[frame],
+          forecastOrigin,
+          forecastOrigin,
+          forecastScale,
+        ).tip,
+        predictedTip = armGeometry(
+          predicted[frame],
+          forecastOrigin,
+          forecastOrigin,
+          forecastScale,
+        ).tip;
       host.querySelector(`[data-forecast-arm="${i}"]`).innerHTML =
-        trace(tips(actual, 90), "blue", false) +
-        trace(tips(predicted, 270), "teal", true) +
-        `<g class="forecast-predicted">${armDrawing(predicted[frame], 270, 110, 95)}</g><g class="forecast-actual">${armDrawing(actual[frame], 90, 110, 95)}</g><text x="90" y="230" text-anchor="middle" class="visual-label" fill="var(--blue)">Actual</text><text x="270" y="230" text-anchor="middle" class="visual-label" fill="var(--teal)">Learned</text>`;
+        trace(tips(actual), "blue", false) +
+        trace(tips(predicted), "teal", true) +
+        `<g class="forecast-actual">${armDrawing(actual[frame], forecastOrigin, forecastOrigin, forecastScale)}</g><g class="forecast-predicted">${armDrawing(predicted[frame], forecastOrigin, forecastOrigin, forecastScale)}</g><path d="M${actualTip.x} ${actualTip.y}L${predictedTip.x} ${predictedTip.y}" stroke="var(--rose)" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="${actualTip.x}" cy="${actualTip.y}" r="3" fill="var(--blue)"/><circle cx="${predictedTip.x}" cy="${predictedTip.y}" r="3" fill="var(--teal)"/>`;
+      host.querySelector(`[data-forecast-gap="${i}"]`).textContent =
+        `Drawing pose gap at step ${frame}: ${poseError(actual[frame], predicted[frame]).toFixed(3)} rad.`;
     });
   };
   const setPlaying = (value) => {
@@ -1000,7 +1232,8 @@ function updateReport() {
   if (button) button.disabled = !evaluation;
   if (!evaluation) return;
   const e = evaluation,
-    reached = controlHistory.some((r) => r.error < 0.15),
-    final = controlHistory.at(-1);
-  host.innerHTML = `<strong>${printSnapshot ? "Recorded worked example" : "Live experiment"} · seed ${info?.seed ?? 17}</strong><dl><dt>Updates</dt><dd>${e.step}</dd><dt>Prediction / persistence</dt><dd>${(e.predictionLoss / Math.max(e.persistenceLoss, 1e-15)).toFixed(3)}</dd><dt>Embedding spread</dt><dd>${e.spread.toFixed(4)}</dd><dt>Future choices</dt><dd>${e.futureMatching.correct}/${e.futureMatching.total}</dd><dt>Executed actions</dt><dd>${controlHistory.length}</dd><dt>Goal reached at least once</dt><dd>${final ? (reached ? "Yes" : "No") : "Not evaluated"}</dd><dt>Final physical error</dt><dd>${final ? final.error.toFixed(3) + " rad" : "Not evaluated"}</dd></dl><p>These observations support claims about this run and this fixed evaluation only. Train, compare objectives, and retain the failed goals before drawing a broader conclusion.</p>`;
+    reached = controlHistory.some((r) => r.error <= CONTROL_TOLERANCE),
+    final = controlHistory.at(-1),
+    goal = activeGoalContext();
+  host.innerHTML = `<strong>${printSnapshot ? "Recorded worked example" : "Live experiment"} · seed ${info?.seed ?? 17}</strong><dl><dt>Active goal</dt><dd>${goal?.label ?? "Not recorded"}</dd><dt>Model checkpoint</dt><dd>${e.step} updates</dd><dt>Control run</dt><dd>${final ? `${controlContext?.goal?.label ?? "Unknown goal"} · checkpoint ${controlContext?.checkpoint ?? "unknown"}` : "Not run yet"}</dd><dt>Prediction / persistence</dt><dd>${(e.predictionLoss / Math.max(e.persistenceLoss, 1e-15)).toFixed(3)}</dd><dt>Embedding spread</dt><dd>${e.spread.toFixed(4)}</dd><dt>Future choices</dt><dd>${e.futureMatching.correct}/${e.futureMatching.total}</dd><dt>Executed actions</dt><dd>${controlHistory.length}</dd><dt>Goal reached at least once</dt><dd>${final ? (reached ? "Yes" : "No") : "Not evaluated"}</dd><dt>Final physical error</dt><dd>${final ? final.error.toFixed(3) + " rad" : "Not evaluated"}</dd></dl><p>These observations support claims about this run and this fixed evaluation only. Train, compare objectives, and retain the failed goals before drawing a broader conclusion.</p>`;
 }

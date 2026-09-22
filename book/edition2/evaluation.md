@@ -150,6 +150,8 @@ $$\begin{aligned}&\tau\,\mathbb E[(Y-v)\mathbf1\{Y\geq v\}]\\&\quad=(1-\tau)\mat
 
 At $\tau=1/2$, the two sides balance ordinary positive and negative deviations, giving the mean. With larger $\tau$, underestimating high targets costs more and the solution shifts upward. For equally likely targets 0 and 1, a solution between them satisfies $\tau(1-v)=(1-\tau)v$, hence $v=\tau$. An expectile is not a quantile: it balances weighted magnitudes, not just counts.
 
+<!-- VISUAL: E8 -->
+
 GCIQL fits $V$ toward target Q-values with this loss and fits Q with a Bellman squared-error target. GCIVL removes the explicit Q-function and uses an expectile loss directly on $r+\gamma\bar V(s',g)-V(s,g)$. These differences explain the equations in Appendix C without assuming prior reinforcement-learning coursework.
 
 ## Advantage-weighted imitation

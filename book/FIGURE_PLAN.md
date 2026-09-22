@@ -1,6 +1,6 @@
 # Visual teaching plan for Before the Move
 
-Status: **complete; final verification recorded in `research/implementation/REVIEW.md`**. This plan covers the current 20 chapters and the reader/training interface. Every item below is an identified teaching gap or an upgrade to an insufficient visual. There are **97 briefs: 73 new, 22 extensions, and 2 replacements**. A brief may become one panel in a combined figure; this is not a quota for 97 full-page illustrations.
+Status: **complete; final verification recorded in `research/implementation/REVIEW.md`**. This plan covers the current 20 chapters and the reader/training interface. The original plan contained **97 briefs: 73 new, 22 extensions, and 2 replacements**. The widget audit later split the expectile explanation from E7 into E8, giving the current ledger **98 briefs**. A brief may become one panel in a combined figure; this is not a quota for full-page illustrations.
 
 The previous pass did not establish visual completeness. It checked existing objects but did not ask what explanations lacked an object in the first place. It also tested a prepared/trained interface while missing its empty first-visit state. This plan replaces that stopping criterion.
 
@@ -432,7 +432,7 @@ A whole-book finish requires every brief to be complete or explicitly consolidat
 
 ## Implementation ledger
 
-All 97 briefs now map to a completed object in `figure-plan.json`: 92 teaching figures and five changes integrated directly into the real training laboratory. The ledger records the source, reader anchor, evidence and any change in presentation. `../figure-atlas.html` links to every item. This is a traceable coverage claim, not a claim that every original suggested composition was followed literally. Several architecture comparisons use editable equation/role cards alongside the original SVG; G3 uses a cell selector rather than timed animation. The local neighborhood/KL and intervention displays explicitly identify constructed calculations.
+All 98 briefs now map to a completed object in `figure-plan.json`: 93 teaching figures and five changes integrated directly into the real training laboratory. The ledger records the source, reader anchor, evidence and any change in presentation. `../figure-atlas.html` links to every item. This is a traceable coverage claim, not a claim that every original suggested composition was followed literally. Several architecture comparisons use editable equation/role cards alongside the original SVG; G3 now lays out each row × column product without an arbitrary selection control. The local neighborhood/KL and intervention displays explicitly identify constructed calculations.
 
 The six generated plates have 4–5 composition choices per subject in `../illustration-gallery.html`. Corrected editorial selections are already embedded so the book is complete without a selection round; the user can replace them later. Rejected architecture drafts are not used as sources.
 

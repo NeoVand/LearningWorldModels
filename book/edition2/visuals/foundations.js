@@ -41,68 +41,121 @@ const matrix = (a) =>
     true,
   );
 register("O3", {
-  title: "Three questions that keep returning",
+  title: "A route through the prerequisites",
   question:
-    "Each mathematical tool earns its place by answering a question about this experiment.",
-  draw: () =>
-    cards([
+    "Follow the dependencies forward; return to a linked lesson whenever a later equation uses an unfamiliar idea.",
+  draw() {
+    const stages = [
       [
-        "Seeing",
-        "What did the image keep?<br>Vectors → projections → probability",
+        "Observe",
+        "Why learn from images, and how can we describe them?",
+        [
+          ["Self-supervision", "philosophy"],
+          ["Vectors", "geometry"],
+          ["Probability", "probability"],
+        ],
       ],
       [
-        "Learning",
-        "What distinguishes a useful representation?<br>Covariance → gradients → collapse → SIGReg",
+        "Measure",
+        "Ask which distinctions survive and how changes propagate.",
+        [
+          ["Clouds", "clouds"],
+          ["Calculus", "calculus"],
+        ],
       ],
       [
-        "Acting",
-        "Can its predictions guide a choice?<br>Rollouts → planning → physical evaluation",
+        "Learn",
+        "Build a predictor, then find its collapse loophole.",
+        [
+          ["Networks", "learning"],
+          ["JEPA", "jepa"],
+        ],
       ],
-    ]),
+      [
+        "Regularize",
+        "Test a cloud and derive a penalty that keeps variation.",
+        [
+          ["Normality", "testing"],
+          ["SIGReg", "sigreg"],
+        ],
+      ],
+      [
+        "Act",
+        "Train on the arm; plan through imagined consequences.",
+        [
+          ["Laboratory", "laboratory"],
+          ["Planning", "planning"],
+          ["Evaluation", "evaluation"],
+        ],
+      ],
+      [
+        "Read",
+        "Use the research bridges to audit the complete paper.",
+        [
+          ["Theory", "theory"],
+          ["Transformers", "transformers"],
+          ["Lineage", "lineage"],
+          ["LeWorldModel", "paper"],
+        ],
+      ],
+    ];
+    return `<div class="prereq-route" role="navigation" aria-label="Prerequisite route to LeWorldModel"><ol>${stages
+      .map(
+        ([title, reason, links], i) =>
+          `<li><span class="route-index">${String(i + 1).padStart(2, "0")}</span><strong>${title}</strong><div><p>${reason}</p><span class="route-links">${links.map(([name, chapter]) => `<a href="#${chapter}">${name}</a>`).join('<span aria-hidden="true"> · </span>')}</span></div></li>`,
+      )
+      .join("")}</ol></div>`;
+  },
   caption:
-    "The later transformer and theory chapters revisit this same chain at research scale.",
+    "The sequence is a learning path through the mathematics and working model. The theory and transformer chapters come after the small experiment so their assumptions and architecture have something concrete to explain.",
 });
 register("G1", {
   title: "Four pixels, two coordinates",
-  question: "Swap the bright pixels. Does this encoder notice?",
-  controls: [
-    choices("image", "Image", ["Diagonal", "Other diagonal"]),
-    range("pixel", "Inspect flattened entry", 1, 4, 1, 1),
-  ],
-  draw(s) {
-    const a = s.image === "Diagonal" ? [1, 0, 0, 1] : [0, 1, 1, 0];
-    return row(
-      panel(
-        "Image → row-major list",
-        svg(
-          a
-            .map(
-              (v, i) =>
-                `<rect x="${75 + (i % 2) * 100}" y="${35 + Math.floor(i / 2) * 100}" width="88" height="88" rx="5" fill="var(--${v ? "blue" : "surface"})" stroke="var(--${i === s.pixel - 1 ? "amber" : "line"})" stroke-width="3"/>` +
-                text(
-                  119 + (i % 2) * 100,
-                  84 + Math.floor(i / 2) * 100,
-                  `${v} · entry ${i + 1}`,
-                  v ? "paper" : "ink",
-                  "middle",
-                ),
-            )
-            .join(""),
-          "Two by two image with highlighted flattened entry",
-        ),
-      ),
-      panel(
-        "Flattening preserves; encoding loses",
-        eq(`\\obs=(${a.join(",")})^\\top`) +
-          eq(
-            `f(\\obs)=\\begin{pmatrix}o_1+o_2\\\\o_3+o_4\\end{pmatrix}=\\begin{pmatrix}1\\\\1\\end{pmatrix}`,
-          ),
-        "Both images have the same row sums. The list is invertible given its shape; this encoder is not.",
-      ),
-    );
+  question: "The bright pixels swap sides. Can row sums tell the images apart?",
+  draw() {
+    const grids = [
+      { x: 61, label: "Image A", values: [1, 0, 0, 1] },
+      { x: 219, label: "Image B", values: [0, 1, 1, 0] },
+    ];
+    const picture =
+      grids
+        .map(
+          ({ x, label, values }) =>
+            text(x + 40, 19, label, "ink", "middle") +
+            values
+              .map((value, i) => {
+                const px = x + (i % 2) * 42;
+                const py = 30 + Math.floor(i / 2) * 42;
+                return (
+                  `<rect x="${px}" y="${py}" width="39" height="39" rx="3" fill="var(--${value ? "blue" : "surface"})" stroke="var(--line)"/>` +
+                  text(
+                    px + 19.5,
+                    py + 25,
+                    value,
+                    value ? "paper" : "ink",
+                    "middle",
+                  )
+                );
+              })
+              .join(""),
+        )
+        .join("") +
+      line(101, 119, 159, 155, "teal") +
+      line(259, 119, 201, 155, "teal") +
+      `<rect x="111" y="153" width="138" height="37" rx="18.5" fill="var(--surface)" stroke="var(--teal)"/>` +
+      text(180, 176, "same two numbers", "teal", "middle");
+    return `<div style="max-width:430px;margin:0 auto">${panel(
+      "Two different images, one code",
+      svg(
+        picture,
+        "Image A has bright pixels at upper left and lower right. Image B has bright pixels at upper right and lower left. Their row-sum encoder gives the same two numbers.",
+        360,
+        200,
+      ) + eq("f(\\obs_A)=f(\\obs_B)=(1,1)^\\top"),
+    )}</div>`;
   },
   caption:
-    "An embedding is a representation, not a promise that all distinctions survive. Here the lost distinction is the left–right arrangement inside a row.",
+    "The row-major lists are (1, 0, 0, 1) and (0, 1, 1, 0), so flattening keeps the difference. Each row sums to one in both images. The encoder discards the left–right arrangement, and its two-number output cannot recover it.",
 });
 const matrices = {
   Identity: [
@@ -171,42 +224,37 @@ register("G2", {
 });
 register("G3", {
   title: "The order changes the shape",
-  question:
-    "Why does one multiplication give a number and another give four numbers?",
-  controls: [range("entry", "Outer-product entry", 1, 4, 1, 1)],
-  draw(s) {
-    const a = [
-        [3, 4],
-        [6, 8],
-      ],
-      i = Math.floor((s.entry - 1) / 2),
-      j = (s.entry - 1) % 2;
+  question: "Which index is summed away, and which pair names one output cell?",
+  draw() {
+    const products = [
+      ["x_1=1", "1\\cdot3=3", "1\\cdot4=4"],
+      ["x_2=2", "2\\cdot3=6", "2\\cdot4=8"],
+    ];
+    const table =
+      `<table style="width:100%;table-layout:fixed;text-align:center"><thead><tr><th>${tex("x_i y_j")}</th><th>${tex("y_1=3")}</th><th>${tex("y_2=4")}</th></tr></thead><tbody>` +
+      products
+        .map(
+          (row) =>
+            `<tr><th>${tex(row[0])}</th><td>${tex(row[1])}</td><td>${tex(row[2])}</td></tr>`,
+        )
+        .join("") +
+      `</tbody></table>`;
     return row(
       panel(
-        "A row times a column",
-        eq(
-          "\\begin{pmatrix}1&2\\end{pmatrix}\\begin{pmatrix}3\\\\4\\end{pmatrix}=1\\cdot3+2\\cdot4=11",
-        ),
-        "The shared axis is summed away: (1 × 2)(2 × 1) → (1 × 1).",
+        "Dot product · one sum",
+        eq("x^\\top y=1\\cdot3+2\\cdot4=11") +
+          eq("(1\\times2)(2\\times1)=(1\\times1)"),
+        "Matching positions contribute to one total. The inner index is summed over.",
       ),
       panel(
-        "A column times a row",
-        matrix(
-          a.map((r, ri) =>
-            r.map((v, cj) =>
-              ri === i && cj === j ? "\\htmlClass{math-mark}{" + v + "}" : v,
-            ),
-          ),
-        ) +
-          eq(
-            `(xy^\\top)_{${i + 1},${j + 1}}=${[1, 2][i]}\\cdot${[3, 4][j]}=${a[i][j]}`,
-          ),
-        "No sum over two coordinates here: (2 × 1)(1 × 2) → (2 × 2).",
+        "Outer product · every pair",
+        table + eq("xy^\\top=\\begin{pmatrix}3&4\\\\6&8\\end{pmatrix}"),
+        "The row chooses an x coordinate; the column chooses a y coordinate. No index is summed away.",
       ),
     );
   },
   caption:
-    "The highlighted entry uses its row’s coordinate from the left factor and its column’s coordinate from the right factor. Always write the shapes before multiplying.",
+    "The same vectors x = (1, 2)ᵀ and y = (3, 4)ᵀ give either one number or a 2 × 2 table. The product order decides whether matching pairs are summed or every pair is retained. Write shapes before multiplying.",
 });
 register("G4", {
   title: "A shadow with a sign",
@@ -310,13 +358,16 @@ register("B1", {
           "Continuous density",
           plot({
             height: 230,
-            ticks: 2,
             xmin: -2,
             xmax: 2,
             ymin: 0,
-            ymax: Math.max(1.1, density(0) * 1.15),
+            ymax: 3,
+            xTicks: [-2, -1, 0, 1, 2],
+            yTicks: [0, 1, 2, 3],
+            snapDomain: false,
             curves: [
               { fn: density, color: "violet" },
+              { fn: () => 1, color: "muted" },
               {
                 data: Array.from({ length: 60 }, (_, i) => {
                   const x = -1 + ((s.bound + 1) * i) / 59;
@@ -328,7 +379,7 @@ register("B1", {
             ],
             ylabel: "density",
           }),
-          "The shaded area, rather than the peak height, is a probability.",
+          "The gray line marks density 1. The shaded area, rather than peak height, is a probability.",
         ),
         panel(
           "Accumulated area",
@@ -345,6 +396,9 @@ register("B1", {
           }),
           "Subtract two CDF values to recover the shaded probability.",
         ),
+      ).replace(
+        'style="--panel-count:',
+        'style="grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));--panel-count:',
       ) +
       results(
         ["Density at the peak", f(density(0), 3)],
@@ -427,42 +481,68 @@ register("B2", {
 });
 register("B3", {
   title: "A positive report filters the population",
-  question: "Among the 26 positive reports, how many describe a real event?",
+  question:
+    "The event is rare among all 100 cases. How does its share change after a positive report?",
   controls: [choices("filter", "Show", ["All 100", "Positive reports"])],
   draw(s) {
-    let g = "";
-    for (let i = 0; i < 100; i++) {
-      const event = i < 10,
-        positive = i < 8 || (i >= 10 && i < 28),
-        visible = s.filter === "All 100" || positive;
-      g += dot(
-        42 + (i % 10) * 30,
-        14 + Math.floor(i / 10) * 26,
-        6,
-        event ? "blue" : "amber",
-        visible ? 1 : 0.08,
-      );
-      if (positive && visible)
-        g += `<circle cx="${42 + (i % 10) * 30}" cy="${14 + Math.floor(i / 10) * 26}" r="9" fill="none" stroke="var(--teal)"/>`;
+    const filtered = s.filter === "Positive reports";
+    let marks = "";
+    if (filtered) {
+      marks += text(36, 48, "8 real events", "blue");
+      for (let i = 0; i < 8; i++) marks += dot(55 + i * 35, 88, 8, "blue");
+      marks += text(36, 143, "18 false alarms", "amber");
+      for (let i = 0; i < 18; i++)
+        marks += dot(
+          46 + (i % 9) * 34,
+          177 + Math.floor(i / 9) * 36,
+          8,
+          "amber",
+        );
+    } else {
+      for (let i = 0; i < 100; i++) {
+        const event = i < 10;
+        const positive = i < 8 || (i >= 10 && i < 28);
+        const cx = 42 + (i % 10) * 30;
+        const cy = 14 + Math.floor(i / 10) * 26;
+        marks += dot(cx, cy, 6, event ? "blue" : "amber");
+        if (positive)
+          marks += `<circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="var(--teal)"/>`;
+      }
     }
-    return row(
-      panel(
-        "100 equally likely states",
-        svg(
-          g,
-          "Ten real events, eight true positives and eighteen false positives",
+    return (
+      row(
+        panel(
+          filtered
+            ? "Only the 26 positive reports"
+            : "All 100 equally likely cases",
+          svg(
+            marks,
+            filtered
+              ? "The twenty-six positive reports, rearranged into eight real events and eighteen false alarms"
+              : "One hundred cases, ten real events, and twenty-six ringed positive reports",
+          ),
         ),
-        "Blue: real event. Amber: no event. Teal ring: positive report.",
-      ),
-      panel(
-        "Condition on the report",
-        eq("P(E\\mid +)=\\frac{8}{8+18}=\\frac{4}{13}\\approx0.308"),
-        "The denominator is the filtered population, not the original 100. A sensitive sensor can still produce many false positives when the event is uncommon.",
-      ),
+        panel(
+          filtered ? "Conditional chance" : "Chance before the report",
+          filtered
+            ? eq("P(E\\mid +)=\\frac{8}{8+18}=\\frac{8}{26}\\approx0.308")
+            : eq("P(E)=\\frac{10}{100}=0.10"),
+        ),
+      ) +
+      results(
+        ["Cases in view", filtered ? "26" : "100"],
+        ["Real events in view", filtered ? "8" : "10"],
+        ["Event share", filtered ? "30.8%" : "10.0%"],
+      ) +
+      takeaway(
+        filtered
+          ? "Conditioning keeps only cases with a positive report. The denominator is 26, and eight of those cases contain the event."
+          : "Blue dots contain the event; teal rings mark a positive report. Select Positive reports to remove cases that do not match what the sensor said.",
+      )
     );
   },
   caption:
-    "Count first, then recognize Bayes’ rule. For an event indicator, this conditional probability is also its conditional expectation.",
+    "The sensor reports positive in eight of ten event cases and eighteen of ninety non-event cases. A positive report therefore raises the event probability from 10/100 to 8/26. Count the filtered cases first; Bayes’ rule expresses that same calculation algebraically.",
 });
 register("B4", {
   title: "The least-squares answer can be an impossible future",
@@ -606,13 +686,10 @@ register("B6", {
 register("B7", {
   title: "What is being repeated?",
   question:
-    "Repeated test cases under one shared model seed are not the same as independent model trainings.",
-  controls: [
-    range("n", "Trials per experiment", 10, 200, 10, 50),
-    range("seed", "Resampling seed", 1, 50, 1, 17),
-  ],
+    "More trials narrow the uncertainty of one success rate. How many independent models are in the right-hand example?",
+  controls: [range("n", "Trials per experiment", 10, 210, 10, 50)],
   draw(s) {
-    const r = rng(s.seed),
+    const r = rng(17),
       rates = Array.from(
         { length: 120 },
         () =>
@@ -620,35 +697,79 @@ register("B7", {
             (a, b) => a + b,
           ) / s.n,
       );
-    return row(
-      panel(
-        "Independent Bernoulli experiments",
-        plot({
-          xmin: 0,
-          xmax: 120,
-          ymin: 0,
-          ymax: 1,
-          points: rates.map((v, i) => [i, v, "blue"]),
-          xlabel: "independent repeat",
-          ylabel: "success fraction",
-        }),
-        `True p = 0.7. Standard error √(0.7·0.3/${s.n}) = ${f(Math.sqrt(0.21 / s.n), 3)}.`,
-      ),
-      panel(
-        "Shared training seed",
-        cards([
-          ["Seed A", "One learned model → many task outcomes"],
-          ["Seed B", "A second learned model → many task outcomes"],
-          [
-            "Correct unit",
-            "Keep model-level variability visible; do not count dependent tasks as independent retrainings.",
-          ],
-        ]),
-      ),
+    const se = Math.sqrt(0.21 / s.n);
+    const low = Math.min(...rates, 0.7 - 2 * se);
+    const high = Math.max(...rates, 0.7 + 2 * se);
+    const pad = Math.max(0.025, (high - low) * 0.1);
+    const ymin = Math.floor((low - pad) * 20) / 20;
+    const ymax = Math.ceil((high + pad) * 20) / 20;
+    const tickStep = ymax - ymin > 0.5 ? 0.2 : ymax - ymin > 0.25 ? 0.1 : 0.05;
+    const yTicks = Array.from(
+      { length: Math.floor(1 / tickStep) + 1 },
+      (_, i) => Number((i * tickStep).toFixed(2)),
+    ).filter((v) => v >= ymin && v <= ymax);
+    const models = [
+      [1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1],
+      [1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+      [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+    ];
+    const modelRows = models
+      .map((outcomes, i) => {
+        const y = 69 + i * 59;
+        return (
+          `<rect x="28" y="${y - 22}" width="304" height="44" rx="5" fill="var(--surface)" stroke="var(--line)"/>` +
+          text(48, y + 4, String.fromCharCode(65 + i), "ink", "middle") +
+          outcomes
+            .map((success, j) =>
+              success
+                ? dot(82 + j * 17, y, 5.3, "blue")
+                : `<circle cx="${82 + j * 17}" cy="${y}" r="5.3" fill="var(--surface)" stroke="var(--muted)"/>`,
+            )
+            .join("") +
+          text(
+            320,
+            y + 4,
+            `${outcomes.reduce((sum, x) => sum + x, 0)}/12`,
+            "ink",
+            "end",
+          )
+        );
+      })
+      .join("");
+    const chart = plot({
+      xmin: -2,
+      xmax: 122,
+      ymin,
+      ymax,
+      xTicks: [0, 30, 60, 90, 120],
+      yTicks,
+      snapDomain: false,
+      curves: [{ fn: () => 0.7, color: "amber" }],
+      points: rates.map((v, i) => [i + 1, v, "blue", 2.4]),
+      xlabel: "independent repeat",
+      ylabel: "success fraction",
+    });
+    const hierarchy = svg(
+      text(29, 29, "One model per row · 12 tasks each", "muted") +
+        modelRows +
+        line(28, 224, 332, 224) +
+        text(180, 253, "3 retrainings · 36 task outcomes", "teal", "middle"),
+      "Three separate trained models, labeled A, B, C, are each evaluated on twelve tasks. Colored circles indicate illustrative successes and open circles failures. There are three retrainings, not thirty-six.",
+      360,
+      280,
+    );
+    return (
+      `<div class="visual-panels" data-panels="2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));--panel-count:2;--graphic-count:2">` +
+      panel("120 independent experiments", chart) +
+      panel("Tasks nested within models", hierarchy) +
+      `</div>` +
+      takeaway(
+        `At ${s.n} trials, one sample rate has standard error ${f(se, 3)} when the true success probability is 0.7. The right side has only <strong>3 independent model trainings</strong>, regardless of its 36 task outcomes.`,
+      )
     );
   },
   caption:
-    "This is a Bernoulli simulation, not an estimate of the book model’s success rate. Its purpose is to identify the unit of repetition before quoting uncertainty.",
+    "The left plot is a Bernoulli simulation with true success probability 0.7. Its vertical scale follows the simulated rates, so small fluctuations remain visible at large trial counts. The right diagram is schematic, not a measurement of the book’s models. Tasks tested on one learned model share its training history; variation across retrainings has three units here, not 36.",
 });
 register("C1", {
   title: "Covariance is an average of signed products",
@@ -693,36 +814,43 @@ register("C1", {
 });
 register("C2", {
   title: "The last centered row is already determined",
-  question: "If the centered rows sum to zero, can all B rows be independent?",
-  draw: () =>
-    row(
-      panel(
-        "Two points",
-        scatter([
-          [-1, -0.7],
-          [1, 0.7],
-        ]),
-        eq("x_2-\\bar x=-(x_1-\\bar x)") + "Only one independent direction.",
-      ),
-      panel(
-        "Three points",
-        scatter([
-          [-1, -1],
-          [1, 0],
-          [0, 1],
-        ]),
-        eq("\\tilde x_3=-\\tilde x_1-\\tilde x_2") +
-          "At most two independent directions.",
-      ),
-      panel(
-        "General batch",
-        eq("\\sum_{b=1}^B\\tilde x_b=0") +
-          eq("\\operatorname{rank}(\\tilde X)\\leq\\min(d,B-1)"),
-        "The final row is fixed once the others are known. More coordinates cannot remove this dependency.",
-      ),
-    ),
+  question:
+    "Place three centered vectors head to tail. Why must the path close?",
+  draw() {
+    const marker = (role) =>
+      `<marker id="c2-${role}" viewBox="0 0 8 8" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="var(--${role})"/></marker>`;
+    const arrow = (d, role) =>
+      `<path d="${d}" fill="none" stroke="var(--${role})" stroke-width="2.4" marker-end="url(#c2-${role})"/>`;
+    const triangle = svg(
+      `<defs>${["blue", "amber", "violet"].map(marker).join("")}</defs>` +
+        arrow("M180 90L105 165", "blue") +
+        arrow("M105 165L180 165", "amber") +
+        arrow("M180 165L180 90", "violet") +
+        dot(180, 90, 4, "ink") +
+        formula(45, 109, 66, "\\tilde x_1") +
+        formula(111, 183, 76, "\\tilde x_2") +
+        formula(189, 119, 76, "\\tilde x_3") +
+        text(188, 78, "start = finish", "muted"),
+      "Three centered row vectors translated head to tail: the blue vector goes down and left, the amber vector goes right, and the violet vector returns to the starting point. Their sum is zero.",
+      360,
+      240,
+    );
+    return (
+      row(
+        panel("Three centered rows form a closed path", triangle),
+        panel(
+          "The dependency comes from the mean",
+          eq("\\sum_{b=1}^{B}(x_b-\\bar x)=\\sum_bx_b-B\\bar x=0") +
+            eq("\\tilde x_B=-\\sum_{b=1}^{B-1}\\tilde x_b"),
+        ),
+      ) +
+      takeaway(
+        `Only B − 1 centered rows can be independent. ${tex("\\operatorname{rank}(\\tilde X)\\leq\\min(d,B-1)")}`,
+      )
+    );
+  },
   caption:
-    "A small batch cannot exhibit full-rank sample covariance in a feature space larger than B − 1. This is a finite-sample constraint, not evidence that the population is collapsed.",
+    "In the picture the three rows are (−1, −1), (1, 0), and (0, 1). Translating vectors to join their ends does not change them. With two centered rows the second is simply the negative of the first. In any batch the final centered row is fixed by the others; this finite-sample rank limit is not evidence that the population collapsed.",
 });
 register("C3", {
   title: "Whitening changes scale along principal directions",
@@ -761,20 +889,97 @@ register("C3", {
 register("C4", {
   title: "Identity covariance does not specify a shape",
   question:
-    "All three populations have zero mean and identity covariance. Which one is Gaussian?",
-  controls: [range("seed", "Sample seed", 1, 40, 1, 7)],
-  draw: (s) =>
-    row(
-      ...["gaussian", "ring", "lines"].map((k) =>
-        panel(
-          k === "lines" ? "Crossing lines" : k[0].toUpperCase() + k.slice(1),
-          scatter(cloud(k, 220, s.seed)),
-          "Population covariance I; finite samples fluctuate.",
-        ),
-      ),
+    "All three populations have mean zero and covariance I. Which measuring direction exposes a difference?",
+  controls: [
+    choices(
+      "shape",
+      "Population",
+      ["Gaussian", "Ring", "Crossing lines"],
+      "Crossing lines",
     ),
+    choices(
+      "direction",
+      "Projection",
+      ["Horizontal", "Diagonal", "Vertical"],
+      "Horizontal",
+    ),
+  ],
+  draw(s) {
+    const kinds = {
+      Gaussian: "gaussian",
+      Ring: "ring",
+      "Crossing lines": "lines",
+    };
+    const roles = {
+      Gaussian: "blue",
+      Ring: "violet",
+      "Crossing lines": "teal",
+    };
+    const angles = {
+      Horizontal: 0,
+      Diagonal: Math.PI / 4,
+      Vertical: Math.PI / 2,
+    };
+    const angle = angles[s.direction];
+    const pts = cloud(kinds[s.shape], 240, 7);
+    const projected = pts
+      .map(([x, y]) => x * Math.cos(angle) + y * Math.sin(angle))
+      .sort((a, b) => a - b);
+    const steps = [[-3.5, 0]];
+    projected.forEach((value, i) => {
+      steps.push(
+        [value, i / projected.length],
+        [value, (i + 1) / projected.length],
+      );
+    });
+    steps.push([3.5, 1]);
+    const atZero = projected.filter((value) => Math.abs(value) < 1e-10).length;
+    const interpretation =
+      s.shape === "Crossing lines" && s.direction === "Diagonal"
+        ? `On the diagonal, ${atZero} of 240 sampled points project to exactly zero. The step in the teal curve cannot come from a Gaussian.`
+        : s.shape === "Crossing lines"
+          ? "Along this axis the crossing-line cloud has a Gaussian projection. Choose Diagonal to reveal what this one view misses."
+          : s.shape === "Ring"
+            ? "Every point lies on a circle of radius √2. Its projection stays within ±√2, unlike an unbounded Gaussian."
+            : "A Gaussian cloud has a Gaussian projection in every direction. Its finite-sample staircase stays near the smooth reference.";
+    return (
+      row(
+        panel(
+          s.shape + " · amber measuring line",
+          scatter(
+            pts.map((point) => [...point, roles[s.shape]]),
+            { angle },
+          ),
+        ),
+        panel(
+          "Projection compared with a Gaussian",
+          plot({
+            xmin: -3.5,
+            xmax: 3.5,
+            ymin: 0,
+            ymax: 1,
+            xTicks: [-3, -2, -1, 0, 1, 2, 3],
+            yTicks: [0, 0.25, 0.5, 0.75, 1],
+            snapDomain: false,
+            curves: [
+              { fn: cdf, color: "muted" },
+              { data: steps, color: roles[s.shape] },
+            ],
+            xlabel: "projected value",
+            ylabel: "fraction ≤ value",
+          }) +
+            `<div class="c4-key"><span style="--key-color:var(--${roles[s.shape]})">${s.shape} sample</span><span style="--key-color:var(--muted)">Gaussian reference</span></div>`,
+        ),
+      ) +
+      results(
+        ["Population covariance", "I"],
+        ["Sample points exactly at 0", `${atZero} / 240`],
+      ) +
+      takeaway(interpretation)
+    );
+  },
   caption:
-    "The ring has fixed radius. Crossing lines concentrate all mass on two lines. Neither becomes Gaussian merely because its first two moments match those of a Gaussian.",
+    "The colored staircase counts 240 sampled projections; the gray curve is the standard Gaussian CDF. The stated moments hold for the populations, while finite samples fluctuate. One Gaussian-looking projection cannot certify the full cloud. SIGReg will check many directions.",
 });
 register("D1", {
   title: "Shrink the step; keep the ratio",
@@ -828,25 +1033,43 @@ register("D3", {
   ],
   draw(s) {
     const u = 2 * s.x + s.bias,
-      y = u * u + s.x;
-    return row(
-      panel(
-        "Forward values",
-        cards([
-          ["Scale and offset", tex(`u=2x+b=${f(u)}`)],
-          ["Two paths", tex(`y=u^2+x=${f(y)}`)],
-          [
-            "Squared target error",
-            tex(`L=\\tfrac12(y-1)^2=${f(0.5 * (y - 1) ** 2)}`),
-          ],
-        ]),
-      ),
-      panel(
-        "Backward sensitivities",
-        eq(`\\frac{dy}{dx}=2u\\cdot2+1=${f(4 * u + 1)}`) +
-          eq(`\\frac{dL}{dx}=(y-1)(4u+1)=${f((y - 1) * (4 * u + 1))}`),
-        "The +1 comes from the direct x → y path. The two contributions add because both paths change when x changes.",
-      ),
+      y = u * u + s.x,
+      loss = 0.5 * (y - 1) ** 2;
+    const node = (x, top, width, math) =>
+      `<rect x="${x}" y="${top}" width="${width}" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>` +
+      `<foreignObject x="${x}" y="${top}" width="${width}" height="42"><div xmlns="http://www.w3.org/1999/xhtml" style="height:100%;display:grid;place-items:center;color:var(--ink);font-size:13px">${tex(math)}</div></foreignObject>`;
+    const arrow = (d, role = "teal") =>
+      `<path d="${d}" fill="none" stroke="var(--${role})" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#d3-${role})"/>`;
+    const graph = svg(
+      `<defs><marker id="d3-teal" viewBox="0 0 8 8" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="var(--teal)"/></marker><marker id="d3-amber" viewBox="0 0 8 8" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="var(--amber)"/></marker></defs>` +
+        arrow("M70 46L120 73") +
+        arrow("M70 130L120 88") +
+        arrow("M212 76L226 130") +
+        arrow("M70 130H90V177H207L226 148", "amber") +
+        arrow("M286 156V204") +
+        node(20, 25, 50, "b") +
+        node(20, 109, 50, "x") +
+        node(120, 55, 92, "u=2x+b") +
+        node(226, 114, 124, "y=u^2+x") +
+        node(226, 204, 124, "L=\\tfrac12(y-1)^2") +
+        text(111, 196, "direct path: +x", "amber"),
+      "Computation graph. Both b and x feed u equals 2x plus b. The value u is squared on its way to y; x also reaches y directly along the amber bypass. Then y feeds the loss.",
+      360,
+      255,
+    );
+    return (
+      row(
+        panel("One input, two routes to y", graph),
+        panel(
+          "Trace the gradient backward",
+          eq(`\\frac{dy}{dx}=(2u)(2)+1=${f(4 * u + 1)}`) +
+            eq(`\\frac{dL}{dx}=(y-1)(4u+1)=${f((y - 1) * (4 * u + 1))}`),
+        ),
+      ) +
+      results(["u", f(u)], ["y", f(y)], ["Loss", f(loss)]) +
+      takeaway(
+        "The amber bypass contributes the +1. Leaving it out changes the gradient even when the forward values look correct.",
+      )
     );
   },
   caption:
@@ -894,53 +1117,52 @@ register("D5", {
 register("D6", {
   title: "Variance as a function of direction",
   question:
-    "Rotate the direction. At a peak or a trough, the slope becomes zero.",
+    "Rotate the direction. How does the local tangent reveal a peak or trough?",
   controls: [range("angle", "Direction · radians", 0, 6.28, 0.01, 0.7)],
   draw(s) {
     const v = (a) => 3 * Math.cos(a) ** 2 + Math.sin(a) ** 2;
     const dv = (a) => -2 * Math.sin(2 * a);
     const cx = 180 + 75 * Math.cos(s.angle),
       cy = 125 - 75 * Math.sin(s.angle);
+    const span = Math.PI / 6;
+    const trend =
+      Math.abs(dv(s.angle)) < 0.08
+        ? "nearly flat"
+        : dv(s.angle) > 0
+          ? "rising"
+          : "falling";
     return (
       row(
         panel(
-          "Projected variance",
+          "Projected variance and its tangent",
           plot({
-            xmin: 0,
-            xmax: 2 * Math.PI,
+            xmin: -0.15,
+            xmax: 2 * Math.PI + 0.15,
             xTicks: [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI],
             xTickFormat: (x) =>
               ["0", "π/2", "π", "3π/2", "2π"][Math.round(x / (Math.PI / 2))],
-            ymin: 0,
+            ymin: 0.7,
             ymax: 3.3,
-            curves: [{ fn: v, color: "violet" }],
+            yTicks: [1, 2, 3],
+            snapDomain: false,
+            curves: [
+              { fn: v, color: "violet" },
+              {
+                data: [
+                  [s.angle - span, v(s.angle) - dv(s.angle) * span],
+                  [s.angle + span, v(s.angle) + dv(s.angle) * span],
+                ],
+                color: "teal",
+              },
+            ],
             points: [[s.angle, v(s.angle), "amber", 5]],
-            xlabel: "direction · rad",
+            xlabel: "angle α · radians",
             ylabel: "variance",
             height: 240,
-            ticks: 2,
           }),
         ),
         panel(
-          "Slope along the circle",
-          plot({
-            xmin: 0,
-            xmax: 2 * Math.PI,
-            xTicks: [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI],
-            xTickFormat: (x) =>
-              ["0", "π/2", "π", "3π/2", "2π"][Math.round(x / (Math.PI / 2))],
-            ymin: -2.3,
-            ymax: 2.3,
-            curves: [{ fn: dv, color: "teal" }],
-            points: [[s.angle, dv(s.angle), "amber", 5]],
-            xlabel: "direction · rad",
-            ylabel: "derivative",
-            height: 240,
-            ticks: 2,
-          }),
-        ),
-        panel(
-          "Direction and tangent",
+          "One direction in the cloud",
           svg(
             `<ellipse cx="180" cy="125" rx="104" ry="60" fill="none" stroke="var(--violet)"/><circle cx="180" cy="125" r="75" fill="none" stroke="var(--plot-line)"/>` +
               line(180, 125, cx, cy, "amber") +
@@ -951,7 +1173,9 @@ register("D6", {
                 cx - 30 * Math.sin(s.angle),
                 cy - 30 * Math.cos(s.angle),
                 "teal",
-              ),
+              ) +
+              text(180, 27, "spread along each direction", "violet", "middle") +
+              text(180, 225, "directions have unit length", "muted", "middle"),
             "Covariance ellipse, unit direction and its tangent",
             360,
             240,
@@ -960,17 +1184,16 @@ register("D6", {
       ) +
       results(
         ["Variance at this direction", f(v(s.angle))],
-        ["Slope at this direction", f(dv(s.angle))],
-        ["Maximum variance", "3.00"],
+        ["Change per radian", f(dv(s.angle))],
       ) +
       `<div class="visual-formula-row">${tex("u^\\top Cu=3\\cos^2\\alpha+\\sin^2\\alpha")}${tex("\\frac{d}{d\\alpha}u^\\top Cu=-2\\sin(2\\alpha)")}</div>` +
       takeaway(
-        "The maximum is 3 along the first coordinate axis. The minimum is 1 along the second. Both have zero slope; a zero slope alone does not identify a maximum.",
+        `The teal tangent is ${trend} here. It is flat at both a peak (variance 3 along the horizontal axis) and a trough (variance 1 along the vertical axis); slope zero alone cannot tell which one.`,
       )
     );
   },
   caption:
-    "Here C = diag(3, 1). Amber is the unit direction; teal is its tangent. The violet ellipse has semiaxes proportional to square-root variance. The existence proof, including the nested-cube construction, is in the preceding text.",
+    "Here C = diag(3, 1). The amber direction and teal tangent share the same angle in both panels. The violet ellipse has semiaxes in the ratio √3:1. The preceding text proves that a maximum is attained and leads to an eigenvector.",
 });
 export const activations = {
   Linear: { fn: (x) => x, df: () => 1, tex: "x" },
@@ -999,31 +1222,53 @@ register("N1", neuronSpec);
 register("N2", {
   title: "Activation and local sensitivity",
   question:
-    "Find a saturated region. A large input change there can produce only a small output change.",
-  controls: [range("probe", "Common probe", -3, 3, 0.02, 1)],
-  draw: (s) =>
-    row(
-      ...Object.entries(activations).map(([name, a]) =>
-        panel(
-          name,
-          plot({
-            xmin: -4,
-            xmax: 4,
-            ymin: -4.3,
-            ymax: 4.3,
-            height: 240,
-            ticks: 2,
-            curves: [
-              { fn: a.fn, color: "teal" },
-              { fn: a.df, color: "rose" },
-            ],
-            points: [[s.probe, a.fn(s.probe), "amber", 5]],
-          }),
-          tex(a.tex) +
-            ` · value ${f(a.fn(s.probe))}; derivative ${name === "ReLU" && s.probe === 0 ? "undefined at zero" : f(a.df(s.probe))}.`,
-        ),
-      ),
-    ),
+    "Compare an activation with its derivative on the same axes. Where does the slope nearly vanish?",
+  controls: [
+    choices("kind", "Activation", Object.keys(activations), "tanh"),
+    range("probe", "Input x", -3, 3, 0.02, 1),
+  ],
+  draw(s) {
+    const a = activations[s.kind];
+    const interpretation = {
+      Linear:
+        "The slope stays at 1. Stacking linear maps without a nonlinear activation still gives a linear map.",
+      ReLU: "The negative half is flat; positive inputs pass with slope 1. At zero the mathematical derivative does not exist.",
+      tanh: "At large positive or negative inputs, the output approaches ±1 and the slope approaches 0.",
+      GELU: "The smooth gate attenuates negative inputs and approaches the identity for large positive inputs.",
+      SiLU: "The sigmoid gate gives a small negative dip and approaches the identity for large positive inputs.",
+    }[s.kind];
+    return (
+      `<div style="max-width:410px;margin:0 auto">${panel(
+        `${s.kind} · output and slope`,
+        plot({
+          xmin: -4,
+          xmax: 4,
+          ymin: -4.3,
+          ymax: 4.3,
+          height: 240,
+          xTicks: [-4, -2, 0, 2, 4],
+          yTicks: [-4, -2, 0, 2, 4],
+          snapDomain: false,
+          curves: [
+            { fn: a.fn, color: "teal" },
+            { fn: a.df, color: "rose" },
+          ],
+          points: [[s.probe, a.fn(s.probe), "amber", 5]],
+          xlabel: "input x",
+          ylabel: "value / slope",
+        }),
+      )}</div>` +
+      `<div class="visual-formula-row">${tex(`\\sigma(x)=${a.tex}`)}</div>` +
+      results(
+        [`Output at x = ${f(s.probe)}`, f(a.fn(s.probe))],
+        [
+          "Local slope",
+          s.kind === "ReLU" && s.probe === 0 ? "undefined" : f(a.df(s.probe)),
+        ],
+      ) +
+      takeaway(interpretation)
+    );
+  },
   caption:
-    "Identical axes make shapes comparable. Teal is activation; rose is its derivative. The common scale includes all five curves on the displayed input interval. GELU is xΦ(x), not the common tanh approximation.",
+    "Teal is the activation, rose its derivative, and amber the selected input and output. The axes stay fixed across choices. At ReLU’s kink, the rose plot shows the conventional value 0 although the mathematical derivative is undefined. GELU uses the exact xΦ(x), not a tanh approximation.",
 });
