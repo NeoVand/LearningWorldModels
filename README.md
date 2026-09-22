@@ -1,10 +1,14 @@
+[![Before the Move: a ball passes from physical observation to a learned representation and imagined future.](assets/readme-banner-4k.webp)](https://neovand.github.io/LearningWorldModels/)
+
 # Before the Move
+
+**[Read the interactive course](https://neovand.github.io/LearningWorldModels/)** · [Download the complete PDF](output/pdf/before-the-move-complete.pdf)
 
 An interactive course on world models, building the required mathematics from first-year probability, linear algebra and calculus through JEPA, SIGReg and **LeWorldModel, arXiv:2603.19312v1**. The book includes extended derivations and a genuine browser-trained visual world model.
 
 **Current status: working draft undergoing design and pedagogical revision.** The 20-chapter manuscript and planned visual coverage are implemented; the latest revision keeps plot comparisons in one row, improves plot scales, and makes important numerical results prominent in HTML and print. See [the figure-layout review](research/layout-review/REVIEW.md) for changes and verification.
 
-Open **`world-models.html`**. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 92 new teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
+Open **`world-models.html`** locally, or use the GitHub Pages link above. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 92 new teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
 
 The 230-page print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
 
@@ -14,7 +18,7 @@ The reading order starts with the purpose of predictive representations, then bu
 
 All 97 planned visual briefs have implementations: 92 teaching figures and five integrations in the live laboratory. This is a coverage count, not a claim that every design has received reader approval. Open `figure-atlas.html` to jump to any item; the build regenerates its titles from the figures. Coverage, source paths and presentation choices are tracked in `book/figure-plan.json`; the latest layout review and verification record is `research/layout-review/REVIEW.md`.
 
-The opening arm moves through exact two-link simulator geometry. The laboratory initializes a real random model, displays its untrained predictions, trains until paused, resumes without resetting, and replays learned versus actual futures from a shared context. Generated infographics complement editable SVG and numerical diagrams; `illustration-gallery.html` offers four or five compositions per subject, with corrected editorial selections already embedded.
+The opening arm moves through exact two-link simulator geometry. The laboratory uses 64 × 64 camera images and initializes a real random model, displays its untrained predictions, trains until paused, resumes without resetting, and replays learned versus actual futures from a shared context. Generated infographics complement editable SVG and numerical diagrams; `illustration-gallery.html` offers four or five compositions per subject, with corrected editorial selections already embedded.
 
 ## Edit and build
 
