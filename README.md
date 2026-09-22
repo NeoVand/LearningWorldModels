@@ -6,7 +6,7 @@ An interactive course on world models, building the required mathematics from fi
 
 Open **`world-models.html`**. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 92 new teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
 
-The 226-page print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
+The 229-page print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
 
 The reading order starts with the purpose of predictive representations, then builds vectors, probability, covariance, calculus, and optimization before introducing JEPA and SIGReg. Normality testing has its own lesson and Monte Carlo experiment. Implementation, training, planning, and evaluation precede the advanced Gaussian theory, transformer architecture, research lineage, and guided reading of LeWorldModel. Core derivations are visible in the reading flow; worked exercise answers remain expandable.
 

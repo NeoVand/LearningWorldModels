@@ -40,3 +40,12 @@ Strengthened light-theme colors; the lowest measured small-text contrast across 
 ## Recommendation not adopted after testing
 
 The proposed `content-visibility:auto; contain-intrinsic-size:auto 12000px` rule caused deep chapter anchors to shift about 87 px after arrival and document height to change by 3,000–3,800 px. The normal page had zero shift in the same trial, with similar timings. See `performance-trial.json`. Preserving a reader’s place takes priority over this unproven optimization. The existing visible-only animation and lazy laboratory initialization remain in use.
+
+## Verification
+
+- Built both self-contained HTML entry points from the same sources.
+- `verify:editorial`: eight width/theme combinations (375, 390, 800 and 1440 px); zero manuscript equation overflow, broken anchors, missing image dimensions or KaTeX errors. All 20 outcomes present.
+- `audit:visuals`: all 92 teaching figures at desktop and phone widths in both themes; zero clipped SVG labels, equation overflow or JavaScript errors. All 200 slider endpoint states produced finite geometry.
+- `verify:polish`, numerical gradient checks and curriculum checks passed.
+- Clicked the live control button: 40 executed actions. The test used random initial weights and establishes the button’s run length, not trained-model performance.
+- Regenerated the 229-page PDF with expanded derivations and labeled recorded training data. Checked text bounds on every page and visually inspected 14 representative rendered pages, plus HTML figures and phone derivations.

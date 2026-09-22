@@ -125,7 +125,7 @@ register("J1", {
     row(
       panel(
         "Pixel reconstruction",
-        `<div class="visual-equation">${tex("o_t\\to f_\\theta\\to g_\\psi\\to\\hat o_{t+1}", true)}</div><div class="visual-equation">${tex("\\|\\hat o_{t+1}-o_{t+1}\\|^2", true)}</div>`,
+        `<div class="visual-equation">${tex("\\observed{o}_t\\to f_\\theta\\to g_\\psi\\to\\predicted{\\hat o}_{t+1}", true)}</div><div class="visual-equation">${tex("\\|\\predicted{\\hat o}_{t+1}-\\observed{o}_{t+1}\\|^2", true)}</div>`,
         "The target is every observed pixel; nuisance appearance can contribute to the loss.",
       ),
       panel(

@@ -308,16 +308,16 @@ register("J2", {
         cards([
           [
             "Context branch",
-            tex(`x=1\\to z=\\theta x\\to\\hat z=1.5z=${f(pred)}`),
+            tex(`\\observed{x}=1\\to\\encoded{z}=\\theta\\observed{x}\\to\\predicted{\\hat z}=1.5\\encoded{z}=${f(pred)}`),
           ],
-          ["Target branch", tex(`x'=2\\to z'=\\theta x'=${f(target)}`)],
+          ["Target branch", tex(`\\observed{x}'=2\\to\\encoded{z}'=\\theta\\observed{x}'=${f(target)}`)],
         ]),
       ),
       panel(
         "Derivative through the graph",
-        eq(`L=(\\hat z-z')^2=${f(error * error)}`) +
+        eq(`\\objective{L}=(\\predicted{\\hat z}-\\encoded{z}')^2=${f(error * error)}`) +
           eq(
-            `\\frac{dL}{d\\theta}=2(\\hat z-z')\\left(1.5-${s.target === "Stopped" ? "0" : "2"}\\right)=${f(g)}`,
+            `\\frac{d\\objective{L}}{d\\theta}=2(\\predicted{\\hat z}-\\encoded{z}')\\left(1.5-${s.target === "Stopped" ? "0" : "2"}\\right)=${f(g)}`,
           ),
         s.target === "Stopped"
           ? "Stopping the target removes its local derivative. It is a computational rule, not a different forward loss value."
@@ -347,8 +347,8 @@ register("J3", {
         "What the objective sees",
         eq(
           s.collapse === "All directions"
-            ? "\\|cz_1-cz_2\\|^2=c^2\\|z_1-z_2\\|^2"
-            : "\\|\\operatorname{diag}(c,1)\\Delta z\\|^2=c^2\\Delta z_1^2+\\Delta z_2^2",
+            ? "\\|c\\encoded{z}_1-c\\encoded{z}_2\\|^2=c^2\\|\\encoded{z}_1-\\encoded{z}_2\\|^2"
+            : "\\|\\operatorname{diag}(c,1)\\Delta\\encoded{z}\\|^2=c^2\\Delta\\encoded{z}_1^2+\\Delta\\encoded{z}_2^2",
         ) +
           number(
             s.collapse === "All directions"
@@ -450,7 +450,7 @@ register("J5", {
       ),
       panel(
         "Prediction target",
-        eq("\\hat z_{t+2}=g(z_t,z_{t+1},a_t,a_{t+1})"),
+        eq("\\predicted{\\hat z}_{t+2}=g(\\encoded{z}_t,\\encoded{z}_{t+1},\\action{a}_t,\\action{a}_{t+1})"),
         s.alignment === "Correct"
           ? "Each action is paired with the transition it produced."
           : "The displayed labels assign later commands to earlier transitions. This changes the learning problem even though array shapes still match.",

@@ -1,0 +1,7 @@
+{
+  "output": "Action 40 \u00b7 physical joint RMS error 2.456 rad \u00b7 normalized action = [0.905, -0.997]\nSeparate drawing-readout RMS error 1.140 rad. Physical error is evaluation only; the planner scores predicted latent distance.",
+  "count": 40,
+  "button": "Run 40 actions",
+  "modelUpdates": 0,
+  "purpose": "Verify the default button executes 40 actions; this untrained run is not a control-performance benchmark."
+}

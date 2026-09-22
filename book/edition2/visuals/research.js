@@ -383,7 +383,7 @@ register("W2", {
       panel(
         "Observed context and shifted targets",
         eq(
-          "(o_t,o_{t+1},o_{t+2})\\to(\\hat z_{t+1},\\hat z_{t+2},\\hat z_{t+3})",
+          "(\\observed{o}_t,\\observed{o}_{t+1},\\observed{o}_{t+2})\\to(\\predicted{\\hat z}_{t+1},\\predicted{\\hat z}_{t+2},\\predicted{\\hat z}_{t+3})",
         ),
         "Four observations supply three context positions and three shifted targets in a length-four training window.",
       ),

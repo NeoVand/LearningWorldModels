@@ -41,7 +41,7 @@
       "distorted": 0
     }
   ],
-  "probe": "-1.08",
+  "probe": "-1.32",
   "sensor": {
     "filter": "invert(1)",
     "className": "sensor-image"

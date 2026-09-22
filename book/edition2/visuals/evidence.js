@@ -451,7 +451,7 @@ register("R2", {
       ),
       panel(
         "Directional effects",
-        eq(`\\lambda_1=${f(a)},\\quad\\lambda_2=${f(b)}`) +
+        eq(`\\rho_1=${f(a)},\\quad\\rho_2=${f(b)}`) +
           number("OLS variance factors", `${f(1 / a)}, ${f(1 / b)}`) +
           number(
             "Ridge retained coefficient fractions",
