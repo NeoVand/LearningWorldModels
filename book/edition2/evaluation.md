@@ -160,7 +160,7 @@ $$L_\pi=\mathbb E\left[e^{\beta A(s,a,g)}\|\pi(s,g)-a\|^2\right].$$
 
 This is a chosen weighted-regression objective. Better-looking dataset actions receive more influence without requiring the policy update to query arbitrary new actions in an inaccurate offline value model. A large inverse temperature $\beta$ concentrates the weights strongly and can make fitting sensitive to estimation errors. Practical algorithms often stabilize weights; exact choices belong to the implementation.
 
-To see what weighted regression learns, fix a context and differentiate with respect to a constant predicted action $c$: $2\mathbb E[w(c-A_{\mathrm{data}})]=0$. If $\mathbb E[w]>0$, the optimum is $c=\mathbb E[wA_{\mathrm{data}}]/\mathbb E[w]$. The weights change the conditional average, not the fact that a deterministic squared-error policy averages.
+To see what weighted regression learns, fix a context and differentiate with respect to a constant predicted action $c$: $2\mathbb E[w(c-a_{\mathrm{data}})]=0$. If $\mathbb E[w]>0$, the optimum is $c=\mathbb E[wa_{\mathrm{data}}]/\mathbb E[w]$. The weights change the conditional average, not the fact that a deterministic squared-error policy averages.
 
 These policy baselines differ from CEM planning. CEM spends computation online to optimize a fresh sequence using a fixed model; the policy spends training computation to make action selection cheap at execution time. The 2022 LeCun proposal explicitly contemplates learning reactive policies from deliberative solutions, so the approaches are not philosophically incompatible.
 

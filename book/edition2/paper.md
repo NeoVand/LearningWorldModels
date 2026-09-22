@@ -92,7 +92,7 @@ The paper evaluates TwoRoom, Reacher, PushT, and OGBench-Cube. Its Figure 6 repo
 
 Figure 3 reports planning times of 0.98 seconds and 47 seconds for LeWM and DINO-WM in the compared setup. Dividing gives about 48. The claim concerns that hardware, implementation, and planning configuration, not every device or deployment. The fixed-compute comparisons additionally show that a cheaper model can use a planning budget differently. They should not be conflated with unconstrained best-quality comparisons.
 
-A figure caption says “18% higher” on PushT for 96 versus 78. The arithmetic difference is 18 percentage points; the relative increase is $18/78\approx23.1\%$. This is a small language distinction with a large interpretive consequence. Use units for improvements as carefully as for losses.
+Section 4.2 reports an “18% higher” success rate on PushT, comparing LeWM’s 96% with PLDM’s 78% (Table 5). The arithmetic difference is 18 percentage points; the relative increase is $18/78\approx23.1\%$. This is a small language distinction with a large interpretive consequence. Use units for improvements as carefully as for losses.
 
 Appendix E describes offline data collection: 20,000 PushT expert episodes averaging 196 steps; 10,000 TwoRoom episodes averaging 92 steps; and 10,000 episodes of 200 steps for Cube and Reacher. These are different data distributions, even though all are offline. Reacher data comes from a trained control policy; TwoRoom and Cube use specified heuristic collection procedures.
 

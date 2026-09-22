@@ -23,9 +23,9 @@ A training example contains three consecutive selected observations and two alig
 
 The predictor's input width is $8+8+2+2=20$. The action values are normalized controls in $[-1,1]$; the simulator maps these to its chosen physical torque scale. Units and normalization belong in a reproducible configuration.
 
-The encoder is an MLP with widths 1,024 → 128 → 8. The predictor is an MLP with widths 20 → 128 → 128 → 8 and a residual output. GELU supplies the nonlinearities. For a dense layer from width $m$ to width $n$, there are $mn$ weights and $n$ biases because each output uses one weight per input and one offset.
+The encoder is a multilayer perceptron (MLP) with widths 1,024 → 128 → 8. The predictor is an MLP with widths 20 → 128 → 128 → 8 and a residual output. GELU supplies the nonlinearities. For a dense layer from width $m$ to width $n$, there are $mn$ weights and $n$ biases because each output uses one weight per input and one offset.
 
-The encoder therefore has $(1024\cdot128+128)+(128\cdot8+8)=132232$ parameters. The predictor has $(20\cdot128+128)+(128\cdot128+128)+(128\cdot8+8)=20232$. Their sum is 152,464. The small model is intentionally simpler than the paper's transformer so we can inspect the entire learning loop.
+The encoder therefore has $(1024\cdot128+128)+(128\cdot8+8)=132{,}232$ parameters. The predictor has $(20\cdot128+128)+(128\cdot128+128)+(128\cdot8+8)=20{,}232$. Their sum is 152,464. The small model is intentionally simpler than the paper's transformer so we can inspect the entire learning loop.
 
 <!-- VISUAL: I1 -->
 
@@ -41,11 +41,11 @@ A useful held-out diagnostic compares prediction error with persistence error in
 
 ## Make the two reductions explicit
 
-For one predicted future per example, the browser prediction loss is coordinate-averaged MSE:
+For one predicted future per example, the browser prediction loss is coordinate-averaged mean squared error (MSE):
 
 $$L_{\mathrm{pred}}=\frac1{Bd}\sum_{b,j}(\hat z_{b,j}-z_{b,\mathrm{next},j})^2.$$
 
-For three encoded positions, define $R=\tfrac13\sum_{r=1}^3\operatorname{SIGReg}(Z_r)$, where each $Z_r$ has shape $B\times d$. The total loss is $L=L_{\mathrm{pred}}+\lambda R$. The browser uses $\lambda=0.01$, 32 random unit directions, and 17 frequency nodes from 0 to 3 with the symmetric trapezoid convention derived earlier. The research configuration uses different scale and settings; coefficient values do not transfer independently of reductions.
+For three encoded positions, define $R=\tfrac13\sum_{t=1}^3\operatorname{SIGReg}(Z_t)$, where each $Z_t$ has shape $B\times d$. The total loss is $L=L_{\mathrm{pred}}+\lambda R$. The browser uses $\lambda=0.01$, 32 random unit directions, and 17 frequency nodes from 0 to 3 with the symmetric trapezoid convention derived earlier. The research configuration uses different scale and settings; coefficient values do not transfer independently of reductions.
 
 Why not pool time into one huge batch? A sequence could encode time position rather than observation content. Consider every example at position 1 equal to $-1$, every example at position 2 equal to 0, and every example at position 3 equal to 1. Pooled variance is nonzero, while each time position is completely collapsed across examples. Step-wise regularization rules out that particular pooling shortcut more directly.
 
@@ -105,11 +105,11 @@ The held-out action shuffle asks whether correctly aligned actions improve predi
 
 A useful training display combines several measurements. Prediction loss describes agreement. SIGReg describes the chosen finite distributional discrepancy. Coordinate spread detects shrinking representations. A covariance participation ratio detects concentration into a few dominant directions. Held-out prediction versus persistence tests a specific dynamics baseline. Actual physical control tests the whole loop.
 
-For covariance eigenvalues $\lambda_j\geq0$, the participation ratio is
+For covariance eigenvalues $\rho_j\geq0$, the participation ratio is
 
-$$r_{\mathrm{eff}}=\frac{(\sum_j\lambda_j)^2}{\sum_j\lambda_j^2}.$$
+$$r_{\mathrm{eff}}=\frac{(\sum_j\rho_j)^2}{\sum_j\rho_j^2}.$$
 
-If exactly $r$ eigenvalues are equal and positive, the ratio is $(r\lambda)^2/(r\lambda^2)=r$. Cauchy–Schwarz gives $r_{\mathrm{eff}}\leq r$, where $r$ is the number of positive eigenvalues, and expanding the squared sum shows it is at least 1 for nonzero covariance. At complete zero covariance the ratio is undefined, so an implementation must report collapse or use an explicitly labeled numerical convention.
+If exactly $r$ eigenvalues are equal and positive, the ratio is $(r\rho)^2/(r\rho^2)=r$. Cauchy–Schwarz gives $r_{\mathrm{eff}}\leq r$, where $r$ is the number of positive eigenvalues, and expanding the squared sum shows it is at least 1 for nonzero covariance. At complete zero covariance the ratio is undefined, so an implementation must report collapse or use an explicitly labeled numerical convention.
 
 ## Worked challenge: a bug that improves the loss
 

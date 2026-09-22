@@ -86,13 +86,13 @@ For a smooth function $a$, a second-order Taylor expansion is
 
 $$a(q+hu)=a(q)+h\nabla a(q)^\top u+\tfrac12h^2u^\top H_a(q)u+o(h^2),$$
 
-under conditions allowing the remainder to be integrated against the kernel. $H_a$ is the Hessian, the matrix of second partial derivatives. Its trace is the Laplacian $\Delta a=\sum_j\partial_j^2a$. The notation $o(h^2)$ means that after division by $h^2$ the remainder tends to zero as $h\to0$. It is not a fixed numerical error bound.
+under conditions allowing the remainder to be integrated against the kernel. $H_a$ is the Hessian, the matrix of second partial derivatives. Its trace is the Laplacian $\nabla^2 a=\sum_j\partial_j^2a$. The notation $o(h^2)$ means that after division by $h^2$ the remainder tends to zero as $h\to0$. It is not a fixed numerical error bound.
 
-Integrating the expansion removes the linear term because $\int uK(u)du=0$. The quadratic term becomes $\tfrac12h^2\mu_2\Delta a$. Apply this first to $a=mp$, then to $a=p$. For numbers $A+h^2a$ and $B+h^2b$ with $B>0$, expansion of the reciprocal gives a ratio $A/B+h^2(aB-Ab)/B^2+o(h^2)$. Therefore
+Integrating the expansion removes the linear term because $\int uK(u)du=0$. The quadratic term becomes $\tfrac12h^2\mu_2\nabla^2 a$. Apply this first to $a=mp$, then to $a=p$. For numbers $A+h^2a$ and $B+h^2b$ with $B>0$, expansion of the reciprocal gives a ratio $A/B+h^2(aB-Ab)/B^2+o(h^2)$. Therefore
 
-$$m_h(q)-m(q)=\frac{h^2\mu_2}{2}\left[\Delta m(q)+2\nabla m(q)^\top\nabla\log p(q)\right]+o(h^2).$$
+$$m_h(q)-m(q)=\frac{h^2\mu_2}{2}\left[\nabla^2 m(q)+2\nabla m(q)^\top\nabla\log p(q)\right]+o(h^2).$$
 
-To check the cancellation, expand $\Delta(mp)=p\Delta m+2\nabla m^\top\nabla p+m\Delta p$. The last term cancels the denominator correction. Finally $\nabla p/p=\nabla\log p$ by the chain rule. The **score** $s(z)=\nabla\log p(z)$ measures how rapidly log density changes with location. It is a derivative with respect to the sample coordinate, not a classifier score and not a derivative with respect to a neural-network parameter.
+To check the cancellation, expand $\nabla^2(mp)=p\nabla^2 m+2\nabla m^\top\nabla p+m\nabla^2 p$. The last term cancels the denominator correction. Finally $\nabla p/p=\nabla\log p$ by the chain rule. The **score** $s(z)=\nabla\log p(z)$ measures how rapidly log density changes with location. It is a derivative with respect to the sample coordinate, not a classifier score and not a derivative with respect to a neural-network parameter.
 
 Dense neighborhoods pull a local weighted average asymmetrically. That is why the density gradient appears in its bias. A representation can affect probe behavior through the arrangement and concentration of its examples.
 
@@ -106,7 +106,7 @@ $$\frac{\int_0^r a^{d+1}da}{\int_0^r a^{d-1}da}=\frac{d}{d+2}r^2.$$
 
 Divide by $d$ identical coordinate variances to obtain $r^2/(d+2)$. Substituting into the smoothing calculation gives
 
-$$m_r(q)-m(q)=\frac{r^2}{d+2}\left[\nabla m(q)^\top s(q)+\tfrac12\Delta m(q)\right]+o(r^2).$$
+$$m_r(q)-m(q)=\frac{r^2}{d+2}\left[\nabla m(q)^\top s(q)+\tfrac12\nabla^2 m(q)\right]+o(r^2).$$
 
 An empirical neighborhood can be empty. A complete implementation must define what to do then. The small-radius asymptotic analysis assumes enough local data for the empirical average to approximate this population object.
 
@@ -142,9 +142,9 @@ This proves a precise result: the isotropic Gaussian minimizes location Fisher i
 
 ## From a score bound to a probe-bias bound
 
-Suppose the target functions satisfy $\|\nabla m\|\leq L$ and $|\Delta m|\leq B_0$. The leading smoothing-bias term contains $\Delta m+2\nabla m^\top s$. Use $(a+b)^2\leq2a^2+2b^2$, obtained from $0\leq(a-b)^2$, and Cauchy–Schwarz to obtain
+Suppose the target functions satisfy $\|\nabla m\|\leq L$ and $|\nabla^2 m|\leq B_0$. The leading smoothing-bias term contains $\nabla^2 m+2\nabla m^\top s$. Use $(a+b)^2\leq2a^2+2b^2$, obtained from $0\leq(a-b)^2$, and Cauchy–Schwarz to obtain
 
-$$\mathbb E\!\left[(\Delta m+2\nabla m^\top s)^2\right]\leq2B_0^2+8L^2J(p).$$
+$$\mathbb E\!\left[(\nabla^2 m+2\nabla m^\top s)^2\right]\leq2B_0^2+8L^2J(p).$$
 
 Multiplying by $(h^2\mu_2/2)^2$ yields the leading integrated squared-bias upper bound used in the kernel argument. With adequate uniform remainder control, the remaining term is $o(h^4)$.
 

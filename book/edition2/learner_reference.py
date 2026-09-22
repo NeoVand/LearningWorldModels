@@ -1,5 +1,5 @@
 import numpy as np
-from model_reference import initialize, forward
+from model_reference import forward
 from sigreg_reference import sigreg, sigreg_gradient
 
 

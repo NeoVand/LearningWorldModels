@@ -23,14 +23,14 @@ The semantic colors are blue for observations, violet for representations, teal 
 | $\xi$ | Optional uncertainty latent in the broad JEPA proposal | Distinct from an observation embedding |
 | $B,T,d$ | Batch size, sequence length, embedding width | Never interchange their averaging axes |
 | $N$ | Context length in the research discussion | Local definitions are stated when a source uses it differently |
-| $\Z_r$ | Batch of embeddings at time position $r$ | Usually $B\times d$ within one regularizer call |
+| $\Z_t$ | Batch of embeddings at time position $t$ | Usually $B\times d$ within one regularizer call |
 | $\uvec,\U$ | One unit projection direction; matrix of directions | Columns of $U$ are normalized |
 | $M,K$ | Number of directions; number of frequency nodes | $K_{\mathrm{exec}}$ separately denotes an MPC execution prefix |
 | $\freq$ | Characteristic-function frequency | Not environment time |
 | $\cf,\ecf$ | Population and empirical characteristic functions | The empirical object fluctuates across batches |
 | $\target(\freq)=e^{-\freq^2/2}$ | Standard-Gaussian characteristic function | Not a density in frequency |
 | $\disc,\stat$ | Unscaled discrepancy and batch-scaled statistic | Their sampling floors scale differently |
-| $\lambda$ | Representation-regularizer coefficient | Not weight decay or Gaussian window width |
+| $\lambda$ | Representation-regularizer coefficient | Distinct from weight decay and Gaussian window width; earlier linear-algebra chapters also use $\lambda$ for eigenvalues. Implementation and Gaussian theory use $\rho_j$ for covariance eigenvalues |
 | $H$ | Planning horizon | $H$ actions imply $H$ transitions in our rollout convention |
 | $\epsilon,\eta$ | Locally defined numerical tolerance/error; learning rate | Reintroduced with units and purpose at each use |
 

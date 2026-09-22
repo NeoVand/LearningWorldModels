@@ -62,7 +62,7 @@ Negatives bring choices: which samples count as distinct, how many to use, and h
 
 ## Teacher branches: change the update rule
 
-Another family uses an online encoder and a target encoder. The target parameters move slowly toward the online parameters using an exponential moving average:
+Another family uses an online encoder and a target encoder. The target parameters move slowly toward the online parameters using an exponential moving average (EMA):
 
 $$\bar\theta_{k+1}=m\bar\theta_k+(1-m)\theta_k,\qquad0\leq m<1.$$
 

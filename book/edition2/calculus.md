@@ -120,7 +120,7 @@ If the Hessian is continuous near $x$, replace it inside the integral by $H_L(x)
 
 $$L(x+v)=L(x)+\nabla L(x)^\top v+\tfrac12v^\top H_L(x)v+o(\|v\|^2).$$
 
-The **Laplacian** is just the trace of this Hessian, $\Delta L=\sum_j\partial_j^2L$. For our example it is $4+1=5$. Later, averaging small symmetric perturbations will cancel linear terms and expose this sum of curvatures in the Gaussian theory.
+The **Laplacian** is just the trace of this Hessian, $\nabla^2 L=\sum_j\partial_j^2L$. Here $\nabla^2 L$ is a scalar sum, while $H_L$ denotes the full Hessian matrix; $\Delta L$ still means a change in loss. For our example the sum is $4+1=5$. Later, averaging small symmetric perturbations will cancel linear terms and expose this sum of curvatures in the Gaussian theory.
 
 <!-- VISUAL: D5 -->
 
