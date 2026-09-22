@@ -8,7 +8,7 @@
     ],
     "P4": [
       "philosophy",
-      "hierarchy-1",
+      "hierarchy-4",
       "Nested views connect a route around a block, a street crossing and a foot placement."
     ],
     "J1": [
@@ -31,5 +31,11 @@
       "lineage-corrected-1",
       "Five research methods compared by the prediction targets they use."
     ]
+  },
+  "confirmed_by_user": {
+    "P4": {
+      "selection": "hierarchy-4",
+      "date": "2026-09-22"
+    }
   }
 }

@@ -9,7 +9,7 @@ The built-in `image_gen` tool produced the assets. It does not expose a verifiab
 ## Review decisions
 
 - **Occlusion 4:** selected for its ordered visible/hidden/possible-future structure. The caption explains that the two exits are alternatives, not simultaneous balls. This is uncertainty about hidden interactions, not a violation of deterministic motion under fully specified conditions.
-- **Hierarchy 1:** selected for explicit spatial nesting and three time scales. It illustrates a proposal; the local model does not implement hierarchical planning.
+- **Hierarchy 4:** selected by the reader on 22 September 2026 for “Plans at three scales.” It illustrates a proposal; the local model does not implement hierarchical planning.
 - **JEPA corrected:** original candidates had ambiguous context/target arrows and illustrated hand direction with a ball. A generated edit separated predicted/observed futures and the target-encoder branch. A second precise edit made the predicted and target vectors both four-dimensional. The editable architecture figures remain the source for method-specific gradients and parameter sharing.
 - **SIGReg 1:** selected for the six-stage account and correct complex discrepancy formula. The figure caption explicitly distinguishes the magnitude illustration from the full complex difference. This is schematic geometry, not a computed sample. Other composition drafts may contain inaccurate labels or curve shapes and must be corrected before use.
 - **Energy final:** the original wording could confuse model compatibility energy with mechanical energy. The edit states explicitly that this is a model score. No probabilities or empirical numbers are invented.

@@ -78,7 +78,7 @@ To visit a friend, one might first choose a route across a city, then a street c
 
 If each low-level step has $k$ alternatives, enumerating $H$ steps requires $k^H$ sequences: multiply $k$ choices once for every step. A good hierarchy can reduce the effective search by reusing meaningful subplans. That is the motivation; there is no general theorem that an arbitrary learned hierarchy will do so. Bad abstractions can erase the constraints needed to make a high-level plan feasible.
 
-<figure class="generated-plate" data-art="P4"><img src="assets/generated/infographics/hierarchy-1.png" alt="Nested views connect a route around a block, a street crossing and a foot placement."/><figcaption>A route selects a crossing; the crossing selects shorter movements. The three views illustrate temporal abstraction. The browser laboratory later uses a single planning scale.</figcaption></figure>
+<figure class="generated-plate" data-art="P4"><img src="assets/generated/infographics/hierarchy-4.png" alt="Nested views connect a route around a block, a street crossing and a foot placement."/><figcaption>A route selects a crossing; the crossing selects shorter movements. The three views illustrate temporal abstraction. The browser laboratory later uses a single planning scale.</figcaption></figure>
 
 <!-- VISUAL: P4 -->
 

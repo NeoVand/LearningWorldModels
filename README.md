@@ -30,7 +30,7 @@ The opening arm moves through exact two-link simulator geometry. The laboratory 
 - Actual learning core adapted from Jaxverse: `book/world/`.
 - Primary papers, pinned author code, and source provenance: `papers/`, `research/`.
 
-Run `npm install`, then `npm run build`. The delivered HTML does not require these authoring dependencies. The preview at `http://127.0.0.1:8767/world-models.html` refreshes after an idle build. If an experiment exists, a revision button appears instead of silently discarding its state.
+Run `npm install`, then `npm run build`. The delivered HTML does not require these authoring dependencies. The local preview shows a “New revision” button after a build; it never automatically reloads and interrupts reading or an experiment. Illustration alternatives remain available in the separate `illustration-gallery.html` page.
 
 ## Verify
 
