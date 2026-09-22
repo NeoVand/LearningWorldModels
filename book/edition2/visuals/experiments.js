@@ -586,7 +586,7 @@ export function rolloutData(n) {
   return { truth, free, forced };
 }
 function forecastPlot(truth, pred, color) {
-  const X = (i) => 35 + i * 14.5,
+  const X = (i) => 55 + i * 13.5,
     Y = (v) => 235 - v * (200 / 3.5);
   const area = `M${truth.map((v, i) => `${i ? "L" : ""}${X(i)} ${Y(v)}`).join("")}L${pred
     .map((_, i) => {

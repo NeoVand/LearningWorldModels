@@ -14,6 +14,8 @@ import {
   tex,
   f,
   number,
+  results,
+  takeaway,
 } from "./core.js";
 import { cloud, sigreg, rng, normal } from "../numerics.js";
 const eq = (s) => `<div class="visual-equation">${tex(s, true)}</div>`;
@@ -380,36 +382,51 @@ register("R1", {
     const random = rng(s.seed),
       a = s.spread,
       beta = 2,
-      est = Array.from(
+      noise = Array.from(
         { length: 100 },
-        () => beta + (normal(random) - normal(random)) / (2 * a),
-      );
-    return row(
-      panel(
-        "Repeated fitted coefficients",
-        plot({
-          xmin: 0,
-          xmax: 100,
-          ymin: -15,
-          ymax: 20,
-          points: est.map((x, i) => [i, x, "violet"]),
-          curves: [{ fn: () => beta, color: "blue" }],
-          xlabel: "independent noise draw",
-          ylabel: "estimated slope",
-        }),
+        () => (normal(random) - normal(random)) / 2,
       ),
-      panel(
-        "Fixed design calculation",
-        eq("x=(-a,a),\\quad y_i=\\beta x_i+\\epsilon_i") +
-          eq(
-            `\\operatorname{Var}(\\hat\\beta)=\\frac{1}{2a^2}=${f(1 / (2 * a * a))}`,
-          ),
-        "Noise variance is one and the true coefficient stays two. This holds the prediction task fixed while changing the available input variation.",
-      ),
+      reference = noise.map((n) => beta + n),
+      estimates = noise.map((n) => beta + n / a),
+      extent = Math.max(1, ...estimates.map((v) => Math.abs(v - beta))) * 1.12;
+    const estimatesPlot = (values, color) =>
+      plot({
+        xmin: 0,
+        xmax: 100,
+        ymin: beta - extent,
+        ymax: beta + extent,
+        height: 230,
+        ticks: 2,
+        points: values.map((v, i) => [i + 1, v, color, 2.5]),
+        curves: [{ fn: () => beta, color: "blue" }],
+        xlabel: "independent noise draw",
+        ylabel: "estimated slope",
+      });
+    return (
+      row(
+        panel(
+          "Reference · input magnitude 1",
+          estimatesPlot(reference, "teal"),
+        ),
+        panel(
+          `Your design · input magnitude ${f(a)}`,
+          estimatesPlot(estimates, "violet"),
+        ),
+      ) +
+      results(
+        ["Reference variance", "0.50"],
+        ["Your slope variance", f(1 / (2 * a * a))],
+        ["Noise amplification", `${f(1 / a)}×`],
+      ) +
+      eq("x=(-a,a),\\quad y_i=\\beta x_i+\\epsilon_i") +
+      eq("\\operatorname{Var}(\\hat\\beta)=\\frac{1}{2a^2}") +
+      takeaway(
+        "Both plots share a vertical scale and the same noise draws. Halving the input magnitude doubles the slope’s standard deviation and quadruples its variance.",
+      )
     );
   },
   caption:
-    "The plotted estimates are actual least-squares fits for a two-point fixed design. Rescaling both the input and the task coefficient would be a different comparison.",
+    "The vertical range adjusts to keep every estimate visible. The true slope stays two and label-noise variance stays one; only the input spacing changes. These are least-squares fits for a two-point fixed design.",
 });
 register("R2", {
   title: "A covariance preference needs a task assumption",

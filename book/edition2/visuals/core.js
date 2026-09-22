@@ -82,15 +82,15 @@ export function plot({
 } = {}) {
   const bottom = height - 45,
     graphHeight = height - 80;
-  const X = (x) => 35 + ((x - xmin) * 290) / (xmax - xmin),
+  const X = (x) => 55 + ((x - xmin) * 270) / (xmax - xmin),
     Y = (y) => bottom - ((y - ymin) * graphHeight) / (ymax - ymin);
   const clipId = clipPrefix + "-plot-" + ++plotSerial;
   let s =
-    `<defs><clipPath id="${clipId}"><rect x="35" y="35" width="290" height="${graphHeight}"/></clipPath></defs>` +
-    line(35, bottom, 325, bottom) +
-    line(35, 35, 35, bottom);
+    `<defs><clipPath id="${clipId}"><rect x="55" y="35" width="270" height="${graphHeight}"/></clipPath></defs>` +
+    line(55, bottom, 325, bottom) +
+    line(55, 35, 55, bottom);
   if (xmin < 0 && xmax > 0) s += line(X(0), 35, X(0), bottom);
-  if (ymin < 0 && ymax > 0) s += line(35, Y(0), 325, Y(0));
+  if (ymin < 0 && ymax > 0) s += line(55, Y(0), 325, Y(0));
   const tick = (v, span) =>
     Number.isInteger(v) ? String(v) : f(v, span < 0.1 ? 3 : span < 1 ? 2 : 1);
   for (let i = 0; i <= ticks; i++) {
@@ -99,14 +99,14 @@ export function plot({
     s +=
       text(X(x), bottom + 20, tick(x, xmax - xmin), "muted", "middle") +
       text(
-        29,
+        49,
         Y(y) + 4,
         yTickFormat ? yTickFormat(y) : tick(y, ymax - ymin),
         "muted",
         "end",
       );
   }
-  s += text(326, height - 4, xlabel, "muted", "end") + text(36, 20, ylabel);
+  s += text(326, height - 8, xlabel, "muted", "end") + text(56, 20, ylabel);
   s += `<g clip-path="url(#${clipId})">`;
   curves.forEach(({ fn, color = "teal", data, area }) => {
     const pts =
@@ -158,13 +158,13 @@ export const row = (...panels) => {
   const notes = [];
   const columns = panels.map((p) =>
     p.replace(
-          /<!--panel-note--><div class="visual-note">([\s\S]*?)<\/div><!--\/panel-note-->/,
-          (_, note) => {
-            const title = p.match(/<h4>([\s\S]*?)<\/h4>/)?.[1] ?? "";
-            notes.push(`<div><strong>${title}.</strong> ${note}</div>`);
-            return "";
-          },
-        ),
+      /<!--panel-note--><div class="visual-note">([\s\S]*?)<\/div><!--\/panel-note-->/,
+      (_, note) => {
+        const title = p.match(/<h4>([\s\S]*?)<\/h4>/)?.[1] ?? "";
+        notes.push(`<div><strong>${title}.</strong> ${note}</div>`);
+        return "";
+      },
+    ),
   );
   const graphics = panels.filter((p) => /<svg\b[^>]*role="img"/.test(p)).length;
   return `<div class="visual-panels" data-panels="${panels.length}" style="--panel-count:${panels.length};--graphic-count:${Math.max(1, graphics)}">${columns.join("")}</div>${notes.length ? `<div class="visual-explanations">${notes.join("")}</div>` : ""}`;

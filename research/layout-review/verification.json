@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-22",
+  "layouts": [
+    {
+      "media": "screen",
+      "theme": "light",
+      "width": 1440,
+      "pageWidth": 1440,
+      "figures": 92,
+      "orphanPlots": [],
+      "textOutside": [],
+      "mathOverflow": [],
+      "distorted": 0
+    },
+    {
+      "media": "screen",
+      "theme": "dark",
+      "width": 800,
+      "pageWidth": 800,
+      "figures": 92,
+      "orphanPlots": [],
+      "textOutside": [],
+      "mathOverflow": [],
+      "distorted": 0
+    },
+    {
+      "media": "screen",
+      "theme": "light",
+      "width": 390,
+      "pageWidth": 390,
+      "figures": 92,
+      "orphanPlots": [],
+      "textOutside": [],
+      "mathOverflow": [],
+      "distorted": 0
+    },
+    {
+      "media": "screen",
+      "theme": "dark",
+      "width": 390,
+      "pageWidth": 390,
+      "figures": 92,
+      "orphanPlots": [],
+      "textOutside": [],
+      "mathOverflow": [],
+      "distorted": 0
+    },
+    {
+      "media": "print",
+      "theme": "light",
+      "width": 615,
+      "pageWidth": 617,
+      "figures": 92,
+      "orphanPlots": [],
+      "textOutside": [],
+      "mathOverflow": [],
+      "distorted": 0
+    }
+  ],
+  "errors": []
+}

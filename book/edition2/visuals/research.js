@@ -299,9 +299,8 @@ register("H2", {
     row(
       panel(
         "DINO-WM",
-        eq(
-          "o\\to\\underbrace{f_{\\rm pretrained}}_{\\rm frozen}\\to z\\to g_{\\rm trainable}",
-        ),
+        eq("o\\to\\underbrace{f_{\\rm pretrained}}_{\\rm frozen}\\to z") +
+          eq("z\\to g_{\\rm trainable}"),
         "Feature pretraining happened elsewhere. World-model training fits dynamics in those features.",
       ),
       panel(
