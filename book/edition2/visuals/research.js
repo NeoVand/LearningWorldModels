@@ -14,6 +14,8 @@ import {
   tex,
   f,
   number,
+  takeaway,
+  results,
 } from "./core.js";
 import { renderSensor } from "../../world/sensor.ts";
 import { recorded } from "./recorded.js";
@@ -456,28 +458,44 @@ register("L6", {
   controls: [choices("seed", "Recorded seed", ["17", "41", "73"], "17")],
   draw(s) {
     const run = recorded.find((r) => String(r.seed) === s.seed);
-    return row(
-      ...run.controls.map((r, i) =>
-        panel(
-          i === 3 ? "Distant stress goal" : "Local goal " + (i + 1),
-          plot({
-            xmin: 0,
-            xmax: 40,
-            ymin: 0,
-            ymax: Math.max(1.5, ...r.errors),
-            curves: [
-              {
-                data: [[0, r.initial], ...r.errors.map((x, j) => [j + 1, x])],
-                color: i === 3 ? "rose" : "teal",
-              },
-              { fn: () => 0.15, color: "amber" },
-            ],
-            xlabel: "executed action",
-            ylabel: "joint RMS error · rad",
-          }),
-          `Reached once: ${r.errors.some((x) => x < 0.15) ? "yes" : "no"}. Final within tolerance: ${r.errors.at(-1) < 0.15 ? "yes" : "no"}.`,
+    const localTop =
+      1.12 *
+      Math.max(
+        0.15,
+        ...run.controls.slice(0, 3).flatMap((r) => [r.initial, ...r.errors]),
+      );
+    return (
+      row(
+        ...run.controls.map((r, i) =>
+          panel(
+            i === 3 ? "Distant stress goal" : "Local goal " + (i + 1),
+            plot({
+              xmin: 0,
+              xmax: 40,
+              ymin: 0,
+              ymax:
+                i === 3
+                  ? Math.max(0.2, r.initial, ...r.errors) * 1.12
+                  : localTop,
+              height: 230,
+              ticks: 2,
+              curves: [
+                {
+                  data: [[0, r.initial], ...r.errors.map((x, j) => [j + 1, x])],
+                  color: i === 3 ? "rose" : "teal",
+                },
+                { fn: () => 0.15, color: "amber" },
+              ],
+              xlabel: "action",
+              ylabel: "RMS error · rad",
+            }) +
+              `<div class="trajectory-verdict"><strong>${r.errors.at(-1) < 0.15 ? "Within goal at end" : r.errors.some((x) => x < 0.15) ? "Reached, then left" : "Did not reach"}</strong><span>Final ${f(r.errors.at(-1), 3)} rad</span></div>`,
+          ),
         ),
-      ),
+      ) +
+      takeaway(
+        "The three local plots share a vertical scale. The distant stress goal uses its own labeled scale. Amber marks the same 0.15-radian tolerance in every plot; reaching it once and staying there are separate outcomes.",
+      )
     );
   },
   caption:

@@ -15,6 +15,8 @@ import {
   tex,
   f,
   number,
+  takeaway,
+  results,
 } from "./core.js";
 import { cloud, ecf, ep, closedEP, rng, normal } from "../numerics.js";
 import { cdf, ks, experiment } from "../normality.js";
@@ -382,56 +384,112 @@ register("S4", {
 register("S5", {
   title: "The window and the grid solve different problems",
   question:
-    "Increase the cutoff, then increase the number of knots. Which error did each change reduce?",
+    "Widen the interval to keep the tail. Add knots to follow the curve within it.",
   controls: [
     range("limit", "Positive cutoff A", 0.5, 6, 0.1, 3),
     range("knots", "Knots K", 3, 49, 2, 17),
   ],
   draw(s) {
-    const h = [-1.6, -0.3, 0.2, 1.1],
-      fn = (w) => {
-        const a = ecf(h, w);
-        return ((a.c - a.q) ** 2 + a.s * a.s) * a.q;
-      },
-      v = ep(h, { limit: s.limit, knots: s.knots, scaled: false }),
-      dense = ep(h, { limit: s.limit, knots: 2001, scaled: false });
-    return row(
-      panel(
-        "Weighted squared discrepancy",
-        plot({
-          xmin: 0,
-          xmax: 6,
-          ymin: 0,
-          ymax: 0.12,
-          curves: [
-            { fn, color: "rose" },
-            {
-              data: Array.from({ length: s.knots }, (_, i) => {
-                const w = (i * s.limit) / (s.knots - 1);
-                return [w, fn(w)];
-              }),
-              color: "amber",
-            },
-          ],
-          points: Array.from({ length: s.knots }, (_, i) => {
-            const w = (i * s.limit) / (s.knots - 1);
-            return [w, fn(w), "amber", 3];
+    const h = [-1.6, -0.3, 0.2, 1.1];
+    const fn = (w) => {
+      const a = ecf(h, w);
+      return ((a.c - a.q) ** 2 + a.s * a.s) * a.q;
+    };
+    const v = ep(h, { limit: s.limit, knots: s.knots, scaled: false });
+    const dense = ep(h, { limit: s.limit, knots: 2001, scaled: false }),
+      full = closedEP(h);
+    const knots = Array.from({ length: s.knots }, (_, i) => {
+      const w = (i * s.limit) / (s.knots - 1);
+      return [w, fn(w)];
+    });
+    const peak = Math.max(
+      ...Array.from({ length: 601 }, (_, i) => fn(i / 100)),
+    );
+    const tail = Array.from({ length: 161 }, (_, i) => {
+      const w = s.limit + ((6 - s.limit) * i) / 160;
+      return [w, fn(w)];
+    });
+    const convergence = Array.from({ length: 24 }, (_, i) => {
+      const k = 3 + 2 * i;
+      return [
+        k,
+        Math.abs(ep(h, { limit: s.limit, knots: k, scaled: false }) - dense),
+      ];
+    });
+    return (
+      row(
+        panel(
+          "What the cutoff discards",
+          plot({
+            xmin: 0,
+            xmax: 6,
+            ymin: 0,
+            ymax: peak * 1.18,
+            height: 240,
+            ticks: 2,
+            curves: [
+              { fn, color: "violet" },
+              { data: tail, color: "rose", area: true },
+              { data: knots, color: "amber", area: true },
+            ],
+            points: knots.map(([x, y]) => [x, y, "amber", 3]),
+            xlabel: "positive frequency",
+            ylabel: "weighted discrepancy",
           }),
-          xlabel: "positive frequency",
-          ylabel: "error × window",
-        }),
-      ),
-      panel(
-        "Separate the errors",
-        number("Trapezoid estimate", f(v, 6)) +
-          number("Dense integral on the same interval", f(dense, 6)) +
-          number("Full-line closed form", f(closedEP(h), 6)),
-        "The positive half is doubled. Endpoint weights are half interior weights before doubling. A denser grid cannot recover a discarded tail.",
-      ),
+          "Amber: retained trapezoids. Rose: discarded tail. Violet: the exact integrand. The vertical scale is fixed as the controls change.",
+        ),
+        panel(
+          "What extra knots recover",
+          plot({
+            xmin: 3,
+            xmax: 49,
+            ymin:
+              Math.floor(
+                Math.log10(
+                  Math.max(1e-12, Math.min(...convergence.map((p) => p[1]))),
+                ),
+              ) - 0.25,
+            ymax:
+              Math.ceil(Math.log10(Math.max(...convergence.map((p) => p[1])))) +
+              0.25,
+            yTickFormat: (y) => (10 ** y).toExponential(0),
+            height: 240,
+            ticks: 2,
+            curves: [
+              {
+                data: convergence.map(([x, y]) => [
+                  x,
+                  Math.log10(Math.max(y, 1e-12)),
+                ]),
+                color: "teal",
+              },
+            ],
+            points: [
+              [
+                s.knots,
+                Math.log10(Math.max(Math.abs(v - dense), 1e-12)),
+                "amber",
+                5,
+              ],
+            ],
+            xlabel: "number of knots",
+            ylabel: "grid error · log scale",
+          }),
+          "Logarithmic height separates errors that differ by orders of magnitude: 1e−6 means one millionth. Each point uses the same interval; plotted errors are floored at 1e−12.",
+        ),
+      ) +
+      results(
+        ["Grid error", Math.abs(v - dense).toExponential(2)],
+        ["Discarded tail", Math.max(0, full - dense).toExponential(2)],
+        ["Computed integral", f(v, 6)],
+      ) +
+      takeaway(
+        `Compare against ${f(dense, 6)} on this interval and ${f(full, 6)} on the full line. Cutoff and grid spacing control different sources of error.`,
+      )
     );
   },
   caption:
-    "The shaded quantity is not the CF itself but squared complex discrepancy times the window. The exact same finite sum drives the displayed numerical estimate.",
+    "The plotted integrand is squared complex characteristic-function discrepancy times the Gaussian window. The positive half is doubled. Endpoint trapezoid weights are halved before doubling; the closed-form full-line value independently checks the numerical sum.",
 });
 register("S6", {
   title: "Expand the square into pairs",

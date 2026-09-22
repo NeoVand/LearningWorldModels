@@ -77,6 +77,8 @@ export function plot({
   ylabel = "y",
   extra = "",
   height = 280,
+  ticks = 4,
+  yTickFormat,
 } = {}) {
   const bottom = height - 45,
     graphHeight = height - 80;
@@ -91,12 +93,18 @@ export function plot({
   if (ymin < 0 && ymax > 0) s += line(35, Y(0), 325, Y(0));
   const tick = (v, span) =>
     Number.isInteger(v) ? String(v) : f(v, span < 0.1 ? 3 : span < 1 ? 2 : 1);
-  for (let i = 0; i <= 4; i++) {
-    let x = xmin + ((xmax - xmin) * i) / 4,
-      y = ymin + ((ymax - ymin) * i) / 4;
+  for (let i = 0; i <= ticks; i++) {
+    let x = xmin + ((xmax - xmin) * i) / ticks,
+      y = ymin + ((ymax - ymin) * i) / ticks;
     s +=
       text(X(x), bottom + 20, tick(x, xmax - xmin), "muted", "middle") +
-      text(29, Y(y) + 4, tick(y, ymax - ymin), "muted", "end");
+      text(
+        29,
+        Y(y) + 4,
+        yTickFormat ? yTickFormat(y) : tick(y, ymax - ymin),
+        "muted",
+        "end",
+      );
   }
   s += text(326, height - 4, xlabel, "muted", "end") + text(36, 20, ylabel);
   s += `<g clip-path="url(#${clipId})">`;
@@ -145,8 +153,26 @@ export function scatter(points, { limit = 3, angle = null } = {}) {
   return svg(s, "Point cloud with equal horizontal and vertical units");
 }
 export const panel = (title, body, note = "") =>
-  `<div class="visual-panel"><h4>${title}</h4>${body}${note ? '<div class="visual-note">' + note + "</div>" : ""}</div>`;
-export const row = (...p) => `<div class="visual-panels">${p.join("")}</div>`;
+  `<div class="visual-panel"${/<svg\b[^>]*role="img"/.test(body) ? "" : ' data-detail="true"'}><h4>${title}</h4>${body}${note ? '<!--panel-note--><div class="visual-note">' + note + "</div><!--/panel-note-->" : ""}</div>`;
+export const row = (...panels) => {
+  const notes = [];
+  const columns = panels.map((p) =>
+    p.replace(
+          /<!--panel-note--><div class="visual-note">([\s\S]*?)<\/div><!--\/panel-note-->/,
+          (_, note) => {
+            const title = p.match(/<h4>([\s\S]*?)<\/h4>/)?.[1] ?? "";
+            notes.push(`<div><strong>${title}.</strong> ${note}</div>`);
+            return "";
+          },
+        ),
+  );
+  const graphics = panels.filter((p) => /<svg\b[^>]*role="img"/.test(p)).length;
+  return `<div class="visual-panels" data-panels="${panels.length}" style="--panel-count:${panels.length};--graphic-count:${Math.max(1, graphics)}">${columns.join("")}</div>${notes.length ? `<div class="visual-explanations">${notes.join("")}</div>` : ""}`;
+};
+export const takeaway = (content) =>
+  `<div class="visual-takeaway">${content}</div>`;
+export const results = (...items) =>
+  `<div class="visual-results">${items.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join("")}</div>`;
 export const number = (label, value, unit = "") =>
   `<div class="visual-number"><strong>${value}</strong><span>${label}${unit ? " · " + unit : ""}</span></div>`;
 export const range = (key, label, min, max, step, value) => ({

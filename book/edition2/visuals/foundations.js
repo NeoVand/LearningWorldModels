@@ -17,6 +17,8 @@ import {
   tex,
   f,
   number,
+  takeaway,
+  results,
 } from "./core.js";
 import { cloud, covariance, rng, normal } from "../numerics.js";
 import { cdf } from "../normality.js";
@@ -283,59 +285,75 @@ register("B1", {
       density = (x) =>
         Math.exp(-0.5 * (x / s.sigma) ** 2) /
         (s.sigma * Math.sqrt(2 * Math.PI));
-    return row(
-      panel(
-        "Discrete mass",
-        plot({
-          xmin: 0,
-          xmax: 4,
-          ymin: 0,
-          ymax: 1,
-          points: [
-            [1, 0.2, "blue", 7],
-            [2, 0.5, "blue", 7],
-            [3, 0.3, "blue", 7],
-          ],
-          xlabel: "outcome",
-          ylabel: "probability",
-        }),
-        "Masses 0.2 + 0.5 + 0.3 = 1. Each number is a probability.",
-      ),
-      panel(
-        "Continuous density",
-        plot({
-          xmin: -2,
-          xmax: 2,
-          ymin: 0,
-          ymax: 3,
-          curves: [
-            { fn: density, color: "violet" },
-            {
-              data: Array.from({ length: 60 }, (_, i) => {
-                const x = -1 + ((s.bound + 1) * i) / 59;
-                return [x, density(x)];
-              }),
-              color: "amber",
-              area: true,
-            },
-          ],
-          ylabel: "density",
-        }),
-        `For ordered interval endpoints, area from −1 to ${f(s.bound)} is ${f(area, 3)}.`,
-      ),
-      panel(
-        "Accumulated area",
-        plot({
-          xmin: -2,
-          xmax: 2,
-          ymin: 0,
-          ymax: 1,
-          curves: [{ fn: (x) => cdf(x / s.sigma) }],
-          points: [[s.bound, cdf(s.bound / s.sigma), "amber", 5]],
-          ylabel: "CDF",
-        }),
-        "The CDF is always between 0 and 1. Subtract two CDF values for interval probability.",
-      ),
+    return (
+      row(
+        panel(
+          "Discrete mass",
+          plot({
+            height: 230,
+            ticks: 2,
+            xmin: 0,
+            xmax: 4,
+            ymin: 0,
+            ymax: 1,
+            points: [
+              [1, 0.2, "blue", 7],
+              [2, 0.5, "blue", 7],
+              [3, 0.3, "blue", 7],
+            ],
+            xlabel: "outcome",
+            ylabel: "probability",
+          }),
+          "The three masses add to one.",
+        ),
+        panel(
+          "Continuous density",
+          plot({
+            height: 230,
+            ticks: 2,
+            xmin: -2,
+            xmax: 2,
+            ymin: 0,
+            ymax: Math.max(1.1, density(0) * 1.15),
+            curves: [
+              { fn: density, color: "violet" },
+              {
+                data: Array.from({ length: 60 }, (_, i) => {
+                  const x = -1 + ((s.bound + 1) * i) / 59;
+                  return [x, density(x)];
+                }),
+                color: "amber",
+                area: true,
+              },
+            ],
+            ylabel: "density",
+          }),
+          "The shaded area, rather than the peak height, is a probability.",
+        ),
+        panel(
+          "Accumulated area",
+          plot({
+            height: 230,
+            ticks: 2,
+            xmin: -2,
+            xmax: 2,
+            ymin: 0,
+            ymax: 1,
+            curves: [{ fn: (x) => cdf(x / s.sigma) }],
+            points: [[s.bound, cdf(s.bound / s.sigma), "amber", 5]],
+            ylabel: "CDF",
+          }),
+          "Subtract two CDF values to recover the shaded probability.",
+        ),
+      ) +
+      results(
+        ["Density at the peak", f(density(0), 3)],
+        [`Probability from −1 to ${f(s.bound)}`, f(area, 3)],
+        ["Total probability", "1.000"],
+      ) +
+      takeaway(
+        "A density can exceed 1. A probability cannot: it is the area over an interval, or the mass at a discrete outcome.",
+      )
     );
   },
   caption:
@@ -352,39 +370,56 @@ register("B2", {
   draw(s) {
     const p = [s.mass / 2, 1 - s.mass, s.mass / 2],
       x = [-s.distance, 0, s.distance];
-    return row(
-      panel(
-        "Probability as weight",
-        svg(
-          line(30, 190, 330, 190) +
-            x
-              .map(
-                (a, i) =>
-                  `<rect x="${168 + a * 42}" y="${190 - 150 * p[i]}" width="24" height="${150 * p[i]}" rx="3" fill="var(--blue)"/>` +
-                  text(180 + a * 42, 220, f(a), "ink", "middle") +
-                  text(
-                    180 + a * 42,
-                    175 - 150 * p[i],
-                    f(p[i]),
-                    "blue",
-                    "middle",
-                  ),
-              )
-              .join("") +
-            `<path d="M180 190L165 250H195Z" fill="var(--teal)"/>`,
-          "Symmetric probability weights balanced at zero",
-        ),
-      ),
-      panel(
-        "Weighted contributions",
-        eq(
-          `\\mathbb E[X]=${f(p[0])}(-${f(s.distance)})+${f(p[2])}(${f(s.distance)})=0`,
-        ) +
-          eq(
-            `\\operatorname{Var}(X)=${f(s.mass)}\\cdot ${f(s.distance)}^2=${f(s.mass * s.distance * s.distance)}`,
+    return (
+      row(
+        panel(
+          "Probability as weight",
+          svg(
+            line(30, 190, 330, 190) +
+              x
+                .map(
+                  (a, i) =>
+                    `<rect x="${168 + a * 42}" y="${190 - 150 * p[i]}" width="24" height="${150 * p[i]}" rx="3" fill="var(--blue)"/>` +
+                    text(180 + a * 42, 220, f(a), "ink", "middle") +
+                    text(
+                      180 + a * 42,
+                      175 - 150 * p[i],
+                      f(p[i]),
+                      "blue",
+                      "middle",
+                    ),
+                )
+                .join("") +
+              `<path d="M180 190L165 250H195Z" fill="var(--teal)"/>`,
+            "Symmetric probability weights balanced at zero",
           ),
-        "The center stays fixed; the average squared distance from it changes.",
-      ),
+        ),
+        panel(
+          "Variance grows with distance",
+          plot({
+            xmin: 0,
+            xmax: 3,
+            ymin: 0,
+            ymax: 9.5,
+            height: 230,
+            ticks: 2,
+            curves: [{ fn: (d) => s.mass * d * d, color: "violet" }],
+            points: [
+              [s.distance, s.mass * s.distance * s.distance, "amber", 5],
+            ],
+            xlabel: "outer distance",
+            ylabel: "variance",
+          }),
+        ),
+      ) +
+      results(
+        ["Mean", "0.00"],
+        ["Variance", f(s.mass * s.distance * s.distance)],
+      ) +
+      `<div class="visual-formula-row">${tex(`\\mathbb E[X]=${f(p[0])}(-${f(s.distance)})+${f(p[2])}(${f(s.distance)})=0`)}${tex(`\\operatorname{Var}(X)=${f(s.mass)}\\cdot${f(s.distance)}^2`)}</div>` +
+      takeaway(
+        "Equal masses on opposite sides cancel in the mean. Their squared distances add: doubling the distance multiplies the variance by four.",
+      )
     );
   },
   caption:
@@ -440,40 +475,51 @@ register("B4", {
   draw(s) {
     const mu = 2 * s.p - 1,
       L = (x) => (1 - s.p) * (x + 1) ** 2 + s.p * (x - 1) ** 2;
-    return row(
-      panel(
-        "Possible outcomes",
-        plot({
-          xmin: -1.5,
-          xmax: 1.5,
-          ymin: 0,
-          ymax: 1,
-          points: [
-            [-1, 1 - s.p, "blue", 8],
-            [1, s.p, "blue", 8],
-            [mu, 0, "teal", 6],
-          ],
-          xlabel: "outcome",
-          ylabel: "mass",
-        }),
-      ),
-      panel(
-        "Expected loss",
-        plot({
-          xmin: -1.5,
-          xmax: 1.5,
-          ymin: 0,
-          ymax: 6,
-          curves: [{ fn: L, color: "rose" }],
-          points: [
-            [s.guess, L(s.guess), "amber", 5],
-            [mu, L(mu), "teal", 6],
-          ],
-          xlabel: "prediction",
-          ylabel: "expected squared error",
-        }),
-        `Optimal prediction ${f(mu)}. Proposed loss ${f(L(s.guess))}; minimum ${f(L(mu))}.`,
-      ),
+    return (
+      row(
+        panel(
+          "Possible outcomes",
+          plot({
+            xmin: -1.5,
+            xmax: 1.5,
+            ymin: 0,
+            ymax: 1,
+            points: [
+              [-1, 1 - s.p, "blue", 8],
+              [1, s.p, "blue", 8],
+              [mu, 0, "teal", 6],
+            ],
+            xlabel: "outcome",
+            ylabel: "mass",
+          }),
+        ),
+        panel(
+          "Expected loss",
+          plot({
+            xmin: -1.5,
+            xmax: 1.5,
+            ymin: 0,
+            ymax: 6.5,
+            curves: [{ fn: L, color: "rose" }],
+            points: [
+              [s.guess, L(s.guess), "amber", 5],
+              [mu, L(mu), "teal", 6],
+            ],
+            xlabel: "prediction",
+            ylabel: "expected squared error",
+          }),
+        ),
+      ) +
+      results(
+        ["Best prediction", f(mu)],
+        ["Your expected loss", f(L(s.guess))],
+        ["Lowest possible loss", f(L(mu))],
+      ) +
+      takeaway(
+        s.p === 0.5
+          ? "The best prediction is zero, even though only −1 and +1 can occur."
+          : "The squared-error optimum follows the mean, not necessarily a possible outcome.",
+      )
     );
   },
   caption:
@@ -848,70 +894,77 @@ register("D5", {
 register("D6", {
   title: "Variance as a function of direction",
   question:
-    "A full turn covers every unit direction. Where is projected variance stationary?",
-  controls: [range("angle", "Direction", 0, 6.28, 0.01, 0.7)],
+    "Rotate the direction. At a peak or a trough, the slope becomes zero.",
+  controls: [range("angle", "Direction · radians", 0, 6.28, 0.01, 0.7)],
   draw(s) {
     const v = (a) => 3 * Math.cos(a) ** 2 + Math.sin(a) ** 2;
-    return row(
-      panel(
-        "Projected variance",
-        plot({
-          xmin: 0,
-          xmax: 6.28,
-          ymin: 0,
-          ymax: 3.5,
-          curves: [{ fn: v, color: "violet" }],
-          points: [[s.angle, v(s.angle), "amber", 5]],
-          xlabel: "angle in radians",
-          ylabel: "uᵀCu",
-        }),
-      ),
-      panel(
-        "The extremum and existence",
-        eq("u^\\top Cu=3\\cos^2\\alpha+\\sin^2\\alpha") +
-          eq("\\frac{d}{d\\alpha}u^\\top Cu=-2\\sin(2\\alpha)") +
-          number("Tangential derivative", f(-2 * Math.sin(2 * s.angle))),
-        "The circle is closed and bounded; the variance is continuous. Nested boxes can select a convergent subsequence from any maximizing sequence, so a maximum is attained. At its stationary direction, the tangential change vanishes.",
-      ),
-      panel(
-        "Direction and tangent",
-        svg(
-          `<ellipse cx="180" cy="140" rx="104" ry="60" fill="none" stroke="var(--violet)"/><circle cx="180" cy="140" r="75" fill="none" stroke="var(--plot-line)"/>` +
-            line(
-              180,
-              140,
-              180 + 75 * Math.cos(s.angle),
-              140 - 75 * Math.sin(s.angle),
-              "amber",
-            ) +
-            line(
-              180 + 75 * Math.cos(s.angle) + 30 * Math.sin(s.angle),
-              140 - 75 * Math.sin(s.angle) + 30 * Math.cos(s.angle),
-              180 + 75 * Math.cos(s.angle) - 30 * Math.sin(s.angle),
-              140 - 75 * Math.sin(s.angle) - 30 * Math.cos(s.angle),
-              "teal",
-            ),
-          "Covariance ellipse, unit direction and its tangent",
+    const dv = (a) => -2 * Math.sin(2 * a);
+    const cx = 180 + 75 * Math.cos(s.angle),
+      cy = 125 - 75 * Math.sin(s.angle);
+    return (
+      row(
+        panel(
+          "Projected variance",
+          plot({
+            xmin: 0,
+            xmax: 2 * Math.PI,
+            ymin: 0,
+            ymax: 3.3,
+            curves: [{ fn: v, color: "violet" }],
+            points: [[s.angle, v(s.angle), "amber", 5]],
+            xlabel: "direction · rad",
+            ylabel: "variance",
+            height: 240,
+            ticks: 2,
+          }),
         ),
-        "The violet ellipse has semiaxes proportional to square-root variance. The amber direction stays on the unit circle; the teal tangent is a legal first-order change.",
-      ),
-      panel(
-        "Why a limit remains available",
-        svg(
-          [160, 80, 40, 20, 10]
-            .map(
-              (w, i) =>
-                `<rect x="${180 - w / 2}" y="${140 - w / 2}" width="${w}" height="${w}" fill="none" stroke="var(--violet)" opacity="${0.3 + i * 0.15}"/>`,
-            )
-            .join("") + dot(180, 140, 3, "amber"),
-          "Schematic nested boxes converging to a point",
+        panel(
+          "Slope along the circle",
+          plot({
+            xmin: 0,
+            xmax: 2 * Math.PI,
+            ymin: -2.3,
+            ymax: 2.3,
+            curves: [{ fn: dv, color: "teal" }],
+            points: [[s.angle, dv(s.angle), "amber", 5]],
+            xlabel: "direction · rad",
+            ylabel: "derivative",
+            height: 240,
+            ticks: 2,
+          }),
         ),
-        "Repeatedly keep a closed sub-box containing infinitely many terms of the bounded sequence. Their diameters shrink to zero. The inset illustrates that construction, not these particular iterates.",
-      ),
+        panel(
+          "Direction and tangent",
+          svg(
+            `<ellipse cx="180" cy="125" rx="104" ry="60" fill="none" stroke="var(--violet)"/><circle cx="180" cy="125" r="75" fill="none" stroke="var(--plot-line)"/>` +
+              line(180, 125, cx, cy, "amber") +
+              dot(cx, cy, 4, "amber") +
+              line(
+                cx + 30 * Math.sin(s.angle),
+                cy + 30 * Math.cos(s.angle),
+                cx - 30 * Math.sin(s.angle),
+                cy - 30 * Math.cos(s.angle),
+                "teal",
+              ),
+            "Covariance ellipse, unit direction and its tangent",
+            360,
+            240,
+          ),
+        ),
+      ) +
+      results(
+        ["Variance at this direction", f(v(s.angle))],
+        ["Slope at this direction", f(dv(s.angle))],
+        ["Maximum variance", "3.00"],
+      ) +
+      `<div class="visual-formula-row">${tex("u^\\top Cu=3\\cos^2\\alpha+\\sin^2\\alpha")}${tex("\\frac{d}{d\\alpha}u^\\top Cu=-2\\sin(2\\alpha)")}</div>` +
+      takeaway(
+        "The maximum is 3 along the first coordinate axis. The minimum is 1 along the second. Both have zero slope; a zero slope alone does not identify a maximum.",
+      )
     );
   },
   caption:
-    "Here C = diag(3, 1). The maximum is 3 along the first coordinate axis. The existence argument in the text explains why a maximizing direction exists before identifying it as an eigenvector.",
+    "Here C = diag(3, 1). Amber is the unit direction; teal is its tangent. The violet ellipse has semiaxes proportional to square-root variance. The existence proof, including the nested-cube construction, is in the preceding text.",
 });
 export const activations = {
   Linear: { fn: (x) => x, df: () => 1, tex: "x" },
@@ -950,8 +1003,10 @@ register("N2", {
           plot({
             xmin: -4,
             xmax: 4,
-            ymin: -1.6,
-            ymax: 2.4,
+            ymin: -4.3,
+            ymax: 4.3,
+            height: 240,
+            ticks: 2,
             curves: [
               { fn: a.fn, color: "teal" },
               { fn: a.df, color: "rose" },
@@ -964,5 +1019,5 @@ register("N2", {
       ),
     ),
   caption:
-    "Identical axes make shapes comparable. Teal is activation; rose is its derivative. Curves outside the displayed vertical range are clipped. GELU is xΦ(x), not the common tanh approximation.",
+    "Identical axes make shapes comparable. Teal is activation; rose is its derivative. The common scale includes all five curves on the displayed input interval. GELU is xΦ(x), not the common tanh approximation.",
 });
