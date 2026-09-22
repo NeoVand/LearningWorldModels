@@ -6,8 +6,9 @@
       "theme": "light",
       "width": 1440,
       "pageWidth": 1440,
-      "figures": 92,
+      "figures": 93,
       "orphanPlots": [],
+      "tooSmallPlots": [],
       "textOutside": [],
       "mathOverflow": [],
       "distorted": 0
@@ -17,8 +18,9 @@
       "theme": "dark",
       "width": 800,
       "pageWidth": 800,
-      "figures": 92,
+      "figures": 93,
       "orphanPlots": [],
+      "tooSmallPlots": [],
       "textOutside": [],
       "mathOverflow": [],
       "distorted": 0
@@ -28,8 +30,18 @@
       "theme": "light",
       "width": 390,
       "pageWidth": 390,
-      "figures": 92,
-      "orphanPlots": [],
+      "figures": 93,
+      "orphanPlots": [
+        "O1",
+        "B1",
+        "B7",
+        "C4",
+        "D6",
+        "S4",
+        "S5",
+        "R5"
+      ],
+      "tooSmallPlots": [],
       "textOutside": [],
       "mathOverflow": [],
       "distorted": 0
@@ -39,8 +51,18 @@
       "theme": "dark",
       "width": 390,
       "pageWidth": 390,
-      "figures": 92,
-      "orphanPlots": [],
+      "figures": 93,
+      "orphanPlots": [
+        "O1",
+        "B1",
+        "B7",
+        "C4",
+        "D6",
+        "S4",
+        "S5",
+        "R5"
+      ],
+      "tooSmallPlots": [],
       "textOutside": [],
       "mathOverflow": [],
       "distorted": 0
@@ -50,8 +72,38 @@
       "theme": "light",
       "width": 615,
       "pageWidth": 617,
-      "figures": 92,
+      "figures": 93,
       "orphanPlots": [],
+      "tooSmallPlots": [
+        {
+          "id": "B1",
+          "width": 199
+        },
+        {
+          "id": "B1",
+          "width": 199
+        },
+        {
+          "id": "B1",
+          "width": 199
+        },
+        {
+          "id": "S4",
+          "width": 199
+        },
+        {
+          "id": "R5",
+          "width": 199
+        },
+        {
+          "id": "R5",
+          "width": 199
+        },
+        {
+          "id": "R5",
+          "width": 199
+        }
+      ],
       "textOutside": [],
       "mathOverflow": [],
       "distorted": 0

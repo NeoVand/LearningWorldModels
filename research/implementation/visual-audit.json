@@ -18,6 +18,38 @@
         {
           "color": "rgb(41, 54, 75)",
           "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
         }
       ],
       "katexErrors": 0
@@ -29,6 +61,38 @@
       "mathOverflow": [],
       "badText": [],
       "code": [
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
         {
           "color": "rgb(233, 237, 245)",
           "background": "rgb(29, 35, 46)"
@@ -62,6 +126,38 @@
         {
           "color": "rgb(41, 54, 75)",
           "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
+        },
+        {
+          "color": "rgb(41, 54, 75)",
+          "background": "rgb(251, 252, 255)"
         }
       ],
       "katexErrors": 0
@@ -84,13 +180,45 @@
         {
           "color": "rgb(233, 237, 245)",
           "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
+        },
+        {
+          "color": "rgb(233, 237, 245)",
+          "background": "rgb(29, 35, 46)"
         }
       ],
       "katexErrors": 0
     }
   ],
   "states": {
-    "count": 200,
+    "count": 186,
     "failures": []
   },
   "errors": []

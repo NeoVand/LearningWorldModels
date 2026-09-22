@@ -1,7 +1,7 @@
 {
   "initialStep": 0,
-  "paused": 74,
-  "resumed": 79,
+  "paused": 66,
+  "resumed": 71,
   "forecastsRemainAtStep": 0,
   "trace": [
     {
@@ -32,7 +32,7 @@
     }
   ],
   "choiceStates": {
-    "count": 88,
+    "count": 98,
     "failures": []
   },
   "layout": [
@@ -56,10 +56,50 @@
           "text": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
           "bg": "rgb(251, 252, 255)",
           "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "B × T × 3 × 224 × 224",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "B × T × 257 × 192",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "B × T × d",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "B × N × d",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "T × B × d",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "T × B × 1,024",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "T × B × 1,024 × 17",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
+        },
+        {
+          "text": "scalar loss",
+          "bg": "rgb(251, 252, 255)",
+          "color": "rgb(41, 54, 75)"
         }
       ],
-      "mathFragments": 1741,
-      "coloredFragments": 827,
+      "mathFragments": 1771,
+      "coloredFragments": 260,
       "distortedCircles": 0
     },
     {
@@ -82,10 +122,50 @@
           "text": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
           "bg": "rgb(29, 35, 46)",
           "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "B × T × 3 × 224 × 224",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "B × T × 257 × 192",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "B × T × d",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "B × N × d",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "T × B × d",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "T × B × 1,024",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "T × B × 1,024 × 17",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
+        },
+        {
+          "text": "scalar loss",
+          "bg": "rgb(29, 35, 46)",
+          "color": "rgb(233, 237, 245)"
         }
       ],
-      "mathFragments": 1741,
-      "coloredFragments": 827,
+      "mathFragments": 1771,
+      "coloredFragments": 260,
       "distortedCircles": 0
     }
   ],
