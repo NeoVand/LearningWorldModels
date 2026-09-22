@@ -1,12 +1,14 @@
-# Before the move
+# World models, from first principles
 
-<p class="lead">To act intelligently, we need some idea of what our actions will change. We will build that idea into a model you can understand, train, and question.</p>
+<p class="course-kicker">A complete learning path · mathematics, neural networks, prediction and action</p>
 
-<!-- VISUAL: O1 -->
+<p class="lead">How can a machine learn what will happen next—and use that knowledge to decide what to do? This course builds the answer from basic mathematics to Yann LeCun’s joint-embedding predictive architecture, or JEPA, and the research paper <em>LeWorldModel</em>.</p>
 
-A cup rests near the edge of a table. You move it inward because you expect something different to happen if you leave it there. You do not need an exact movie of the future. You need a description that preserves the distinctions relevant to the decision: where the cup is, what supports it, and what your hand can change.
+<div class="course-promise"><div><strong>Start with</strong><p>Basic algebra, a first encounter with vectors and probability, and the idea of a derivative. No deep-learning background is needed.</p></div><div><strong>Build the missing tools</strong><p>Embeddings, covariance, gradients, neurons, regularization, normality tests, characteristic functions and attention—each introduced before we need it.</p></div><div><strong>Finish by doing</strong><p>Derive SIGReg, train a small world model in your browser, plan through its predictions, and read LeWorldModel’s equations and experiments critically.</p></div></div>
 
-A **world model** is a learned model of some aspect of how an environment changes. In this book, it learns from images and actions, predicts changes in an internal description, and helps choose what to do next. Our destination is [LeWorldModel, version 1](https://arxiv.org/pdf/2603.19312v1). We will reach its equations after constructing the ideas they compress.
+A **world model** learns some aspect of how an environment changes. Here, a camera observes a robotic arm; a neural network turns its images into a compact description; another network predicts how that description will change after an action. A planner can then compare possible actions before moving the real arm.
+
+We will build every part of that loop. The course explains the mathematical prerequisites along the way, with worked calculations, derivations and experiments. The browser model is small enough to inspect; the final chapters show how the same ideas lead to the larger system in [LeWorldModel, version 1](https://arxiv.org/pdf/2603.19312v1).
 
 ## One mechanism, three questions
 
@@ -17,6 +19,8 @@ Then ask: **what description should we learn?** Keeping every pixel preserves sh
 Finally ask: **how can predictions choose an action?** We can imagine several commands, compare their predicted consequences with a goal, execute one command, and look again. The observation after an action may correct the model's expectation.
 
 These questions stay with us throughout the book. Every new piece of mathematics will answer one of them, expose a failure, or let us test an answer.
+
+<!-- VISUAL: O1 -->
 
 ## The route through the book
 

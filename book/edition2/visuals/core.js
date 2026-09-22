@@ -100,12 +100,15 @@ export function plot({
   curves.forEach(({ fn, color = "teal", data, area }) => {
     const pts =
       data ??
-      Array.from({ length: 161 }, (_, i) => {
-        let x = xmin + ((xmax - xmin) * i) / 160;
+      Array.from({ length: 401 }, (_, i) => {
+        let x = xmin + ((xmax - xmin) * i) / 400;
         return [x, fn(x)];
       });
-    if (area)
-      s += `<path d="M${X(pts[0][0])} ${Y(0)}${pts.map(([x, y]) => "L" + X(x) + " " + Y(y)).join("")}L${X(pts.at(-1)[0])} ${Y(0)}Z" fill="${role(color)}" opacity=".16"/>`;
+    if (area) {
+      const fillId=clipId+"-area-"+color;
+      s += `<defs><linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${role(color)}" stop-opacity=".4"/><stop offset="1" stop-color="${role(color)}" stop-opacity=".025"/></linearGradient></defs>`;
+      s += `<path d="M${X(pts[0][0])} ${Y(0)}${pts.map(([x, y]) => "L" + X(x) + " " + Y(y)).join("")}L${X(pts.at(-1)[0])} ${Y(0)}Z" fill="url(#${fillId})"/>`;
+    }
     s += path(
       pts.map(([x, y]) => [X(x), Y(y)]),
       color,

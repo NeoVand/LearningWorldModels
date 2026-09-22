@@ -103,21 +103,7 @@ register("O1", {
           s.command + " · simulated consequences, not learned predictions.",
         ),
       ) +
-      row(
-        ...[
-          ["Push", [0.55, -0.45]],
-          ["Reverse", [-0.55, 0.45]],
-          ["Release", [0, 0]],
-        ].map(([name, command]) => {
-          const branch = trajectory(p, command, 90);
-          return panel(
-            name,
-            mechanism(branch[90], ghost(p, "muted")),
-            "Same current state; pose after 90 simulated frames.",
-          );
-        }),
-      ) +
-      `<div class="camera-inset">${svg(camera, "Actual 16 by 16 sensor image")}<p>The actual camera image. The trainable encoder later receives 32 × 32 pixels.</p></div>`
+      `<div class="camera-inset">${svg(`<g class="sensor-image">${camera}</g>`, "Actual 16 by 16 sensor image")}<p>The actual camera image. The trainable encoder later receives 32 × 32 pixels.</p></div>`
     );
   },
   caption:

@@ -50,6 +50,9 @@ const scoped = {
 export function semanticLatex(source, chapter = "") {
   if (source.includes("\\htmlClass") || source.includes("\\textcolor"))
     return source;
+  // Legacy declarations occur in older diagram formulas. Normalize them before
+  // semantic token coloring so a letter inside “momentum” is never a variable.
+  source = source.replace(/\\rm\s+([A-Za-z][A-Za-z -]*)/g, (_, word) => "\\mathrm{" + word.trim() + "}");
   const saved = [];
   let s = source.replace(
     /\\(?:text|operatorname|mathrm|mathsf|begin|end)\*?\{[^{}]*\}/g,

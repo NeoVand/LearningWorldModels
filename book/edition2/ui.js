@@ -510,6 +510,7 @@ function comparisonView(r) {
       )}</tbody></table></div><p class="lab-note">${r.complete ? "Matched update counts." : "Comparison paused early: update counts differ."} Training data and parameter initialization are matched; resulting latent coordinate systems differ.</p>`;
 }
 function sensor(canvas, values) {
+  canvas.classList.add("sensor-image");
   values =
     Array.isArray(values) || ArrayBuffer.isView(values)
       ? values

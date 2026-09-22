@@ -2,7 +2,7 @@ import { experiment } from "./normality.js";
 // Deterministic mathematical desks. These do not train or simulate learned weights.
 import { palette } from "./palette.js";
 function desk(id,inputId,render){const canvas=document.getElementById(id),input=document.getElementById(inputId);if(!canvas||!input)return;
- function draw(){const width=canvas.clientWidth||600,height=Math.max(220,Math.min(340,width*.55)),dpr=devicePixelRatio||1;canvas.style.height=height+'px';canvas.width=width*dpr;canvas.height=height*dpr;const c=canvas.getContext('2d');c.scale(dpr,dpr);c.font='12px "DM Sans", sans-serif';render(c,width,height,Number(input.value));}
+ function draw(){const width=canvas.clientWidth||600,height=id==='uncertainty-canvas'?150:Math.max(180,Math.min(250,width*.4)),dpr=devicePixelRatio||1;canvas.style.height=height+'px';canvas.width=width*dpr;canvas.height=height*dpr;const c=canvas.getContext('2d');c.scale(dpr,dpr);c.font='12px "DM Sans", sans-serif';render(c,width,height,Number(input.value));}
  addEventListener('book-theme-change',draw);input.addEventListener('input',draw);new ResizeObserver(draw).observe(canvas);document.fonts.ready.then(draw);draw();}
 function line(c,x,y,X,Y,color=palette.line,width=1){c.beginPath();c.moveTo(x,y);c.lineTo(X,Y);c.strokeStyle=color;c.lineWidth=width;c.stroke();}
 function point(c,x,y,color,r=4){c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fillStyle=color;c.fill();}

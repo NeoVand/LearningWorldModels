@@ -487,3 +487,21 @@
 .teaching-visual {
   scroll-margin-top: 90px;
 }
+
+/* Reader revision: less furniture, more room for the actual comparison. */
+.course-kicker{font:500 .72rem/1.6 "DM Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:1rem 0}
+.course-promise{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin:2rem 0 2.5rem;padding:1.4rem 0;border-block:1px solid var(--line)}
+.course-promise strong{font:500 .78rem "DM Sans",sans-serif;color:var(--teal)}
+.course-promise p{font:400 .86rem/1.65 "DM Sans",sans-serif;margin:.6rem 0 0;color:var(--muted)}
+.teaching-visual{margin:2.1rem 0;padding:1.15rem 0}
+.visual-panel>svg{max-height:280px}
+.visual-question{margin:.4rem 0 .9rem}
+.visual-controls{gap:.75rem 1.25rem;padding:.8rem 0 .25rem}
+#uncertainty-lab{padding:1.25rem 1.4rem;margin:2rem 0}
+#uncertainty-lab .lab-head p{margin:.5rem 0}
+#uncertainty-lab .controls{margin:.75rem 0}
+#uncertainty-lab canvas{height:150px!important;max-height:150px}
+#uncertainty-lab .readout{margin:.6rem 0 0;font-size:.85rem}
+[data-theme="dark"] .sensor-image{filter:invert(1)}
+@media(max-width:620px){.course-promise{grid-template-columns:1fr;gap:1.1rem}.course-promise p{margin-top:.3rem}.visual-panel>svg{max-height:250px}}
+@media print{.course-promise{gap:1rem}.sensor-image{filter:none!important}}
