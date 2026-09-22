@@ -15,7 +15,19 @@ import {
 } from "./core.js";
 import { armDrawing, armGeometry } from "../../../tools/arm-plates.mjs";
 import { stepArm, armPoints } from "../../world/simulator.ts";
-import { renderSensor } from "../../world/sensor.ts";
+import { renderSensor, SENSOR_SIZE } from "../../world/sensor.ts";
+// Draw the native sensor samples; omit white background pixels to keep animation light.
+function cameraImage(pixels) {
+  return (
+    `<g class="sensor-image"><rect width="${SENSOR_SIZE}" height="${SENSOR_SIZE}" fill="white"/>` +
+    Array.from(pixels, (v, i) =>
+      v >= 1
+        ? ""
+        : `<rect x="${i % SENSOR_SIZE}" y="${Math.floor(i / SENSOR_SIZE)}" width="1" height="1" fill="rgb(${Math.round(v * 255)},${Math.round(v * 255)},${Math.round(v * 255)})"/>`,
+    ).join("") +
+    "</g>"
+  );
+}
 const initial = { q1: -1.9, q2: 1.45, v1: 0.45, v2: -0.55 };
 export function trajectory(start, action, steps = 240) {
   let p = { ...start };
@@ -57,7 +69,7 @@ register("O1", {
   animate: true,
   draw(s) {
     const p = histories[0][Math.round(s.time)],
-      pixels = renderSensor(p, 16),
+      pixels = renderSensor(p),
       vals = [
         Math.sin(p.q1),
         Math.cos(p.q1),
@@ -68,11 +80,7 @@ register("O1", {
         Math.tanh(p.v1),
         Math.tanh(p.v2),
       ];
-    let camera = "";
-    pixels.forEach(
-      (v, i) =>
-        (camera += `<rect x="${124 + (i % 16) * 7}" y="${82 + Math.floor(i / 16) * 7}" width="7" height="7" fill="rgb(${v * 255},${v * 255},${v * 255})"/>`),
-    );
+    const camera = cameraImage(pixels);
     let bars = vals
       .map(
         (v, i) =>
@@ -103,7 +111,7 @@ register("O1", {
           s.command + " · simulated consequences, not learned predictions.",
         ),
       ) +
-      `<div class="camera-inset">${svg(`<g class="sensor-image">${camera}</g>`, "Actual 16 by 16 sensor image")}<p>The actual camera image. The trainable encoder later receives 32 × 32 pixels.</p></div>`
+      `<div class="camera-inset">${svg(camera, `Actual ${SENSOR_SIZE} by ${SENSOR_SIZE} sensor image`, SENSOR_SIZE, SENSOR_SIZE)}<p>The actual ${SENSOR_SIZE} × ${SENSOR_SIZE} camera image—the same resolution used by the trainable encoder.</p></div>`
     );
   },
   caption:

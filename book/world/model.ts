@@ -1,5 +1,6 @@
 /** A small joint-embedding world model. No simulator or state labels enter this module. */
 import { numpy as np, nn, tree } from '@jax-js/jax';
+import { SENSOR_SIZE } from './sensor';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type Tensor = any;
@@ -14,7 +15,7 @@ export interface WorldConfig {
 }
 
 export const WORLD_CONFIG: WorldConfig = {
-	resolution: 32,
+	resolution: SENSOR_SIZE,
 	hidden: 128,
 	latent: 8,
 	predictorHidden: 128,

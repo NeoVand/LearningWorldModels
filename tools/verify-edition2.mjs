@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { writeExperiment } from "./write-experiment.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import * as math from "../book/edition2/numerics.js";
@@ -114,10 +115,16 @@ if (process.env.BOOK_TRAINING_CHECK !== "0") {
   for (const seed of [17, 41, 73]) {
     const result = await page.evaluate(async (seed) => {
       const { info, backend } = await WorldWorkshop.init({ seed });
+      if (info.config.resolution !== 64 || info.parameters !== 545680)
+        throw Error("Expected the full 64 × 64 training model");
       const untrained = WorldWorkshop.snapshot().evaluation;
       const learned = await WorldWorkshop.train(5000);
       let comparison = null;
-      if (seed === 17) comparison = await WorldWorkshop.compare();
+      if (seed === 17) {
+        comparison = await WorldWorkshop.compare();
+        await WorldWorkshop.forecasts();
+      }
+      const printRecord = seed === 17 ? WorldWorkshop.snapshot() : null;
       const controls = [];
       for (const goal of [0, 1, 2, 3]) {
         document.querySelector("#world-goal").value = String(goal);
@@ -145,6 +152,8 @@ if (process.env.BOOK_TRAINING_CHECK !== "0") {
         seed,
         backend,
         parameters: info.parameters,
+        config: info.config,
+        printRecord,
         untrained: trim(untrained),
         learned: trim(learned.evaluation),
         training: learned.metrics,
@@ -164,6 +173,13 @@ if (process.env.BOOK_TRAINING_CHECK !== "0") {
     assert.ok(result.learned.spread > 0.5);
     if (result.comparison)
       assert.ok(result.comparison.unregularized.spread < 0.001);
+    if (result.printRecord) {
+      writeExperiment(
+        path.join(root, "research/edition2/first-training-run.json"),
+        result.printRecord,
+      );
+      delete result.printRecord;
+    }
     trials.push(result);
     console.log(
       JSON.stringify({
@@ -224,7 +240,12 @@ const report = {
   remote,
 };
 fs.writeFileSync(
-  path.join(root, process.env.BOOK_TRAINING_CHECK === "0" ? "research/edition2/visual-verification.json" : "research/edition2/verification.json"),
+  path.join(
+    root,
+    process.env.BOOK_TRAINING_CHECK === "0"
+      ? "research/edition2/visual-verification.json"
+      : "research/edition2/verification.json",
+  ),
   JSON.stringify(report, null, 2),
 );
 await browser.close();

@@ -2,7 +2,7 @@
 
 <p class="lead">A small prediction error can mean “I have learned the dynamics.” It can also mean “I have stopped distinguishing anything.” Here you can watch the difference develop.</p>
 
-This laboratory trains a visual encoder and an action-conditioned predictor from random weights. It adapts the numerical core developed for Jaxverse. The camera sees 32 × 32 grayscale pixels. The encoder produces eight coordinates. The model has 152,464 adjustable parameters. No pretrained representation is downloaded.
+This laboratory trains a visual encoder and an action-conditioned predictor from random weights. It adapts the numerical core developed for Jaxverse. The camera sees 64 × 64 grayscale pixels. The encoder produces eight coordinates. The model has 545,680 adjustable parameters. No pretrained representation is downloaded.
 
 The physical environment is a simulated two-link mechanism. The simulator supplies camera frames and the outcomes of actions. During model training, its joint angles and velocities are not targets. The learning signals are next-embedding prediction and SIGReg. Labels are used only for explicitly described evaluation and for a separate visualization readout.
 
@@ -50,7 +50,7 @@ The planner receives two camera images, the previous action, and a goal image. I
 <h3>Imagine, act, observe again</h3>
 <p class="instruction">Prepare a model above. You can try the untrained controller, then repeat after learning. The goal is a camera image; the planner does not receive joint-angle error.</p>
 <div class="controls"><label>Goal <select id="world-goal"><option value="0">A · local reach</option><option value="1">B · local turn</option><option value="2">C · local curl</option><option value="3">D · distant stress test</option></select></label><button id="world-control-reset" disabled>Reset mechanism</button><button id="world-control" disabled>Run 40 actions</button></div>
-<div class="sensor-pair"><div><canvas id="world-current" width="32" height="32" aria-label="Actual camera image supplied to the model"></canvas><div class="plot-label">Current camera · 32 × 32</div></div><div><canvas id="world-goal-image" width="32" height="32" aria-label="Goal camera image"></canvas><div class="plot-label">Goal camera · 32 × 32</div></div></div>
+<div class="sensor-pair"><div><canvas id="world-current" width="64" height="64" aria-label="Actual camera image supplied to the model"></canvas><div class="plot-label">Current camera · 64 × 64</div></div><div><canvas id="world-goal-image" width="64" height="64" aria-label="Goal camera image"></canvas><div class="plot-label">Goal camera · 64 × 64</div></div></div>
 <svg id="world-control-plot" class="control-instrument" viewBox="0 0 720 360" role="img" aria-label="Actual arm, goal arm, and imagined future poses"></svg>
 <output id="world-control-output">Train a model above or inspect the untrained controller first.</output>
 <p class="lab-note">Blue: actual physical pose. Amber dashed: goal. Teal translucent: imagined poses drawn by a separately fitted diagnostic readout. The readout uses state labels to draw predictions but never scores candidate actions. Its error contributes to discrepancies in the drawing.</p>
@@ -70,7 +70,7 @@ $$\begin{aligned}\loss&=\frac{1}{Bd}\sum_{b=1}^B\sum_{j=1}^d(\pred_{b,j}-\lat_{b
 
 The coefficient is specific to these reductions and this small experiment. Multiplying one term by the batch size or feature count would change the tradeoff. The target embeddings receive gradients as well as the predicted embeddings.
 
-The encoder is a 1,024 → 128 → 8 multilayer perceptron. The predictor is a 20 → 128 → 128 → 8 multilayer perceptron with a residual output. The 20 inputs are two eight-coordinate embeddings and two two-coordinate actions: $8+8+2+2=20$. GELU activations supply nonlinearity; a stack of affine maps without nonlinearities would still be one affine map.
+The encoder is a 4,096 → 128 → 8 multilayer perceptron. The predictor is a 20 → 128 → 128 → 8 multilayer perceptron with a residual output. The 20 inputs are two eight-coordinate embeddings and two two-coordinate actions: $8+8+2+2=20$. GELU activations supply nonlinearity; a stack of affine maps without nonlinearities would still be one affine map.
 
 Adam uses a learning rate of 0.001, moment coefficients 0.9 and 0.99, and a global gradient-norm cap of 5. These settings specify the experiment. Keeping them visible makes a comparison reproducible and shows which choices are held fixed.
 
@@ -96,15 +96,15 @@ Declare the evaluation before comparing models. “Ever within a tolerance,” �
 
 ## Research correspondence
 
-A reference evaluation used seeds 17, 41, and 73, each with 5,000 updates, the same three local goals, and one distant stress goal. Here are the measurements from this machine’s WebGPU backend, not promises about a new run:
+A 64 × 64 reference evaluation used seeds 17, 41, and 73, each with 5,000 updates, the same three local goals, and one distant stress goal. Here are the measurements from this machine’s WebGPU backend, not promises about a new run:
 
 | Seed | Prediction / persistence | Embedding spread | Local goals reached at least once | Local goals within tolerance at final observation |
 |---|---:|---:|---:|---:|
-| 17 | 0.116 | 0.903 | 3 / 3 | 3 / 3 |
-| 41 | 0.106 | 0.935 | 3 / 3 | 2 / 3 |
-| 73 | 0.119 | 0.845 | 3 / 3 | 2 / 3 |
+| 17 | 0.100 | 0.933 | 2 / 3 | 0 / 3 |
+| 41 | 0.094 | 0.947 | 3 / 3 | 2 / 3 |
+| 73 | 0.139 | 0.837 | 3 / 3 | 1 / 3 |
 
-Tolerance was a circular joint RMS error of 0.15 radians over 40 executed actions. All three distant-goal trials failed that criterion. Nine local trials and three stress trials are a diagnostic suite, not a population success-rate estimate. The raw trajectories and configuration are retained with the book’s verification record. The first seed’s matched prediction-only model reached mean embedding standard deviation approximately $3.84\times10^{-5}$, compared with $0.903$ for the regularized model; its smaller prediction loss came with near-complete collapse.
+Tolerance was a circular joint RMS error of 0.15 radians over 40 executed actions. All three distant-goal trials failed that criterion. Eight of nine local trials reached tolerance at least once, but only three finished within tolerance. The trajectories show why a good one-step prediction score does not guarantee stable control. Nine local trials and three stress trials are a diagnostic suite, not a population success-rate estimate. The raw trajectories and configuration are retained with the book’s verification record. The first seed’s matched prediction-only model reached mean embedding standard deviation approximately $2.68\times10^{-5}$, compared with $0.933$ for the regularized model; its smaller prediction loss came with near-complete collapse.
 
 This is a small educational model with the same prediction-plus-SIGReg structure. It is not a reproduction of LeWorldModel’s architecture, scale, or benchmark results. The paper uses a vision-transformer encoder and an action-conditioned transformer predictor. The transformer chapter explains those components, and the guided paper chapter maps their exact research configuration to the published method.
 

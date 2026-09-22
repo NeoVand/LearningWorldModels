@@ -19,14 +19,10 @@ const recorded = JSON.parse(
     "utf8",
   ),
 );
-const continuous = JSON.parse(
-  fs.readFileSync(
-    path.join(root, "research/implementation/continuous-training.json"),
-    "utf8",
-  ),
-);
-recorded.forecasts = continuous.forecasts;
-recorded.forecastStep = continuous.resumed.evaluation.step;
+if (recorded.info.config.resolution !== 64 || !recorded.forecasts?.length)
+  throw Error(
+    "Print requires a trained 64 × 64 snapshot with matching forecasts.",
+  );
 await page.evaluate(
   (record) => window.WorldWorkshop.renderPrintSnapshot(record),
   recorded,

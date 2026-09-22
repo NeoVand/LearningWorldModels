@@ -17,7 +17,7 @@ import {
   takeaway,
   results,
 } from "./core.js";
-import { renderSensor } from "../../world/sensor.ts";
+import { renderSensor, SENSOR_SIZE } from "../../world/sensor.ts";
 import { recorded } from "./recorded.js";
 const eq = (s) => `<div class="visual-equation">${tex(s, true)}</div>`;
 const cards = (items) =>
@@ -38,35 +38,47 @@ register("V1", {
     "A patch is flattened before projection. Its position is then supplied separately.",
   controls: [range("patch", "Selected patch", 0, 15, 1, 5)],
   draw(s) {
-    const img = renderSensor({ q1: -1.4, q2: 1.6 }, 16);
-    let g = "";
+    const img = renderSensor({ q1: -1.4, q2: 1.6 });
+    const patchSide = SENSOR_SIZE / 4,
+      pixelWidth = 224 / SENSOR_SIZE;
+    let g = `<rect x="70" y="25" width="224" height="224" fill="white"/>`;
     img.forEach(
       (v, i) =>
-        (g += `<rect x="${70 + (i % 16) * 14}" y="${25 + Math.floor(i / 16) * 14}" width="14" height="14" fill="rgb(${v * 255},${v * 255},${v * 255})"/>`),
+        (g +=
+          v >= 1
+            ? ""
+            : `<rect x="${70 + (i % SENSOR_SIZE) * pixelWidth}" y="${25 + Math.floor(i / SENSOR_SIZE) * pixelWidth}" width="${pixelWidth}" height="${pixelWidth}" fill="rgb(${v * 255},${v * 255},${v * 255})"/>`),
     );
     g = `<g class="sensor-image">${g}</g>`;
     g += `<rect x="${70 + (s.patch % 4) * 56}" y="${25 + Math.floor(s.patch / 4) * 56}" width="56" height="56" fill="none" stroke="var(--amber)" stroke-width="3"/>`;
     const values = Array.from(
-      { length: 16 },
+      { length: patchSide ** 2 },
       (_, i) =>
         img[
-          (Math.floor(s.patch / 4) * 4 + Math.floor(i / 4)) * 16 +
-            (s.patch % 4) * 4 +
-            (i % 4)
+          (Math.floor(s.patch / 4) * patchSide + Math.floor(i / patchSide)) *
+            SENSOR_SIZE +
+            (s.patch % 4) * patchSide +
+            (i % patchSide)
         ],
     );
     return row(
       panel(
-        "Teaching image: 16 × 16",
-        svg(g, "Actual sensor image with one selected four by four patch"),
-        "Sixteen grayscale patches, each containing sixteen intensities. Selected values in row-major order: " +
-          values.map((v) => f(v, 1)).join(", ") +
-          ". A toy projection takes their mean: " +
-          f(values.reduce((a, b) => a + b) / 16, 3) +
+        `Teaching image: ${SENSOR_SIZE} × ${SENSOR_SIZE}`,
+        svg(
+          g,
+          "Actual sensor image with one selected sixteen by sixteen patch",
+        ),
+        "Sixteen grayscale patches, each containing 256 intensities. First row of the selected patch: " +
+          values
+            .slice(0, patchSide)
+            .map((v) => f(v, 1))
+            .join(", ") +
+          ". A toy projection takes the mean of all 256 patch values: " +
+          f(values.reduce((a, b) => a + b) / values.length, 3) +
           ". Adding the illustrative position " +
           s.patch +
           "/16 gives " +
-          f(values.reduce((a, b) => a + b) / 16 + s.patch / 16, 3) +
+          f(values.reduce((a, b) => a + b) / values.length + s.patch / 16, 3) +
           ".",
       ),
       panel(
@@ -498,7 +510,7 @@ register("L6", {
     );
   },
   caption:
-    "Historical WebGPU measurements: 5,000 updates per seed, 40 executed actions per goal, circular joint RMS threshold 0.15 rad. Source: research/edition2/verification.json. These plots do not update when you train a new live model.",
+    "Recorded 64 × 64 WebGPU measurements: 5,000 updates per seed, 40 executed actions per goal, circular joint RMS threshold 0.15 rad. Source: research/edition2/verification.json. These plots do not update when you train a new live model.",
 });
 register("K1", {
   title: "Label the information boundary yourself",
@@ -566,7 +578,6 @@ register("X1", {
         "Analytical tools",
         tex("\\uvec,\\quad\\freq,\\quad\\cf") + " · muted local palette",
       ],
-
     ]),
   caption:
     "Operators, dimensions, indices and unassigned mathematical parameters remain neutral. Color supplements the defined symbols and labels; it never replaces them.",

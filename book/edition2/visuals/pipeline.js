@@ -38,7 +38,7 @@ register("I1", {
         cards([
           [
             "Camera window",
-            tex("[3,B,1024]") + "<br>time × batch × flattened pixels",
+            tex("[3,B,4096]") + "<br>time × batch × flattened pixels",
           ],
           ["Shared encoder", tex("[3,B,8]") + "<br>time × batch × coordinates"],
           ["Selected slice", tex(`Z_{${s.time}}\\in\\mathbb R^{B\\times8}`)],

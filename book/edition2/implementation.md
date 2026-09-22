@@ -4,7 +4,7 @@
 
 ## Define the experiment before writing the loss
 
-Our browser experiment learns from a two-link mechanism observed through a $32\times32$ grayscale camera. At each step the simulator updates joint motion under a two-coordinate action and renders an image. The encoder receives the 1,024 pixel values, not the simulator’s joint angles. The predictor receives embeddings and actions, not a privileged physical state.
+Our browser experiment learns from a two-link mechanism observed through a $64\times64$ grayscale camera. At each step the simulator updates joint motion under a two-coordinate action and renders an image. The encoder receives the 4,096 pixel values, not the simulator’s joint angles. The predictor receives embeddings and actions, not a privileged physical state.
 
 The simulator is necessary to generate consequences. It must not be confused with the learned world model. During planning, candidate futures are evaluated by the learned predictor. The real simulator is stepped only to execute the selected action and measure what actually happens. A hidden call to the simulator inside candidate scoring would answer a much easier question.
 
@@ -14,7 +14,7 @@ A training example contains three consecutive selected observations and two alig
 
 | Quantity | Shape | Meaning |
 |---|---|---|
-| Camera windows | $B\times3\times1024$ | Three flattened grayscale frames per example |
+| Camera windows | $B\times3\times4096$ | Three flattened grayscale frames per example |
 | Action windows | $B\times2\times2$ | Two transitions, each with two action coordinates |
 | Encoded windows | $B\times3\times8$ | Eight learned coordinates per frame |
 | Predictor input | $B\times20$ | Two embeddings plus two actions |
@@ -23,9 +23,9 @@ A training example contains three consecutive selected observations and two alig
 
 The predictor’s input width is $8+8+2+2=20$. The action values are normalized controls in $[-1,1]$; the simulator maps these to its chosen physical torque scale. Units and normalization belong in a reproducible configuration.
 
-The encoder is a multilayer perceptron (MLP) with widths 1,024 → 128 → 8. The predictor is an MLP with widths 20 → 128 → 128 → 8 and a residual output. GELU supplies the nonlinearities. For a dense layer from width $m$ to width $n$, there are $mn$ weights and $n$ biases because each output uses one weight per input and one offset.
+The encoder is a multilayer perceptron (MLP) with widths 4,096 → 128 → 8. The predictor is an MLP with widths 20 → 128 → 128 → 8 and a residual output. GELU supplies the nonlinearities. For a dense layer from width $m$ to width $n$, there are $mn$ weights and $n$ biases because each output uses one weight per input and one offset.
 
-The encoder therefore has $(1024\cdot128+128)+(128\cdot8+8)=132{,}232$ parameters. The predictor has $(20\cdot128+128)+(128\cdot128+128)+(128\cdot8+8)=20{,}232$. Their sum is 152,464. The small model is intentionally simpler than the paper’s transformer so we can inspect the entire learning loop.
+The encoder therefore has $(4096\cdot128+128)+(128\cdot8+8)=525{,}448$ parameters. The predictor has $(20\cdot128+128)+(128\cdot128+128)+(128\cdot8+8)=20{,}232$. Their sum is 545,680. The small model is intentionally simpler than the paper’s transformer so we can inspect the entire learning loop.
 
 <!-- VISUAL: I1 -->
 

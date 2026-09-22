@@ -9,3 +9,5 @@ They implement the actual image encoder, predictor, SIGReg, Adam updates, observ
 The dependency `@jax-js/jax` is pinned to 0.1.18 and its MIT license is embedded in the delivered HTML. Numerical source fingerprints are recorded in the edition's verification/provenance files.
 
 The planner receives encoded camera history, actions, and a goal image. Simulator labels score physical outcomes and fit a separate visualization readout; they do not choose actions. The current experimental export stores measurements, not neural weights or optimizer state.
+
+The book uses 64 × 64 observations throughout collection, training, inference, and camera previews. The dense encoder has 4,096 inputs and 525,448 parameters; the complete model has 545,680. Resolution is configurable and retained by reset and the matched baseline. The displayed grayscale raster is the exact model input; the dark-theme display filter does not alter training pixels.

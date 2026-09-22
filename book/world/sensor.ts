@@ -1,6 +1,6 @@
 import { armPoints, type ArmState, type Point } from './simulator.ts';
 
-export const SENSOR_SIZE = 32;
+export const SENSOR_SIZE = 64;
 export const SENSOR_PIXELS = SENSOR_SIZE * SENSOR_SIZE;
 export const SENSOR_EXTENT = 1;
 

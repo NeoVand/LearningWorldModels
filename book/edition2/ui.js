@@ -528,6 +528,9 @@ function sensor(canvas, values) {
     image.data[4 * i + 3] = 255;
   });
   c.putImageData(image, 0, 0);
+  const label = canvas.parentElement.querySelector(".plot-label");
+  if (label)
+    label.textContent = `${canvas.id === "world-current" ? "Current" : "Goal"} camera · ${r} × ${r}`;
 }
 function drawScene() {
   if (!scene) return;
