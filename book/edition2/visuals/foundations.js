@@ -390,7 +390,7 @@ register("B2", {
                     ),
                 )
                 .join("") +
-              `<path d="M180 190L165 250H195Z" fill="var(--teal)"/>`,
+              `<path class="mean-marker" d="M180 192L174 202H186Z" fill="var(--teal)"/>`,
             "Symmetric probability weights balanced at zero",
           ),
         ),
