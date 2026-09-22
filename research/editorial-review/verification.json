@@ -1,0 +1,302 @@
+{
+  "layouts": [
+    {
+      "width": 375,
+      "theme": "light",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 800,
+      "theme": "light",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 800,
+      "theme": "dark",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "overflow": [],
+      "brokenLinks": [],
+      "images": 0,
+      "outcomes": 20,
+      "mathErrors": 0,
+      "pageOverflow": false
+    }
+  ],
+  "contrast": [
+    {
+      "theme": "light",
+      "name": "blue",
+      "bg": "paper",
+      "ratio": 5.2485929979664485
+    },
+    {
+      "theme": "light",
+      "name": "blue",
+      "bg": "surface",
+      "ratio": 5.840425277921779
+    },
+    {
+      "theme": "light",
+      "name": "violet",
+      "bg": "paper",
+      "ratio": 5.320184806138856
+    },
+    {
+      "theme": "light",
+      "name": "violet",
+      "bg": "surface",
+      "ratio": 5.9200897911168875
+    },
+    {
+      "theme": "light",
+      "name": "teal",
+      "bg": "paper",
+      "ratio": 5.244360438761911
+    },
+    {
+      "theme": "light",
+      "name": "teal",
+      "bg": "surface",
+      "ratio": 5.835715454588542
+    },
+    {
+      "theme": "light",
+      "name": "amber",
+      "bg": "paper",
+      "ratio": 5.298422780206133
+    },
+    {
+      "theme": "light",
+      "name": "amber",
+      "bg": "surface",
+      "ratio": 5.895873875269439
+    },
+    {
+      "theme": "light",
+      "name": "red",
+      "bg": "paper",
+      "ratio": 5.144959024218719
+    },
+    {
+      "theme": "light",
+      "name": "red",
+      "bg": "surface",
+      "ratio": 5.725105518862117
+    },
+    {
+      "theme": "light",
+      "name": "muted",
+      "bg": "paper",
+      "ratio": 4.671100752038796
+    },
+    {
+      "theme": "light",
+      "name": "muted",
+      "bg": "surface",
+      "ratio": 5.1978149036316665
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-one",
+      "bg": "paper",
+      "ratio": 5.698776800253383
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-one",
+      "bg": "surface",
+      "ratio": 6.341371885823412
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-two",
+      "bg": "paper",
+      "ratio": 5.242016150718457
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-two",
+      "bg": "surface",
+      "ratio": 5.833106824208358
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-three",
+      "bg": "paper",
+      "ratio": 5.507998491505901
+    },
+    {
+      "theme": "light",
+      "name": "math-aux-three",
+      "bg": "surface",
+      "ratio": 6.129081381050101
+    },
+    {
+      "theme": "dark",
+      "name": "blue",
+      "bg": "paper",
+      "ratio": 10.54539275062816
+    },
+    {
+      "theme": "dark",
+      "name": "blue",
+      "bg": "surface",
+      "ratio": 9.171430163489392
+    },
+    {
+      "theme": "dark",
+      "name": "violet",
+      "bg": "paper",
+      "ratio": 9.602946007682494
+    },
+    {
+      "theme": "dark",
+      "name": "violet",
+      "bg": "surface",
+      "ratio": 8.351775107472694
+    },
+    {
+      "theme": "dark",
+      "name": "teal",
+      "bg": "paper",
+      "ratio": 9.58151007641795
+    },
+    {
+      "theme": "dark",
+      "name": "teal",
+      "bg": "surface",
+      "ratio": 8.333132070534083
+    },
+    {
+      "theme": "dark",
+      "name": "amber",
+      "bg": "paper",
+      "ratio": 9.499044052210726
+    },
+    {
+      "theme": "dark",
+      "name": "amber",
+      "bg": "surface",
+      "ratio": 8.261410570940608
+    },
+    {
+      "theme": "dark",
+      "name": "red",
+      "bg": "paper",
+      "ratio": 8.750288017350762
+    },
+    {
+      "theme": "dark",
+      "name": "red",
+      "bg": "surface",
+      "ratio": 7.61021019883495
+    },
+    {
+      "theme": "dark",
+      "name": "muted",
+      "bg": "paper",
+      "ratio": 8.650284801701662
+    },
+    {
+      "theme": "dark",
+      "name": "muted",
+      "bg": "surface",
+      "ratio": 7.5232364340697195
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-one",
+      "bg": "paper",
+      "ratio": 9.801566566817066
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-one",
+      "bg": "surface",
+      "ratio": 8.524517330566036
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-two",
+      "bg": "paper",
+      "ratio": 9.70320725291607
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-two",
+      "bg": "surface",
+      "ratio": 8.438973283065485
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-three",
+      "bg": "paper",
+      "ratio": 9.474149343684834
+    },
+    {
+      "theme": "dark",
+      "name": "math-aux-three",
+      "bg": "surface",
+      "ratio": 8.23975940193393
+    }
+  ]
+}

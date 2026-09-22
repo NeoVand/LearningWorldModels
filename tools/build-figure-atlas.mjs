@@ -17,11 +17,19 @@ const esc = (s) =>
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll('"', "&quot;");
+const book = fs.readFileSync(
+  new URL("../world-models.html", import.meta.url),
+  "utf8",
+);
 const content = chapters
   .map(
     ([chapter, title]) =>
       `<section><h2>${esc(title)}</h2><div class="grid">${ledger.items
         .filter((i) => i.chapter === chapter)
+        .sort(
+          (a, b) =>
+            book.indexOf(`id="${a.anchor}"`) - book.indexOf(`id="${b.anchor}"`),
+        )
         .map((i) => {
           const spec = registry[i.id];
           return `<a class="card" href="world-models.html#${i.anchor}"><span>${i.id}</span><h3>${esc(spec?.title ?? i.title)}</h3><p>${esc(spec?.question ?? i.brief)}</p></a>`;

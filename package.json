@@ -13,7 +13,8 @@
     "verify:continuous": "node tools/verify-continuous.mjs",
     "audit:visuals": "node tools/audit-visuals.mjs",
     "print": "node tools/print-edition2.mjs",
-    "verify:layout": "node tools/verify-figure-layout.mjs"
+    "verify:layout": "node tools/verify-figure-layout.mjs",
+    "verify:editorial": "node tools/verify-editorial.mjs"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "4.3.2",

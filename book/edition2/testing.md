@@ -82,7 +82,7 @@ SIGReg deliberately wants a standardized target. A cloud centered far from zero 
 
 ## A training penalty is not a hypothesis-test verdict
 
-A hypothesis test asks whether an untouched sample is unusual under a specified null procedure. A training penalty changes the encoder to make its sample outputs less discrepant. The data have now been adaptively chosen by optimization. A small training statistic cannot be interpreted using the untouched-sample p-value story.
+A hypothesis test asks whether an untouched sample is unusual under a specified null procedure. A training penalty changes the encoder to make its sample outputs less discrepant. **Optimization changes the sampling story.** The data have now been adaptively chosen, so a small training statistic cannot be interpreted using the untouched-sample p-value calibration.
 
 With a continuous reference and distinct samples, the sorted formula for $D_n$ is piecewise differentiable. Its maximum often sends a gradient through just one extreme discrepancy, and the active sample can change abruptly. We instead want a smooth aggregate with contributions from all samples. This does not guarantee a nonzero gradient at every configuration. SIGReg will replace this illustrative statistic with characteristic-function measurements, then average their squared deviations. The ideas of finite-sample fluctuation and a fully specified target still apply.
 

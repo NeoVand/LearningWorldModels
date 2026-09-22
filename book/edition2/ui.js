@@ -656,7 +656,7 @@ const api = {
       return r;
     });
   },
-  async control(steps = 20) {
+  async control(steps = 40) {
     return guarded(async () => {
       status(
         "Planning through the learned model; preparing the separate drawing readout…",
@@ -714,8 +714,38 @@ if ($("#world-lab")) {
     ]);
     txt(c, 70, 23, "log₁₀ loss", colors.muted);
     txt(c, 680, 353, "training updates", colors.muted, "right");
-    for (let i = -8; i <= 2; i += 2) {
-      const y = 305 - (i + 8) * 26;
+    const logs = history
+      .flatMap((m) => [m.predictionLoss, m.regularizer * 0.01])
+      .filter((v) => Number.isFinite(v) && v > 0)
+      .map(Math.log10);
+    let low = logs.length ? Math.floor(Math.min(...logs)) : -4;
+    let high = logs.length ? Math.ceil(Math.max(...logs)) : -1;
+    if (high - low < 3) low = high - 3;
+    const Y = (value) => 305 - (240 * (value - low)) / (high - low);
+    const superscript = (n) =>
+      String(n).replace(
+        /[-0-9]/g,
+        (c) =>
+          ({
+            "-": "⁻",
+            0: "⁰",
+            1: "¹",
+            2: "²",
+            3: "³",
+            4: "⁴",
+            5: "⁵",
+            6: "⁶",
+            7: "⁷",
+            8: "⁸",
+            9: "⁹",
+          })[c],
+      );
+    for (
+      let i = low;
+      i <= high;
+      i += Math.max(1, Math.ceil((high - low) / 5))
+    ) {
+      const y = Y(i);
       line(
         c,
         [
@@ -724,7 +754,7 @@ if ($("#world-lab")) {
         ],
         colors.line,
       );
-      txt(c, 50, y + 4, `10^${i}`, colors.muted, "right");
+      txt(c, 50, y + 4, `10${superscript(i)}`, colors.muted, "right");
     }
     const max = Math.max(500, ...history.map((m) => m.step));
     for (let i = 0; i <= 4; i++)
@@ -742,13 +772,7 @@ if ($("#world-lab")) {
     ]) {
       const points = history.map((m) => [
         60 + (630 * m.step) / max,
-        305 -
-          26 *
-            (Math.max(
-              -8,
-              Math.min(2, Math.log10(Math.max(1e-12, m[key] * mul))),
-            ) +
-              8),
+        Y(Math.log10(Math.max(1e-12, m[key] * mul))),
       ]);
       line(c, points, color, 2);
       points.forEach((p) => dot(c, p[0], p[1], 3, color));

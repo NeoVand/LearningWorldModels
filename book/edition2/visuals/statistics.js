@@ -17,6 +17,7 @@ import {
   number,
   takeaway,
   results,
+  powerLabel,
 } from "./core.js";
 import { cloud, ecf, ep, closedEP, rng, normal } from "../numerics.js";
 import { cdf, ks, experiment } from "../normality.js";
@@ -452,7 +453,7 @@ register("S5", {
             ymax:
               Math.ceil(Math.log10(Math.max(...convergence.map((p) => p[1])))) +
               0.25,
-            yTickFormat: (y) => (10 ** y).toExponential(0),
+            yTickFormat: powerLabel,
             height: 240,
             ticks: 2,
             curves: [
@@ -475,7 +476,7 @@ register("S5", {
             xlabel: "number of knots",
             ylabel: "grid error · log scale",
           }),
-          "Logarithmic height separates errors that differ by orders of magnitude: 1e−6 means one millionth. Each point uses the same interval; plotted errors are floored at 1e−12.",
+          "Logarithmic height separates errors that differ by orders of magnitude: 10⁻⁶ means one millionth. Each point uses the same interval; plotted errors are floored at 1e−12.",
         ),
       ) +
       results(

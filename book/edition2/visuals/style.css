@@ -1093,3 +1093,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Analytical distinctions are separate from the model's semantic palette. */
+:root { --math-aux-one:#4c6073; --math-aux-two:#73604d; --math-aux-three:#6b5a74; }
+:root[data-theme="dark"] { --math-aux-one:#b0c1cd; --math-aux-two:#d0baa4; --math-aux-three:#c8b5d0; }
+.math-aux-one { color:var(--math-aux-one); }
+.math-aux-two { color:var(--math-aux-two); }
+.math-aux-three { color:var(--math-aux-three); }
+.math-mark { color:var(--ink); background:var(--selection); border-radius:2px; }
+@media print { :root,:root[data-theme="dark"] { --math-aux-one:#4c6073; --math-aux-two:#73604d; --math-aux-three:#6b5a74; } }

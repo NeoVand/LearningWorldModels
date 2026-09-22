@@ -1,0 +1,54 @@
+{
+  "normal": [
+    {
+      "id": "geometry",
+      "ms": 37.5,
+      "shift": 0,
+      "heightChange": 0
+    },
+    {
+      "id": "sigreg",
+      "ms": 23.699999928474426,
+      "shift": 0,
+      "heightChange": 0
+    },
+    {
+      "id": "paper",
+      "ms": 29,
+      "shift": 0,
+      "heightChange": 0
+    },
+    {
+      "id": "opening",
+      "ms": 34.200000047683716,
+      "shift": 0,
+      "heightChange": 0
+    }
+  ],
+  "trial": [
+    {
+      "id": "geometry",
+      "ms": 29.899999976158142,
+      "shift": 0,
+      "heightChange": 0
+    },
+    {
+      "id": "sigreg",
+      "ms": 32.799999952316284,
+      "shift": -86.96875,
+      "heightChange": -3836
+    },
+    {
+      "id": "paper",
+      "ms": 32.5,
+      "shift": -87.015625,
+      "heightChange": -3054
+    },
+    {
+      "id": "opening",
+      "ms": 32.700000047683716,
+      "shift": 0,
+      "heightChange": 0
+    }
+  ]
+}

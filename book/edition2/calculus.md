@@ -16,7 +16,7 @@ A derivative is a local conversion factor, with units of output per unit input. 
 
 For two functions, expand the product difference:
 
-$$(uv)(x+h)-(uv)(x)=u(x+h)[v(x+h)-v(x)]+v(x)[u(x+h)-u(x)].$$
+$$\begin{aligned}&(uv)(x+h)-(uv)(x)\\&\quad=u(x+h)[v(x+h)-v(x)]\\&\qquad+v(x)[u(x+h)-u(x)].\end{aligned}$$
 
 Divide by $h$ and take the limit to obtain $(uv)'=u'v+uv'$. To differentiate $1/v$, differentiate $v(1/v)=1$: its derivative is zero, giving $(1/v)'=-v'/v^2$ when $v\ne0$. Combining these rules proves the quotient rule. We will reuse both for normalized probabilities.
 
@@ -26,7 +26,7 @@ Divide by $h$ and take the limit to obtain $(uv)'=u'v+uv'$. To differentiate $1/
 
 Consider $L(w,b)=(2w+b-5)^2/2$. A **partial derivative** changes one input while holding the others fixed. Write $e=2w+b-5$. If only $w$ changes by $h$, the error becomes $e+2h$, so
 
-$$L(w+h,b)-L(w,b)=\tfrac12[(e+2h)^2-e^2]=2eh+2h^2.$$
+$$\begin{aligned}L(w+h,b)-L(w,b)&=\tfrac12[(e+2h)^2-e^2]\\&=2eh+2h^2.\end{aligned}$$
 
 Dividing by $h$ and taking the limit gives $\partial L/\partial w=2e$. If only $b$ changes, the same expansion gives $\partial L/\partial b=e$.
 
@@ -72,7 +72,7 @@ The Gaussian density, likelihood, and attention weights all use exponentials. Fo
 
 Define $e^u$ as the inverse: $\log(e^u)=u$, with $e^0=1$. Differentiate this identity with the chain rule: $(e^u)'/e^u=1$, so $(e^u)'=e^u$.
 
-Why do logarithms turn products into sums? For fixed $a>0$, differentiate $\log(ab)-\log b$ with respect to $b$. The result is $a/(ab)-1/b=0$, so the difference is constant. At $b=1$ it equals $\log a$. Therefore $\log(ab)=\log a+\log b$, and inversion gives $e^{u+v}=e^ue^v$. In particular, taking the logarithm of a product of positive densities turns it into a sum. Since the logarithm increases, maximizing that sum chooses the same parameters as maximizing the product. Negating it turns maximization into minimization. This will explain the planner's likelihood calculation.
+Why do logarithms turn products into sums? For fixed $a>0$, differentiate $\log(ab)-\log b$ with respect to $b$. The result is $a/(ab)-1/b=0$, so the difference is constant. At $b=1$ it equals $\log a$. Therefore $\log(ab)=\log a+\log b$, and inversion gives $e^{u+v}=e^ue^v$. In particular, taking the logarithm of a product of positive densities turns it into a sum. Since the logarithm increases, maximizing that sum chooses the same parameters as maximizing the product. Negating it turns maximization into minimization. This will explain the planner’s likelihood calculation.
 
 ## A Jacobian is a table of local effects
 
@@ -118,7 +118,7 @@ $$r(1)=r(0)+r'(0)+\int_0^1(1-t)r''(t)\,dt.$$
 
 If the Hessian is continuous near $x$, replace it inside the integral by $H_L(x)$ plus a difference that tends uniformly to zero as $v$ shrinks. Since $\int_0^1(1-t)dt=1/2$, this yields
 
-$$L(x+v)=L(x)+\nabla L(x)^\top v+\tfrac12v^\top H_L(x)v+o(\|v\|^2).$$
+$$\begin{aligned}L(x+v)&=L(x)+\nabla L(x)^\top v\\&\quad+\tfrac12v^\top H_L(x)v+o(\|v\|^2).\end{aligned}$$
 
 The **Laplacian** is just the trace of this Hessian, $\nabla^2 L=\sum_j\partial_j^2L$. Here $\nabla^2 L$ is a scalar sum, while $H_L$ denotes the full Hessian matrix; $\Delta L$ still means a change in loss. For our example the sum is $4+1=5$. Later, averaging small symmetric perturbations will cancel linear terms and expose this sum of curvatures in the Gaussian theory.
 
@@ -130,7 +130,7 @@ Writing $R(h)=O(h^2)$ means there is a fixed finite $C$ such that $|R(h)|\leq C|
 
 For a smooth scalar $f$, Taylor expansion at $x+h$ and $x-h$ gives
 
-$$f(x\pm h)=f(x)\pm hf'(x)+\tfrac12h^2f''(x)+O(h^3).$$
+$$\begin{aligned}f(x\pm h)&=f(x)\pm hf'(x)\\&\quad+\tfrac12h^2f''(x)+O(h^3).\end{aligned}$$
 
 Subtract and divide by $2h$. The even terms cancel, leaving the central difference $[f(x+h)-f(x-h)]/(2h)=f'(x)+O(h^2)$ when third derivatives are bounded nearby. This provides an independent numerical check of a derivative. Extremely tiny steps can lose accuracy because computers subtract rounded, nearly equal numbers.
 
@@ -138,7 +138,7 @@ Subtract and divide by $2h$. The even terms cancel, leaving the central differen
 
 We promised to justify the general covariance decomposition. The new derivative tools let us do it. Let $C$ be any real symmetric matrix and consider $u^\top Cu$ on unit vectors. We want a direction with the greatest value.
 
-First, such a direction exists. The unit sphere is closed and bounded in finite-dimensional Euclidean space. To see why a sequence on it has a convergent subsequence, enclose it in the cube $[-1,1]^d$. Bisect each side and retain a closed subcube containing infinitely many sequence terms. Repeat, choosing a later term at every stage. After $n$ stages the retained cube has diameter $2\sqrt d/2^n$, which tends to zero. The selected coordinates form Cauchy sequences and converge by completeness of the real numbers. Continuity of the norm keeps the limit on the unit sphere. Choose a sequence whose quadratic values approach their supremum. Continuity makes the limit's value equal that supremum. This uses the basic completeness property of real coordinates; it is the finite-dimensional extreme-value argument, not an assumption about the data.
+First, such a direction exists. The unit sphere is closed and bounded in finite-dimensional Euclidean space. To see why a sequence on it has a convergent subsequence, enclose it in the cube $[-1,1]^d$. Bisect each side and retain a closed subcube containing infinitely many sequence terms. Repeat, choosing a later term at every stage. After $n$ stages the retained cube has diameter $2\sqrt d/2^n$, which tends to zero. The selected coordinates form Cauchy sequences and converge by completeness of the real numbers. Continuity of the norm keeps the limit on the unit sphere. Choose a sequence whose quadratic values approach their supremum. Continuity makes the limit’s value equal that supremum. This uses the basic completeness property of real coordinates; it is the finite-dimensional extreme-value argument, not an assumption about the data.
 
 Let $u$ maximize the value and let $v$ be perpendicular to it. To stay on the sphere, move along $u(t)=(u+tv)/\|u+tv\|$. Because $u^\top v=0$, its denominator is $\sqrt{1+t^2\|v\|^2}$, whose derivative at zero is zero. Differentiating $u(t)^\top C u(t)$ at zero gives $2v^\top Cu$. At a maximum this is zero for every such $v$.
 

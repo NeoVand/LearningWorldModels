@@ -40,13 +40,13 @@ This is a structural limit, not a training defect. With $B=32$ and $d=192$, no s
 
 <!-- VISUAL: C2 -->
 
-## Eigenvectors reveal the cloud's principal directions
+## Eigenvectors reveal the cloud’s principal directions
 
 An eigenvector $u$ of a matrix $C$ is a nonzero vector for which $Cu=\lambda u$. The matrix stretches that direction by a scalar $\lambda$ without changing its direction. For a covariance matrix, a unit eigenvector has projected variance $u^\top Cu=\lambda$.
 
 Start with a matrix we can multiply by hand:
 
-$$C=\begin{pmatrix}2&1\\1&2\end{pmatrix},\qquad u=\frac1{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix},\qquad v=\frac1{\sqrt2}\begin{pmatrix}1\\-1\end{pmatrix}.$$
+$$\begin{aligned}&C=\begin{pmatrix}2&1\\1&2\end{pmatrix}, \\ &u=\frac1{\sqrt2}\begin{pmatrix}1\\1\end{pmatrix}, \\ &v=\frac1{\sqrt2}\begin{pmatrix}1\\-1\end{pmatrix}.\end{aligned}$$
 
 Compute $Cu=(3,3)^\top/\sqrt2=3u$ and $Cv=(1,-1)^\top/\sqrt2=v$. Thus the rising diagonal has variance 3 and the falling diagonal variance 1. Check also $u^\top v=0$ and both lengths equal 1: the two measuring directions are perpendicular and normalized.
 
@@ -54,15 +54,15 @@ For any unit direction $w=au+bv$, perpendicularity gives $a^2+b^2=1$. Its varian
 
 Put these two vectors into the columns of a matrix $Q$ and their variances into a diagonal matrix $\Lambda$. Then
 
-$$Q=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\qquad \Lambda=\begin{pmatrix}3&0\\0&1\end{pmatrix},\qquad C=Q\Lambda Q^\top.$$
+$$\begin{aligned}&Q=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}, \\ &\Lambda=\begin{pmatrix}3&0\\0&1\end{pmatrix}, \\ &C=Q\Lambda Q^\top.\end{aligned}$$
 
 Verify the last equality by multiplication. Reading it right to left, $Q^\top$ expresses a vector along the principal directions, $\Lambda$ scales those coordinates, and $Q$ returns to the original coordinates. Here $Q^\top Q=I$, so transpose also undoes the rotation or reflection. A matrix with this property is **orthogonal**.
 
 Why should two distinct eigenvector directions of a symmetric matrix be perpendicular? If $Cu=\lambda u$ and $Cv=\rho v$, then $u^\top Cv=\rho u^\top v$, but symmetry also gives $u^\top Cv=(Cu)^\top v=\lambda u^\top v$. Thus $(\rho-\lambda)u^\top v=0$. If the eigenvalues differ, the dot product must be zero.
 
-For this two-dimensional example, we have explicitly found all the directions we need. The general statement that a symmetric matrix admits a complete perpendicular set is the spectral theorem. We will prove the needed finite-dimensional version after learning directional derivatives in the next chapter on calculus. Until then, the calculations here use the displayed $Q$ that we can check directly.
+For this two-dimensional example, we have explicitly found all the directions we need. The general statement that a symmetric matrix admits a complete perpendicular set is the spectral theorem. We will [prove the finite-dimensional spectral theorem](#calculus-10) after learning directional derivatives. Until then, the calculations here use the displayed $Q$ that we can check directly.
 
-The **trace** is the sum of diagonal entries: here $2+2=4$, also $3+1$. For any decomposition with orthogonal $Q$, expansion gives $\operatorname{tr}(Q\Lambda Q^\top)=\sum_j\lambda_j\sum_iQ_{ij}^2=\sum_j\lambda_j$. Each column's squared entries sum to one. Total variance is unchanged by a perpendicular change of coordinates.
+The **trace** is the sum of diagonal entries: here $2+2=4$, also $3+1$. For any decomposition with orthogonal $Q$, expansion gives $\operatorname{tr}(Q\Lambda Q^\top)=\sum_j\lambda_j\sum_iQ_{ij}^2=\sum_j\lambda_j$. Each column’s squared entries sum to one. Total variance is unchanged by a perpendicular change of coordinates.
 
 <!-- VISUAL: C3 -->
 
@@ -82,7 +82,7 @@ $$\operatorname{Cov}(y)=\Lambda^{-1/2}Q^\top C Q\Lambda^{-1/2}=I.$$
 
 Each equality follows from applying the linear map to both sides of the covariance outer product and using $Q^\top Q=I$. Dividing a principal coordinate by the square root of its variance gives it unit variance. This operation is called whitening. If an eigenvalue is zero, its inverse square root does not exist; one must remove that direction or choose an explicit regularized approximation.
 
-Whitening does not make every distribution Gaussian. Uniform points on a circle of radius $\sqrt2$ in two dimensions have mean zero and covariance $I$: symmetry gives equal coordinate variances, and their sum is the constant squared radius 2. Yet every sample lies exactly on a circle. A two-dimensional Gaussian fills an area and has variable radius. Matching first and second moments cannot distinguish these distributions. This example motivates SIGReg's richer distributional measurements.
+Whitening does not make every distribution Gaussian. Uniform points on a circle of radius $\sqrt2$ in two dimensions have mean zero and covariance $I$: symmetry gives equal coordinate variances, and their sum is the constant squared radius 2. Yet every sample lies exactly on a circle. A two-dimensional Gaussian fills an area and has variable radius. Matching first and second moments cannot distinguish these distributions. This example motivates SIGReg’s richer distributional measurements.
 
 <div class="lab" id="geometry-lab"><div class="lab-head"><span class="eyebrow">Geometry desk</span><h3>Rotate the measuring direction</h3><p>The illustrative cloud approximates a distribution with covariance eigenvalues 3 and 1. Predict that distribution’s projected variance before turning the direction.</p></div><div class="controls"><label>Direction <input id="geometry-angle" type="range" min="0" max="180" value="45" step="1"/></label></div><canvas id="geometry-canvas" aria-label="An equal-scale sample cloud and its projection direction"></canvas><p id="geometry-readout" class="readout"></p><p class="caption">A deterministic illustrative cloud; no neural network is being trained. Equal horizontal and vertical units preserve the geometry.</p></div>
 
@@ -98,7 +98,7 @@ The three outer products sum to $\begin{pmatrix}2&1\\1&2\end{pmatrix}$. Divide b
 
 Now replace each vector by twice itself. Covariance becomes four times larger because both factors in every outer product double. Rank is unchanged. Scale and dimensional collapse are different diagnostics.
 
-Finally map every vector to its first coordinate. The scalar values are $1,0,-1$. These examples remain distinct, but the map would identify $(1,0)$ with $(1,100)$ on a broader dataset. An embedding's adequacy must be assessed on the relevant distribution and tasks, not only on a tiny training list.
+Finally map every vector to its first coordinate. The scalar values are $1,0,-1$. These examples remain distinct, but the map would identify $(1,0)$ with $(1,100)$ on a broader dataset. An embedding’s adequacy must be assessed on the relevant distribution and tasks, not only on a tiny training list.
 
 </details>
 

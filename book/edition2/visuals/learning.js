@@ -209,7 +209,7 @@ register("N5", optimizerSpec);
 register("N6", {
   title: "The fit alone leaves a choice",
   question:
-    "One observation at x = 0 cannot determine the curvature. What does the penalty prefer?",
+    "One observation at x = 1 cannot determine the curvature. What does the penalty prefer?",
   controls: [
     range("curvature", "Curvature c", -2, 2, 0.02, 1),
     range("lambda", "Penalty weight", 0, 2, 0.02, 0.5),
@@ -219,15 +219,15 @@ register("N6", {
       panel(
         "A family through one observation",
         plot({
-          xmin: -2,
-          xmax: 2,
-          ymin: -4,
-          ymax: 5,
+          xmin: -1,
+          xmax: 3,
+          ymin: Math.min(0, 1 + 4 * s.curvature) - 0.2,
+          ymax: Math.max(1, 1 + 4 * s.curvature) + 0.2,
           curves: [
-            { fn: (x) => 1 + s.curvature * x * x, color: "teal" },
+            { fn: (x) => 1 + s.curvature * (x - 1) ** 2, color: "teal" },
             { fn: () => 1, color: "blue" },
           ],
-          points: [[0, 1, "amber", 6]],
+          points: [[1, 1, "amber", 6]],
         }),
       ),
       panel(
@@ -236,7 +236,7 @@ register("N6", {
           xmin: -2,
           xmax: 2,
           ymin: 0,
-          ymax: 8,
+          ymax: Math.max(0.25, 4 * s.lambda * 1.12),
           curves: [
             { fn: () => 0, color: "blue" },
             { fn: (c) => s.lambda * c * c, color: "rose" },

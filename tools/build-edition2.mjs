@@ -139,11 +139,13 @@ function render(body, id) {
     /<figure class="arm-plate" data-arm="([^"]+)"><\/figure>/g,
     (_, name) => `<figure class="arm-plate">${armPlate(name)}</figure>`,
   );
-  html = html.replace(
-    /<img src="(assets\/[^\"]+)"/g,
-    (_, p) =>
-      `<img src="data:image/${p.endsWith(".png") ? "png" : p.endsWith(".webp") ? "webp" : "svg+xml"};base64,${fs.readFileSync(path.join(root, p)).toString("base64")}"`,
-  );
+  html = html.replace(/<img src="(assets\/[^\"]+)"/g, (_, p) => {
+    const bytes = fs.readFileSync(path.join(root, p));
+    const dims = p.endsWith(".png")
+      ? ` width="${bytes.readUInt32BE(16)}" height="${bytes.readUInt32BE(20)}"`
+      : "";
+    return `<img${dims} decoding="async" src="data:image/${p.endsWith(".png") ? "png" : p.endsWith(".webp") ? "webp" : "svg+xml"};base64,${bytes.toString("base64")}"`;
+  });
   html = html.replace(
     /<details(?: class="[^"]*")?><summary>Required[^<]*?· ([^<]+)<\/summary>([\s\S]*?)<\/details>/g,
     (_, title, body) =>
@@ -179,7 +181,7 @@ function themedMarkup(html) {
 const content = chapters
   .map(
     ([id, title, status, prerequisites, outcome], i) =>
-      `<article id="${id}"><div class="chapter-meta"><span>${String(i + 1).padStart(2, "0")} / ${status}</span><span>World models, from first principles</span></div>${themedMarkup(render(read(`book/edition2/${id}.md`), id))}</article>`,
+      `<article id="${id}"><div class="chapter-meta"><span>${String(i + 1).padStart(2, "0")} / ${status}</span></div>${themedMarkup(render(read(`book/edition2/${id}.md`), id)).replace(/(<p class="lead">[\s\S]*?<\/p>)/, `$1<p class="chapter-outcome"><strong>By the end:</strong> ${esc(outcome)}</p>`)}</article>`,
   )
   .join("\n");
 let js = "";

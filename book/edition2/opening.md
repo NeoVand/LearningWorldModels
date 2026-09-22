@@ -16,7 +16,7 @@ Our running world is a small two-link robotic arm seen by a camera. First ask: *
 
 Then ask: **what description should we learn?** Keeping every pixel preserves shadows and table texture along with the arm. Keeping too little may erase the joint configuration. A representation is useful only if it retains distinctions that later prediction or action requires.
 
-Finally ask: **how can predictions choose an action?** We can imagine several commands, compare their predicted consequences with a goal, execute one command, and look again. The observation after an action may correct the model's expectation.
+Finally ask: **how can predictions choose an action?** We can imagine several commands, compare their predicted consequences with a goal, execute one command, and look again. The observation after an action may correct the model’s expectation.
 
 These questions stay with us throughout the book. Every new piece of mathematics will answer one of them, expose a failure, or let us test an answer.
 
@@ -24,7 +24,7 @@ These questions stay with us throughout the book. Every new piece of mathematics
 
 ## The route through the book
 
-We start with LeCun's reason for learning from observations rather than relying entirely on human labels. Next we learn to encode an image as numbers, measure distances, describe uncertainty, and inspect a cloud of representations. Calculus then gives us a way to change a model from its errors.
+We start with LeCun’s reason for learning from observations rather than relying entirely on human labels. Next we learn to encode an image as numbers, measure distances, describe uncertainty, and inspect a cloud of representations. Calculus then gives us a way to change a model from its errors.
 
 With those tools, we construct a predictive learning objective and discover its loophole: two networks can agree by saying nothing. We develop distributional regularization, derive SIGReg, and train an actual small model. We then make it choose actions and learn how to judge its successes and failures.
 

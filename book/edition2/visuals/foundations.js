@@ -194,7 +194,7 @@ register("G3", {
         matrix(
           a.map((r, ri) =>
             r.map((v, cj) =>
-              ri === i && cj === j ? "\\htmlClass{math-act}{" + v + "}" : v,
+              ri === i && cj === j ? "\\htmlClass{math-mark}{" + v + "}" : v,
             ),
           ),
         ) +
@@ -908,6 +908,9 @@ register("D6", {
           plot({
             xmin: 0,
             xmax: 2 * Math.PI,
+            xTicks: [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI],
+            xTickFormat: (x) =>
+              ["0", "π/2", "π", "3π/2", "2π"][Math.round(x / (Math.PI / 2))],
             ymin: 0,
             ymax: 3.3,
             curves: [{ fn: v, color: "violet" }],
@@ -923,6 +926,9 @@ register("D6", {
           plot({
             xmin: 0,
             xmax: 2 * Math.PI,
+            xTicks: [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI],
+            xTickFormat: (x) =>
+              ["0", "π/2", "π", "3π/2", "2π"][Math.round(x / (Math.PI / 2))],
             ymin: -2.3,
             ymax: 2.3,
             curves: [{ fn: dv, color: "teal" }],

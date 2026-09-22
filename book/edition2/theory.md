@@ -40,7 +40,7 @@ $$\operatorname{Bias}(\hat\beta\mid X)=-\lambda(G+\lambda I)^{-1}\beta.$$
 
 An eigenvector direction of $G$ with eigenvalue $\rho$ therefore has shrinkage bias factor $\lambda/(\rho+\lambda)$. Small data variation in that direction makes the regularizer comparatively stronger.
 
-Under a fixed trace $\sum_j\rho_j=c$, the smallest eigenvalue is at most $c/d$: otherwise all $d$ eigenvalues would sum to more than $c$. Equal eigenvalues maximize this smallest value. Hence isotropy minimizes the worst-direction ridge bias magnitude for a fixed norm of $\beta$ and positive $\lambda$. This is a minimax statement over directions. It does not say every individual task is best served by isotropy; a known task aligned with a privileged direction can benefit from allocating more variation there.
+Under a fixed trace $\sum_j\rho_j=c$, the smallest eigenvalue is at most $c/d$: otherwise all $d$ eigenvalues would sum to more than $c$. Equal eigenvalues maximize this smallest value. Hence isotropy minimizes the worst-direction ridge bias magnitude for a fixed norm of $\beta$ and positive $\lambda$. This is a minimax statement over unknown task directions. For a known task, allocating more variation to its relevant direction can instead help.
 
 <!-- VISUAL: R2 -->
 
@@ -84,13 +84,13 @@ For example, if the local label function is $m(x)=x^2$ and the density is locall
 
 For a smooth function $a$, a second-order Taylor expansion is
 
-$$a(q+hu)=a(q)+h\nabla a(q)^\top u+\tfrac12h^2u^\top H_a(q)u+o(h^2),$$
+$$\begin{aligned}a(q+hu)&=a(q)+h\nabla a(q)^\top u\\&\quad+\tfrac12h^2u^\top H_a(q)u+o(h^2),\end{aligned}$$
 
 under conditions allowing the remainder to be integrated against the kernel. $H_a$ is the Hessian, the matrix of second partial derivatives. Its trace is the Laplacian $\nabla^2 a=\sum_j\partial_j^2a$. The notation $o(h^2)$ means that after division by $h^2$ the remainder tends to zero as $h\to0$. It is not a fixed numerical error bound.
 
 Integrating the expansion removes the linear term because $\int uK(u)du=0$. The quadratic term becomes $\tfrac12h^2\mu_2\nabla^2 a$. Apply this first to $a=mp$, then to $a=p$. For numbers $A+h^2a$ and $B+h^2b$ with $B>0$, expansion of the reciprocal gives a ratio $A/B+h^2(aB-Ab)/B^2+o(h^2)$. Therefore
 
-$$m_h(q)-m(q)=\frac{h^2\mu_2}{2}\left[\nabla^2 m(q)+2\nabla m(q)^\top\nabla\log p(q)\right]+o(h^2).$$
+$$\begin{aligned}m_h(q)-m(q)&=\frac{h^2\mu_2}{2}\Big[\nabla^2 m(q)\\&\quad+2\nabla m(q)^\top\nabla\log p(q)\Big]\\&\quad+o(h^2).\end{aligned}$$
 
 To check the cancellation, expand $\nabla^2(mp)=p\nabla^2 m+2\nabla m^\top\nabla p+m\nabla^2 p$. The last term cancels the denominator correction. Finally $\nabla p/p=\nabla\log p$ by the chain rule. The **score** $s(z)=\nabla\log p(z)$ measures how rapidly log density changes with location. It is a derivative with respect to the sample coordinate, not a classifier score and not a derivative with respect to a neural-network parameter.
 
@@ -106,7 +106,7 @@ $$\frac{\int_0^r a^{d+1}da}{\int_0^r a^{d-1}da}=\frac{d}{d+2}r^2.$$
 
 Divide by $d$ identical coordinate variances to obtain $r^2/(d+2)$. Substituting into the smoothing calculation gives
 
-$$m_r(q)-m(q)=\frac{r^2}{d+2}\left[\nabla m(q)^\top s(q)+\tfrac12\nabla^2 m(q)\right]+o(r^2).$$
+$$\begin{aligned}m_r(q)-m(q)&=\frac{r^2}{d+2}\Big[\nabla m(q)^\top s(q)\\&\quad+\tfrac12\nabla^2 m(q)\Big]+o(r^2).\end{aligned}$$
 
 An empirical neighborhood can be empty. A complete implementation must define what to do then. The small-radius asymptotic analysis assumes enough local data for the empirical average to approximate this population object.
 
@@ -114,7 +114,7 @@ An empirical neighborhood can be empty. A complete implementation must define wh
 
 The density score needs a numerical interpretation before another integral. For a scalar Gaussian with mean zero and variance $\sigma^2$, the log density is a constant minus $x^2/(2\sigma^2)$. Its derivative with respect to $x$ is $s(x)=-x/\sigma^2$. At $x=1$, a narrow Gaussian with variance $1/4$ has score $-4$, while a unit-variance Gaussian has score $-1$: the narrow density falls more sharply there.
 
-Averaging the squared score gives $\mathbb E[s(X)^2]=\mathbb E[X^2]/\sigma^4=1/\sigma^2$. This motivates a quantity that measures average density sensitivity. It does not measure how much physical state a representation contains.
+Averaging the squared score gives $\mathbb E[s(X)^2]=\mathbb E[X^2]/\sigma^4=1/\sigma^2$. The resulting quantity measures average density sensitivity. Recoverable physical state is a different question, assessed by the probes introduced earlier.
 
 Define the location Fisher-information functional
 
@@ -136,7 +136,7 @@ The cross term is $-2\operatorname{tr}(\Sigma^{-1})$ by the preceding identity. 
 
 Equality forces $s(z)=-\Sigma^{-1}z$ almost everywhere. Integrating this gradient equation yields $\log p(z)=c-\tfrac12z^\top\Sigma^{-1}z$ on the connected domain under these regularity assumptions. Normalizing produces a Gaussian density. If only total variance $\operatorname{tr}\Sigma=c_0$ is fixed, the previous reciprocal-eigenvalue inequality gives $J(p)\geq d^2/c_0$, with equality for the isotropic Gaussian of covariance $(c_0/d)I$.
 
-This proves a precise result: the isotropic Gaussian minimizes location Fisher information among the regular densities under this total-variance constraint. It does not yet prove that it minimizes every downstream risk.
+**What has been minimized:** the isotropic Gaussian minimizes location Fisher information among regular densities with this fixed total variance. The next step asks how that quantity enters a downstream-risk bound.
 
 <!-- VISUAL: R5 -->
 
@@ -158,9 +158,9 @@ Integrating against query density $p(q)$ formally cancels its factor, giving $R(
 
 ## Why a Gaussian marginal can still encode the wrong thing
 
-Imagine observations containing both arm position and an independent background variable. A representation can map the background into a nearly Gaussian coordinate while discarding the arm. Its marginal geometry can look excellent, yet it is useless for the goal. Prediction may or may not reject this shortcut depending on the background's temporal behavior.
+Imagine observations containing both arm position and an independent background variable. A representation can map the background into a nearly Gaussian coordinate while discarding the arm. Its marginal geometry can look excellent, yet it is useless for the goal. Prediction may or may not reject this shortcut depending on the background’s temporal behavior.
 
-Conversely, an environment with only a small discrete set of states cannot be mapped deterministically to an exact continuous full-dimensional Gaussian without additional variation. The attainable representation distributions depend on the input distribution and encoder. The target's desirable geometry does not prove attainability or semantic alignment.
+Conversely, an environment with only a small discrete set of states cannot be mapped deterministically to an exact continuous full-dimensional Gaussian without additional variation. The attainable representation distributions depend on the input distribution and encoder. The target’s desirable geometry does not prove attainability or semantic alignment.
 
 Theoretical distribution matching also differs from its finite implementation. Matching every direction and every frequency at the population level is an identification statement. Sampling a finite collection of directions and frequencies gives an optimization surrogate. Its stochastic gradients, finite-batch floor, and collapsed stationary configurations were derived in the SIGReg chapter.
 
@@ -176,4 +176,4 @@ A defensible statement is narrower: SIGReg encourages a noncollapsed isotropic G
 
 </details>
 
-This is research-level reading: neither dismiss the theory nor let its shorthand outrun its proof. We have already trained the objective; now we can state what its Gaussian motivation does and does not prove. The next chapter replaces the teaching model's small networks with the transformer components used in the research architecture.
+This is research-level reading: neither dismiss the theory nor let its shorthand outrun its proof. We have already trained the objective; now we can state what its Gaussian motivation does and does not prove. The next chapter replaces the teaching model’s small networks with the transformer components used in the research architecture.

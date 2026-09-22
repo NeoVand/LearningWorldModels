@@ -24,7 +24,7 @@ The browser model uses **GELU**, a smooth gate. Let $p(u)=e^{-u^2/2}/\sqrt{2\pi}
 
 $$\operatorname{GELU}(x)=x\Phi(x).$$
 
-For a large positive input, $\Phi(x)$ is near one, so the input mostly passes through. For a large negative input it is near zero, so the input is strongly attenuated. At zero, symmetry gives $\Phi(0)=1/2$. By the fundamental theorem of calculus, $\Phi'(x)=p(x)$; the product rule therefore gives $\operatorname{GELU}'(x)=\Phi(x)+xp(x)$, including slope $1/2$ at zero. A probability function defines the gate; it does not imply that the network's features are probabilities or Gaussian samples.
+For a large positive input, $\Phi(x)$ is near one, so the input mostly passes through. For a large negative input it is near zero, so the input is strongly attenuated. At zero, symmetry gives $\Phi(0)=1/2$. By the fundamental theorem of calculus, $\Phi'(x)=p(x)$; the product rule therefore gives $\operatorname{GELU}'(x)=\Phi(x)+xp(x)$, including slope $1/2$ at zero. A probability function defines the gate; it does not imply that the network’s features are probabilities or Gaussian samples.
 
 Without an activation, two layers give $W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)$, still one affine map. Nonlinearity is what allows stacked layers to represent relations beyond a single affine transformation. “Expressive” does not mean a particular training run will find the desired function.
 
@@ -40,11 +40,11 @@ A residual block computes $h'=h+F(h)$. It allows a layer to learn a correction i
 
 Take a two-layer scalar-output network:
 
-$$r=W_1x+b_1,\quad h=\sigma(r),\quad \hat y=w_2^\top h+b_2,\quad \ell=\tfrac12(\hat y-y)^2.$$
+$$\begin{aligned}&r=W_1x+b_1, \\ &h=\sigma(r), \\ &\hat y=w_2^\top h+b_2, \\ &\ell=\tfrac12(\hat y-y)^2.\end{aligned}$$
 
 Start with the output error $e=\hat y-y$. A change in $w_{2j}$ changes the output by $h_j$ times that change, so $\partial\ell/\partial w_2=eh$. A change in $h$ contributes $ew_2$. Passing through the activation multiplies coordinatewise by its derivative:
 
-$$\delta=(ew_2)\odot\sigma'(r),\qquad \frac{\partial\ell}{\partial W_1}=\delta x^\top,\qquad \frac{\partial\ell}{\partial b_1}=\delta.$$
+$$\begin{aligned}&\delta=(ew_2)\odot\sigma'(r), \\ &\frac{\partial\ell}{\partial W_1}=\delta x^\top, \\ &\frac{\partial\ell}{\partial b_1}=\delta.\end{aligned}$$
 
 The symbol $\odot$ means multiply corresponding coordinates. The outer product has the correct shape: if there are $m$ hidden units and $n$ input coordinates, $\delta x^\top$ is $m\times n$, exactly the shape of $W_1$. Each entry is the downstream sensitivity $\delta_i$ times the input $x_j$ that the parameter multiplies.
 
@@ -68,9 +68,9 @@ Momentum averages recent gradients so a persistent direction accumulates while s
 
 Adam maintains one such average of gradients and another of coordinatewise squared gradients:
 
-$$m_k=\beta_1m_{k-1}+(1-\beta_1)g_k,\qquad v_k=\beta_2v_{k-1}+(1-\beta_2)g_k^2.$$
+$$\begin{aligned}&m_k=\beta_1m_{k-1}+(1-\beta_1)g_k, \\ &v_k=\beta_2v_{k-1}+(1-\beta_2)g_k^2.\end{aligned}$$
 
-$$\hat m_k=\frac{m_k}{1-\beta_1^k},\quad \hat v_k=\frac{v_k}{1-\beta_2^k},\quad \theta_{k+1}=\theta_k-\eta\frac{\hat m_k}{\sqrt{\hat v_k}+\epsilon}.$$
+$$\begin{aligned}&\hat m_k=\frac{m_k}{1-\beta_1^k}, \\ &\hat v_k=\frac{v_k}{1-\beta_2^k}, \\ &\theta_{k+1}=\theta_k-\eta\frac{\hat m_k}{\sqrt{\hat v_k}+\epsilon}.\end{aligned}$$
 
 All operations in the last fraction are coordinatewise. A coordinate with consistently large gradients gets a larger denominator. The positive $\epsilon$ avoids division by zero and affects very small-gradient behavior. These recurrences define an optimization algorithm; they do not prove convergence for every network. The browser model uses Adam. A saved checkpoint needs the moment arrays and update count as well as weights if we want to resume the same optimization trajectory.
 
@@ -88,7 +88,7 @@ For a concrete ambiguity, suppose the only observed pair is $x=1,y=1$. The funct
 
 Take the scalar model $y_i\approx wx_i$ and objective
 
-$$L(w)=\sum_i(wx_i-y_i)^2+\lambda w^2,\qquad\lambda\geq0.$$
+$$\begin{aligned}&L(w)=\sum_i(wx_i-y_i)^2+\lambda w^2, \\ &\lambda\geq0.\end{aligned}$$
 
 Differentiate and collect terms: $L'(w)=2w\sum_i x_i^2-2\sum_i x_iy_i+2\lambda w$. Setting this to zero yields
 
@@ -110,7 +110,7 @@ If the data term is averaged instead of summed, the same numerical $\lambda$ rep
 
 ## Other ways to express a preference
 
-A weight penalty expresses one particular preference. It does not know which distinctions in an image matter. When we start learning the targets as well as the predictions, that limitation will become important.
+A weight penalty favors particular parameter values; identifying useful distinctions in an image requires a learning task and data. When we start learning the targets as well as the predictions, that limitation will become important.
 
 There are other regularization mechanisms. **Data augmentation** changes inputs while declaring which relationships should survive. **Dropout** randomly zeros intermediate activations during training. In inverted dropout, an activation is multiplied by $M/(1-p)$ where $M$ is 1 with probability $1-p$ and 0 otherwise. Its expected value is unchanged because $\mathbb E[M]=1-p$. That identity motivates the scaling; it does not mean an entire nonlinear network has unchanged expected output. Dropout is normally disabled during evaluation.
 
@@ -120,7 +120,7 @@ There are other regularization mechanisms. **Data augmentation** changes inputs 
 
 Normalization transforms activations using a mean and scale. Batch Normalization computes statistics across a batch for each feature; Layer Normalization computes statistics across features within each example. A normalized value takes the form $(x-\mu)/\sqrt{v+\epsilon}$, usually followed by a learned affine scale and shift.
 
-The denominator rescales fluctuations, and $\epsilon>0$ prevents division by zero. Which axis is used changes the geometry. A per-example normalization can constrain every vector's length while a Gaussian target requires fluctuating lengths. This will explain why LeWM places a projector after the encoder's final Layer Normalization. A normalization layer may influence regularization or optimization, but its name does not imply it supplies all needed anti-collapse constraints.
+The denominator rescales fluctuations, and $\epsilon>0$ prevents division by zero. Which axis is used changes the geometry. A per-example normalization can constrain every vector’s length while a Gaussian target requires fluctuating lengths. This will explain why LeWM places a projector after the encoder’s final Layer Normalization. A normalization layer may influence regularization or optimization, but its name does not imply it supplies all needed anti-collapse constraints.
 
 <!-- VISUAL: N7 -->
 
@@ -140,7 +140,7 @@ Let $x=1$, $W_1=2$, $b_1=0$, $w_2=3$, $b_2=0$, with ReLU and target $y=4$. Find 
 
 <details class="derivation"><summary>Follow the computation graph</summary>
 
-The preactivation is 2, the activation is 2, the output is 6, and the error is 2. The output-weight gradient is $eh=4$; the output-bias gradient is 2. Because ReLU's input is positive, its derivative is 1, so the hidden sensitivity is $ew_2=6$. The first-weight gradient is $6x=6$, and the first-bias gradient is 6.
+The preactivation is 2, the activation is 2, the output is 6, and the error is 2. The output-weight gradient is $eh=4$; the output-bias gradient is 2. Because ReLU’s input is positive, its derivative is 1, so the hidden sensitivity is $ew_2=6$. The first-weight gradient is $6x=6$, and the first-bias gradient is 6.
 
 With step size 0.01 the new parameters are 1.94, −0.06, 2.96, −0.02. The new hidden activation is 1.88 and the output is 5.5448. The error has decreased. Updating the hidden weight while forgetting that the hidden bias also contributes would produce a different calculation. An automatic differentiation system should reproduce these four gradients exactly within arithmetic precision.
 
@@ -148,4 +148,4 @@ With step size 0.01 the new parameters are 1.94, −0.06, 2.96, −0.02. The new
 
 Try to explain the roles separately: the model computes predictions, the loss expresses what is preferred, and the optimizer chooses parameter updates.
 
-The basic machinery is now in place. We can understand a neural-network objective, derive its parameter sensitivities, and state which choices are statistical preferences or numerical algorithms. The next chapter asks which objective prevents a predictive representation from erasing the world.
+The basic machinery is now in place. We can understand a neural-network objective, derive its parameter sensitivities, and state which choices are statistical preferences or numerical algorithms. The [JEPA chapter](#jepa) asks which objective prevents a predictive representation from erasing the world.

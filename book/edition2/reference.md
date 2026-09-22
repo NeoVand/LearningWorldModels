@@ -10,7 +10,7 @@
 
 ## Symbols and axes
 
-The semantic colors are blue for observations, violet for representations, teal for predictions, amber for actions, and rose for losses or costs. A hat also marks prediction, so meaning does not depend on color alone. Neutral mathematical parameters remain neutral when coloring would imply a semantic role they do not have.
+The semantic colors are blue for observations, violet for representations, teal for predictions, amber for actions, and rose for losses or costs. A hat also marks prediction, so meaning does not depend on color alone. Neutral mathematical parameters remain neutral when coloring would imply a semantic role they do not have. Muted analytical colors distinguish the measurement tools in SIGReg and the query, key, and value matrices in attention; each chapter states its local legend. These colors carry no world-model role.
 
 | Symbol | Meaning | Important distinction |
 |---|---|---|
@@ -63,7 +63,7 @@ Boldface indicates a vector or structured observation in the main model notation
 | Appendix H; Eq. 9; Figure 17 | Temporal straightness | Geometry and evaluation derivation |
 | Appendix I; Figures 18–19 | Training curves | Learning, laboratory, guided paper chapter |
 
-The map covers the explanatory dependencies of the full v1 paper and its appendices. It does not claim a rerun of the authors' benchmark experiments or a proof of every empirical assertion in the paper. Empirical assertions require measurements; definitions require motivation; mathematical identities require derivation; approximations require assumptions and error discussion.
+The map covers the explanatory dependencies of the full v1 paper and its appendices. It does not claim a rerun of the authors’ benchmark experiments or a proof of every empirical assertion in the paper. Empirical assertions require measurements; definitions require motivation; mathematical identities require derivation; approximations require assumptions and error discussion.
 
 ## Read the PLDM appendix without an axis mistake
 
@@ -71,7 +71,7 @@ The PLDM objective shown in LeWM Appendix C.2 combines prediction, batch varianc
 
 The batch variance and covariance formulas follow directly from our cloud-geometry chapter, computed at fixed time across trajectories. Temporal versions exchange those axes: hold a trajectory fixed and compute moments across time. Temporal similarity averages squared differences between adjacent embeddings. Inverse dynamics regresses the action from consecutive embeddings using squared error. The same chain-rule and covariance derivations already taught apply to each axis choice.
 
-The v1 appendix prints off-diagonal covariance sums without squares in places. A raw signed sum permits cancellation and is not the usual VICReg squared-covariance penalty. This book presents the standard squared form when teaching VICReg and flags the source discrepancy instead of silently treating the printed formulas as equivalent. The reported baseline's actual configuration and code are needed to establish its exact operational objective.
+The v1 appendix prints off-diagonal covariance sums without squares in places. A raw signed sum permits cancellation and is not the usual VICReg squared-covariance penalty. This book presents the standard squared form when teaching VICReg and flags the source discrepancy instead of silently treating the printed formulas as equivalent. The reported baseline’s actual configuration and code are needed to establish its exact operational objective.
 
 ## A compact glossary with return paths
 
@@ -101,7 +101,7 @@ The v1 appendix prints off-diagonal covariance sums without squares in places. A
 
 **Expectile.** A minimizer of asymmetric squared error; distinct from a quantile. See [evaluation](#evaluation).
 
-**Fisher information.** Here, the expected squared magnitude of a density's location score. See [theory](#theory).
+**Fisher information.** Here, the expected squared magnitude of a density’s location score. See [theory](#theory).
 
 **Frozen encoder.** An encoder whose parameters remain fixed while another component is trained. See [lineage](#lineage).
 
@@ -137,7 +137,7 @@ The v1 appendix prints off-diagonal covariance sums without squares in places. A
 
 ## Primary sources and provenance
 
-The book's main research path uses the following fixed primary sources. The downloaded PDFs, extraction records, and pinned implementation are retained with the editable manuscript.
+The book’s main research path uses the following fixed primary sources. The downloaded PDFs, extraction records, and pinned implementation are retained with the editable manuscript.
 
 - Yann LeCun, [A Path Towards Autonomous Machine Intelligence, version 0.9.2, June 27, 2022](https://openreview.net/forum?id=BZ5a1r-kVsf). The 62-page author document was read from an accessible mirrored copy after the official download was unavailable; its provenance and checksum are recorded locally.
 - Bardes, Ponce, and LeCun, [VICReg, 2105.04906v1](https://arxiv.org/pdf/2105.04906v1).
@@ -149,6 +149,6 @@ The book's main research path uses the following fixed primary sources. The down
 - Balestriero and LeCun, [LeJEPA, 2511.08544v1](https://arxiv.org/pdf/2511.08544v1).
 - Maes and colleagues, [LeWorldModel, 2603.19312v1](https://arxiv.org/pdf/2603.19312v1), and the [pinned author implementation](https://github.com/lucas-maes/le-wm/tree/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac).
 
-The user-supplied [SIGReg tutorial by Reza Bayat](https://rezabyt.github.io/blogposts/sigreg-tutorial.html) informed the desired pedagogical depth. Mathematical derivations and code in this book are developed explicitly and checked against the primary method and implementation. The browser learning system adapts Jaxverse's numerical core; its measurements were rerun in this packaged book rather than borrowed as unverified performance claims.
+The user-supplied [SIGReg tutorial by Reza Bayat](https://rezabyt.github.io/blogposts/sigreg-tutorial.html) informed the desired pedagogical depth. Mathematical derivations and code in this book are developed explicitly and checked against the primary method and implementation. The browser learning system adapts Jaxverse’s numerical core; its measurements were rerun in this packaged book rather than borrowed as unverified performance claims.
 
 Generated conceptual illustrations are labeled as illustrations. They are not model predictions or evidence. Precise architecture diagrams are editable SVG with LaTeX labels. The numerical desks compute their displayed quantities; the learning laboratory actually updates neural-network parameters. Printed training curves are explicitly labeled recorded measurements, so they cannot be mistaken for a live run.

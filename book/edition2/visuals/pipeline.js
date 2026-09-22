@@ -49,13 +49,13 @@ register("I1", {
         cards([
           [
             "Concatenate",
-            tex("[z_0,z_1,a_0,a_1]") +
+            tex("[\\encoded{z}_0,\\encoded{z}_1,\\action{a}_0,\\action{a}_1]") +
               "<br>8 + 8 + 2 + 2 = 20 entries per example",
           ],
           ["Predict a residual", tex("g:\\mathbb R^{20}\\to\\mathbb R^8")],
           [
             "Add and compare",
-            tex("\\hat z_2=z_1+g(\\cdot)") +
+            tex("\\predicted{\\hat z}_2=\\encoded{z}_1+g(\\cdot)") +
               "<br>Compare against encoder output z₂. Gradients reach both.",
           ],
         ]),
@@ -260,13 +260,27 @@ register("A1", {
       panel(
         "Information flow",
         cards([
-          ["Observe", tex("o_t\\to f_\\theta(o_t)=z_t")],
-          ["Predict", tex("(z_t,a_t)\\to g_\\psi(z_t,a_t)")],
+          [
+            "Observe",
+            tex(
+              "\\observed{o}_t\\to f_\\theta(\\observed{o}_t)=\\encoded{z}_t",
+            ),
+          ],
+          [
+            "Predict",
+            tex(
+              "(\\encoded{z}_t,\\action{a}_t)\\to g_\\psi(\\encoded{z}_t,\\action{a}_t)",
+            ),
+          ],
           [
             "Compare",
             s.mode === "Learning"
-              ? tex("\\|\\hat z_{t+1}-z_{t+1}\\|^2+\\lambda R")
-              : tex("\\|\\hat z_{t+H}-f_\\theta(o_{\\rm goal})\\|^2"),
+              ? tex(
+                  "\\|\\predicted{\\hat z}_{t+1}-\\encoded{z}_{t+1}\\|^2+\\lambda\\objective{R}",
+                )
+              : tex(
+                  "\\|\\predicted{\\hat z}_{t+H}-f_\\theta(\\observed{o}_{\\rm goal})\\|^2",
+                ),
           ],
         ]),
       ),

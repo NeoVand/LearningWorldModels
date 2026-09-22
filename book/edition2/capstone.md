@@ -14,7 +14,7 @@ List every quantity available at each stage: data collection, model training, pr
 
 <details class="derivation"><summary>Worked solution · the boundary used here</summary>
 
-The simulator has joint angles and velocities because it must generate motion. Model training receives three camera frames and two action vectors per window. It does not receive those state variables as prediction targets. A separate readout uses state labels to draw imagined poses. Candidate scoring uses only the learned latent rollout, the encoded goal, and declared action costs. After an action executes, simulator state supplies physical error for evaluation.
+The simulator has joint angles and velocities because it must generate motion. Model training receives three camera frames and two action vectors per window; the prediction targets are learned frame embeddings. A separate readout uses state labels to draw imagined poses. Candidate scoring uses only the learned latent rollout, the encoded goal, and declared action costs. After an action executes, simulator state supplies physical error for evaluation.
 
 This separation allows a meaningful claim about learning control from pixels in the teaching setting. If the planner used true joint-angle distance to score every imagined candidate, that would be a different experiment with privileged planning information.
 
@@ -40,21 +40,21 @@ Construct a parameterized function pair achieving perfect prediction agreement w
 
 <details class="derivation"><summary>Worked solution · do not rely on a slogan</summary>
 
-Choose $f(o)=0$ for all inputs and a predictor returning zero. Every target and prediction is zero, so every squared error is zero. Zero weights and biases can realize this in many ordinary architectures, making a small-weight preference compatible with collapse. A distributional penalty must prefer a nonconstant collection of outputs. A positive penalty value at collapse still does not prove that an exactly symmetric collapsed point has a nonzero gradient; that requires the derivative analysis developed earlier.
+Choose $f(\observed{o})=0$ for all inputs and a predictor returning zero. Every target and prediction is zero, so every squared error is zero. Zero weights and biases can realize this in many ordinary architectures, making a small-weight preference compatible with collapse. A distributional penalty must prefer a nonconstant collection of outputs. A positive penalty value at collapse still does not prove that an exactly symmetric collapsed point has a nonzero gradient; that requires the derivative analysis developed earlier.
 
 </details>
 
 ## 4 · Check the implementation before training
 
-Check attention's causal mask on a tiny array, compare analytic and finite-difference gradients of the reference learner, and test CEM on the two-action quadratic whose optimum we solved by hand.
+Check attention’s causal mask on a tiny array, compare analytic and finite-difference gradients of the reference learner, and test CEM on the two-action quadratic whose optimum we solved by hand.
 
 <details class="derivation"><summary>Worked solution · what a passing check establishes</summary>
 
 For attention, each row must sum to one over allowed positions, future weights must be zero, and changing a future token must not affect earlier outputs in the standalone causal-attention function. For the learner, hold directions and data fixed, perturb every parameter coordinate in a small configuration, and compare the central difference with the analytic gradient. This catches omitted target gradients and wrong reductions.
 
-For CEM, use the known scalar dynamics only in this numerical unit check. Compare the best sampled action sequence with $a_0=a_1=1/(2+\rho)$. The discrepancy should shrink with adequate sampling, but a finite stochastic search need not hit the exact optimum. This verifies basic planner arithmetic; it does not establish that a learned dynamics model is accurate.
+For CEM, use the known scalar dynamics only in this numerical unit check. Compare the best sampled action sequence with $\action{a}_0=\action{a}_1=1/(2+\rho)$. The discrepancy should shrink with adequate sampling, but a finite stochastic search need not hit the exact optimum. This verifies basic planner arithmetic; it does not establish that a learned dynamics model is accurate.
 
-The book's reference checks execute these tests. The packaged browser model additionally has recorded real-training and control checks. These are different levels of verification and are reported separately.
+The book’s reference checks execute these tests. The packaged browser model additionally has recorded real-training and control checks. These are different levels of verification and are reported separately.
 
 </details>
 
@@ -64,9 +64,9 @@ Use the same initialization seed, data corpus, batch sequence, and update count 
 
 <details class="derivation"><summary>Worked solution · interpret the reference measurements</summary>
 
-In the recorded seed-17 experiment after 5,000 updates, the regularized model had mean embedding standard deviation about 0.903 and prediction/persistence ratio about 0.116. The matched prediction-only model's spread was approximately $3.84\times10^{-5}$. Its extremely small MSE accompanied near-complete collapse.
+In the recorded seed-17 experiment after 5,000 updates, the regularized model had mean embedding standard deviation about 0.903 and prediction/persistence ratio about 0.116. The matched prediction-only model’s spread was approximately $3.84\times10^{-5}$. Its extremely small MSE accompanied near-complete collapse.
 
-That comparison supports the need for the regularizer in this architecture and training setting. It does not show that every possible prediction-only learning procedure collapses, nor that the selected coefficient is optimal. Repeat with declared seeds and retain all outcomes. A different device backend can introduce numerical variation even with the same nominal seed.
+That comparison supports the regularizer in this architecture and training setting. Broader claims require comparisons across architectures and coefficients. Repeat with declared seeds and retain all outcomes. A different device backend can introduce numerical variation even with the same nominal seed.
 
 </details>
 
@@ -88,9 +88,9 @@ Without looking at the paper, sketch its training graph and planning graph. Labe
 
 <details class="derivation"><summary>Worked solution · the two graphs have different adjustable variables</summary>
 
-The training graph has frame encoder branches with shared parameters, an action-conditioned causal predictor, next-embedding MSE, and step-wise SIGReg. Both target and context encoder paths receive gradients; no EMA teacher or training stop-gradient is used. The paper's image encoder is a ViT and its predictor is a transformer, unlike the smaller MLP laboratory.
+The training graph has frame encoder branches with shared parameters, an action-conditioned causal predictor, next-embedding MSE, and step-wise SIGReg. Both target and context encoder paths receive gradients; no EMA teacher or training stop-gradient is used. The paper’s image encoder is a ViT and its predictor is a transformer, unlike the smaller MLP laboratory.
 
-The planning graph encodes a current context and goal, rolls proposed action blocks through the fixed learned predictor, computes terminal latent distance, and uses CEM to refine actions. Parameters remain fixed. The optimized prefix executes in the environment, then a new observation supplies context for another plan. The paper's execution cadence must be taken from its appendix/configuration, not assumed to match the browser demonstration.
+The planning graph encodes a current context and goal, rolls proposed action blocks through the fixed learned predictor, computes terminal latent distance, and uses CEM to refine actions. Parameters remain fixed. The optimized prefix executes in the environment, then a new observation supplies context for another plan. The paper’s execution cadence must be taken from its appendix/configuration, not assumed to match the browser demonstration.
 
 </details>
 
@@ -100,7 +100,7 @@ Write three sentences: what you built, what you measured, and what remains unest
 
 <details class="derivation"><summary>A worked scientific conclusion</summary>
 
-We trained a small visual encoder and action-conditioned predictor jointly with prediction MSE and step-wise SIGReg, then used the fixed learned predictor to score candidate controls toward goal images. In a recorded three-seed local diagnostic suite, all nine local goals were reached at least once, seven remained within tolerance at the final observation, and all three distant-goal trials failed. These measurements support local learned-model control in the tested setup, while leaving broad transfer, robust long-horizon planning, calibrated uncertainty, and reproduction of LeWM's published benchmarks unestablished.
+We trained a small visual encoder and action-conditioned predictor jointly with prediction MSE and step-wise SIGReg, then used the fixed learned predictor to score candidate controls toward goal images. In a recorded three-seed local diagnostic suite, all nine local goals were reached at least once, seven remained within tolerance at the final observation, and all three distant-goal trials failed. These measurements support local learned-model control in the tested setup, while leaving broad transfer, robust long-horizon planning, calibrated uncertainty, and reproduction of LeWM’s published benchmarks unestablished.
 
 Each sentence has a different job. The first specifies the system. The second reports evidence with its scope and failures. The third marks the boundary. This is more informative than calling the model a general physical intelligence or dismissing it because it is small.
 

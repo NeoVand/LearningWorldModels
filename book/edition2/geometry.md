@@ -12,7 +12,7 @@ $$f(\obs)=\begin{pmatrix}o_1+o_2\\o_3+o_4\end{pmatrix}.$$
 
 This encoder retains total intensity in each row. It cannot tell $(1,0,0,1)$ from $(0,1,1,0)$ because both become $(1,1)$. A reader can now answer precisely what the encoder loses: the left–right arrangement within each row. Saying it produces a two-dimensional “embedding” adds no guarantee of usefulness.
 
-In deep learning, embedding usually means a learned coordinate representation. It does not imply an injective mathematical embedding that preserves every distinct input. An encoder may intentionally identify many inputs. The issue is whether inputs requiring different predictions or actions remain distinguishable.
+In deep learning, an embedding is a learned coordinate representation. An encoder may intentionally give several inputs the same coordinates; in mathematics, an injective embedding instead keeps distinct inputs distinct. The issue is whether inputs requiring different predictions or actions remain distinguishable.
 
 <!-- VISUAL: G1 -->
 
@@ -28,7 +28,7 @@ For example, let $A=(1,-1)$ subtract the second row sum from the first. Multipli
 
 A neural network repeatedly applies such maps, offsets them by a bias vector, and inserts nonlinear functions between them. Without those nonlinearities, all the matrices would combine into a single matrix, no matter how many layers we stacked.
 
-A **tensor** in this book is a multidimensional array with named axes, not a mysterious extra mathematical object. A batch of $B$ sequences, each containing $T$ color images, has shape $B\times T\times C\times H\times W$. An embedding tensor might have shape $B\times T\times d$. Exchanging axes changes the interpretation of an average. It does not change the underlying values. Averaging over examples answers a different question from averaging over time.
+A **tensor** in this book is a multidimensional array with named axes. A batch of $B$ sequences, each containing $T$ color images, has shape $B\times T\times C\times H\times W$. An embedding tensor might have shape $B\times T\times d$. Exchanging axes preserves the values while changing which groups an average combines. Averaging over examples answers a different question from averaging over time.
 
 <!-- VISUAL: G2 -->
 
@@ -70,7 +70,7 @@ The same expansion proves the Cauchy–Schwarz inequality. The minimum of $\|x-c
 
 ## Rank measures available directions
 
-A linear map's **rank** is the number of independent output directions it can produce. Its **null space** is the set of input changes it maps to zero. For the row-sum encoder, the change $(1,-1,0,0)$ lies in the null space. Moving brightness from one pixel to the other leaves the representation unchanged.
+A linear map’s **rank** is the number of independent output directions it can produce. Its **null space** is the set of input changes it maps to zero. For the row-sum encoder, the change $(1,-1,0,0)$ lies in the null space. Moving brightness from one pixel to the other leaves the representation unchanged.
 
 If all learned embeddings lie on one line, they may vary substantially in magnitude while using only one direction. That is dimensional collapse. If all are identical, even that one degree of variation disappears. Checking the average norm alone would miss both a constant nonzero cloud and many lower-dimensional failures.
 
@@ -85,7 +85,7 @@ Take an image with flattened pixels $\obs=(2,1,0,3)^\top$. Before continuing, co
 
 Both images map to $(3,3)^\top$. Their representation distance is zero although their pixels differ. The projection is $3$: multiply corresponding coordinates and add, $1\cdot3+0\cdot3=3$. The two-dimensional representation has already discarded the within-row arrangement. Projecting it onto the first axis then discards the second row sum as well.
 
-A zero distance means “the same description under this map.” It does not mean “the same physical image.” This distinction is the reason we will later evaluate what an encoder preserves rather than trusting its output dimension.
+Two different physical images can have zero distance if this map gives them the same description. This distinction is the reason we will later evaluate what an encoder preserves rather than trusting its output dimension.
 
 </details>
 

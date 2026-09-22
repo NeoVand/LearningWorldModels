@@ -64,6 +64,41 @@ export const path = (pts, c = "teal", width = 2) => {
     .join("");
   return `<path d="${d}" fill="none" stroke="${role(c)}" stroke-width="${width}" stroke-linejoin="round"/>`;
 };
+// Round ticks without changing sampled data. Explicit ticks support angles and logs.
+export function niceTicks(min, max, count = 4) {
+  const raw = (max - min) / Math.max(1, count);
+  if (!(raw > 0) || !Number.isFinite(raw)) return [min];
+  const power = 10 ** Math.floor(Math.log10(raw));
+  const n = raw / power;
+  const step = (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * power;
+  const values = [];
+  for (
+    let i = Math.ceil(min / step - 1e-9);
+    i <= Math.floor(max / step + 1e-9);
+    i++
+  )
+    values.push(Number((i * step).toPrecision(12)));
+  return values;
+}
+export const powerLabel = (exponent) =>
+  "10" +
+  String(Math.round(exponent)).replace(
+    /[-0-9]/g,
+    (c) =>
+      ({
+        "-": "⁻",
+        0: "⁰",
+        1: "¹",
+        2: "²",
+        3: "³",
+        4: "⁴",
+        5: "⁵",
+        6: "⁶",
+        7: "⁷",
+        8: "⁸",
+        9: "⁹",
+      })[c],
+  );
 let plotSerial = 0;
 const clipPrefix = typeof window === "undefined" ? "static" : "live";
 export function plot({
@@ -79,7 +114,28 @@ export function plot({
   height = 280,
   ticks = 4,
   yTickFormat,
+  xTickFormat,
+  xTicks,
+  yTicks,
+  snapDomain = !extra,
 } = {}) {
+  const snap = (lo, hi) => {
+    const raw = (hi - lo) / Math.max(1, ticks),
+      p = 10 ** Math.floor(Math.log10(raw));
+    const n = raw / p;
+    const step = (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p;
+    const min = Math.floor(lo / step) * step,
+      max = Math.ceil(hi / step) * step;
+    const values = Array.from(
+      { length: Math.round((max - min) / step) + 1 },
+      (_, i) => Number((min + i * step).toPrecision(12)),
+    );
+    return [min, max, values];
+  };
+  if (snapDomain) {
+    if (!xTicks) [xmin, xmax, xTicks] = snap(xmin, xmax);
+    if (!yTicks) [ymin, ymax, yTicks] = snap(ymin, ymax);
+  }
   const bottom = height - 45,
     graphHeight = height - 80;
   const X = (x) => 55 + ((x - xmin) * 270) / (xmax - xmin),
@@ -91,21 +147,23 @@ export function plot({
     line(55, 35, 55, bottom);
   if (xmin < 0 && xmax > 0) s += line(X(0), 35, X(0), bottom);
   if (ymin < 0 && ymax > 0) s += line(55, Y(0), 325, Y(0));
-  const tick = (v, span) =>
-    Number.isInteger(v) ? String(v) : f(v, span < 0.1 ? 3 : span < 1 ? 2 : 1);
-  for (let i = 0; i <= ticks; i++) {
-    let x = xmin + ((xmax - xmin) * i) / ticks,
-      y = ymin + ((ymax - ymin) * i) / ticks;
-    s +=
-      text(X(x), bottom + 20, tick(x, xmax - xmin), "muted", "middle") +
-      text(
-        49,
-        Y(y) + 4,
-        yTickFormat ? yTickFormat(y) : tick(y, ymax - ymin),
-        "muted",
-        "end",
-      );
-  }
+  const tick = (v) => String(Number(v.toPrecision(5))).replace("-", "−");
+  for (const x of xTicks ?? niceTicks(xmin, xmax, ticks))
+    s += text(
+      X(x),
+      bottom + 20,
+      xTickFormat ? xTickFormat(x) : tick(x),
+      "muted",
+      "middle",
+    );
+  for (const y of yTicks ?? niceTicks(ymin, ymax, ticks))
+    s += text(
+      49,
+      Y(y) + 4,
+      yTickFormat ? yTickFormat(y) : tick(y),
+      "muted",
+      "end",
+    );
   s += text(326, height - 8, xlabel, "muted", "end") + text(56, 20, ylabel);
   s += `<g clip-path="url(#${clipId})">`;
   curves.forEach(({ fn, color = "teal", data, area }) => {
@@ -131,7 +189,7 @@ export function plot({
   s += "</g>";
   return svg(
     s + extra,
-    "Computed graph: " + xlabel + " against " + ylabel,
+    "Graph: " + ylabel + " as a function of " + xlabel,
     360,
     height,
   );
@@ -153,7 +211,7 @@ export function scatter(points, { limit = 3, angle = null } = {}) {
   return svg(s, "Point cloud with equal horizontal and vertical units");
 }
 export const panel = (title, body, note = "") =>
-  `<div class="visual-panel"${/<svg\b[^>]*role="img"/.test(body) ? "" : ' data-detail="true"'}><h4>${title}</h4>${body}${note ? '<!--panel-note--><div class="visual-note">' + note + "</div><!--/panel-note-->" : ""}</div>`;
+  `<div class="visual-panel"${/<svg\b[^>]*role="img"/.test(body) ? "" : ' data-detail="true"'}><h4>${title}</h4>${body.replace(/aria-label="Graph: /g, `aria-label="${esc(title)}. `)}${note ? '<!--panel-note--><div class="visual-note">' + note + "</div><!--/panel-note-->" : ""}</div>`;
 export const row = (...panels) => {
   const notes = [];
   const columns = panels.map((p) =>
@@ -231,5 +289,5 @@ export function renderFigure(id) {
   const s = registry[id];
   if (!s) throw Error("Missing visual " + id);
   const state = stateFor(s);
-  return `<figure class="teaching-visual" id="visual-${id}" data-visual="${id}"><div class="visual-heading"><span class="eyebrow">${s.kind ?? "Explore the idea"}</span><h3>${s.title}</h3></div><p class="visual-question">${s.question}</p><div class="visual-body">${s.draw(state)}</div>${s.controls?.length ? `<div class="visual-controls">${controlsHTML(s.controls, state)}</div>` : ""}<figcaption>${s.caption}</figcaption></figure>`;
+  return `<figure class="teaching-visual" id="visual-${id}" data-visual="${id}"><div class="visual-heading">${s.kind ? `<span class="eyebrow">${s.kind}</span>` : ""}<h3>${s.title}</h3></div><p class="visual-question">${s.question}</p><div class="visual-body">${s.draw(state)}</div>${s.controls?.length ? `<div class="visual-controls">${controlsHTML(s.controls, state)}</div>` : ""}<figcaption>${s.caption}</figcaption></figure>`;
 }

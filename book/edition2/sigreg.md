@@ -8,6 +8,9 @@ The previous chapters supplied the pieces: an encoder maps images to vectors, pr
 
 Keep one small example in mind: two samples at $-1$ and $+1$. Their mean is zero and their variance is one, yet they are not a Gaussian. The statistic must notice more than those two moments.
 
+
+In this chapter, muted analytical colors distinguish projection directions $\uvec$, frequency $\freq$, the characteristic function $\cf$, and its Gaussian reference $\target$. These measurement tools have their own local legend; frequency and projection direction are not motor actions.
+
 ## A Gaussian target is a choice with consequences
 
 <figure class="diagram" data-diagram="families"></figure>
@@ -44,17 +47,17 @@ The complex conjugate of $a+ib$ is $a-ib$. Multiplying them gives $a^2+b^2$, bec
 
 $$|a+ib|^2=(a+ib)(a-ib)=a^2+b^2.$$
 
-Euler's identity relates a complex exponential to the unit circle:
+Euler’s identity relates a complex exponential to the unit circle:
 
 $$e^{it}=\cos t+i\sin t.$$
 
-<details><summary>Required derivation · Euler's identity from power series</summary>
+<details><summary>Required derivation · Euler’s identity from power series</summary>
 
 Here $n!=1\cdot2\cdots n$ is a factorial, with $0!=1$. For a real input $x$, Taylor expansion of the exponential at zero has remainder bounded by $e^{|x|}|x|^{n+1}/(n+1)!$, since every derivative is an exponential. The ratio test just below makes this bound tend to zero, establishing its power series; we extend its definition to complex inputs using that same series. For any fixed finite $t$, the series converges. Convergence follows because the ratio of consecutive absolute terms, $|t|/(n+1)$, eventually becomes less than any fixed number below one; the tail is then bounded by a geometric series. Absolute convergence permits separating even and odd terms:
 
-$$e^{it}=\sum_{n=0}^{\infty}\frac{(it)^n}{n!}=\sum_{k=0}^{\infty}\frac{(-1)^kt^{2k}}{(2k)!}+i\sum_{k=0}^{\infty}\frac{(-1)^kt^{2k+1}}{(2k+1)!}.$$
+$$\begin{aligned}e^{it}&=\sum_{n=0}^{\infty}\frac{(it)^n}{n!}\\&=\sum_{k=0}^{\infty}\frac{(-1)^kt^{2k}}{(2k)!}\\&\quad+i\sum_{k=0}^{\infty}\frac{(-1)^kt^{2k+1}}{(2k+1)!}.\end{aligned}$$
 
-The first series is the Taylor series of cosine and the second of sine. Taylor's remainder tends to zero for each finite $t$: the derivatives of sine and cosine have magnitude at most one, so their remainder is bounded by $|t|^{n+1}/(n+1)!$. This establishes the equality. Since $\cos^2t+\sin^2t=1$, the resulting point has unit magnitude.
+The first series is the Taylor series of cosine and the second of sine. Taylor’s remainder tends to zero for each finite $t$: the derivatives of sine and cosine have magnitude at most one, so their remainder is bounded by $|t|^{n+1}/(n+1)!$. This establishes the equality. Since $\cos^2t+\sin^2t=1$, the resulting point has unit magnitude.
 
 </details>
 
@@ -62,7 +65,7 @@ For a real sample $x$, choose a real **frequency** $\freq$ and form $e^{i\freq x
 
 Now average the arrows for a random variable $X$. Its **characteristic function** is defined by
 
-$$\cf_X(\freq)=\mathbb E[e^{i\freq X}]=\mathbb E[\cos(\freq X)]+i\mathbb E[\sin(\freq X)].$$
+$$\begin{aligned}\cf_X(\freq)&=\mathbb E[e^{i\freq X}]\\&=\mathbb E[\cos(\freq X)]+i\mathbb E[\sin(\freq X)].\end{aligned}$$
 
 This expectation always exists: both sine and cosine are bounded, even when $X$ has no finite mean or variance. At frequency zero, every arrow points to $1$, so $\cf_X(0)=1$. A single frequency is only one measurement. The whole function over frequencies carries much more information.
 
@@ -78,7 +81,7 @@ Let $X$ have the standard Gaussian density $p$. We claim that $\cf_X(\freq)=e^{-
 
 Differentiate under the integral. This is legitimate here because the absolute derivative of $e^{i\freq x}p(x)$ is $|x|p(x)$, which is integrable and does not depend on frequency. Using $p'(x)=-xp(x)$ gives
 
-$$\cf_X'(\freq)=\int ix e^{i\freq x}p(x)\,dx=-i\int e^{i\freq x}p'(x)\,dx.$$
+$$\begin{aligned}\cf_X'(\freq)&=\int ix e^{i\freq x}p(x)\,dx\\&=-i\int e^{i\freq x}p'(x)\,dx.\end{aligned}$$
 
 Integration by parts says $\int uv'=uv-\int u'v$. Use $u=e^{i\freq x}$ and $v=p(x)$. The boundary term vanishes because $p(x)$ tends to zero and the complex exponential has magnitude one. Therefore
 
@@ -130,7 +133,7 @@ Suppose the batch consists of independent draws from a fixed distribution. At a 
 
 To compute its expected squared error, multiply by the complex conjugate and expand:
 
-$$\mathbb E\left|\frac1B\sum_b(Y_b-\mu)\right|^2=\frac1{B^2}\sum_{b,c}\mathbb E[(Y_b-\mu)\overline{(Y_c-\mu)}].$$
+$$\begin{aligned}&\mathbb E\left|\frac1B\sum_b(Y_b-\mu)\right|^2\\&\quad=\frac1{B^2}\sum_{b,c}\mathbb E[(Y_b-\mu)\overline{(Y_c-\mu)}].\end{aligned}$$
 
 When $b\ne c$, independence lets the expectation factor into two zero means. When $b=c$, the expectation is $\mathbb E|Y_b|^2-|\mu|^2=1-|\mu|^2$, since every sample arrow has unit magnitude. There are $B$ such diagonal terms, so
 
@@ -140,7 +143,7 @@ If the population is already standard Gaussian, the expected discrepancy at that
 
 Now distinguish the unscaled discrepancy $\disc_B$ from the scaled statistic $\stat_B=B\disc_B$. Integrate the last equation against our window:
 
-$$\mathbb E[\disc_B]=\frac1B\left(\sqrt{2\pi}-\sqrt{\frac{2\pi}{3}}\right),\qquad\mathbb E[\stat_B]=\sqrt{2\pi}-\sqrt{\frac{2\pi}{3}}.$$
+$$\begin{aligned}&\mathbb E[\disc_B]=\frac1B\left(\sqrt{2\pi}-\sqrt{\frac{2\pi}{3}}\right), \\ &\mathbb E[\stat_B]=\sqrt{2\pi}-\sqrt{\frac{2\pi}{3}}.\end{aligned}$$
 
 The Gaussian integrals follow by substituting $v=\sqrt a\,\freq$ in $\int e^{-a\freq^2/2}d\freq=\sqrt{2\pi/a}$. The unscaled expectation decreases like $1/B$; the scaled expectation remains of order one. A quadrature approximation on a truncated interval has a corresponding approximate floor.
 
@@ -160,11 +163,11 @@ The dot product measures signed distance along that direction. The unit-length c
 
 If $Z$ has independent standard Gaussian coordinates, independence yields
 
-$$\mathbb E[e^{i\freq\uvec^\top Z}]=\prod_{j=1}^d\mathbb E[e^{i\freq\uvec_jZ_j}]=\prod_{j=1}^d e^{-\freq^2\uvec_j^2/2}=e^{-\freq^2/2}.$$
+$$\begin{aligned}\mathbb E[e^{i\freq\uvec^\top Z}]&=\prod_{j=1}^d\mathbb E[e^{i\freq\uvec_jZ_j}]\\&=\prod_{j=1}^d e^{-\freq^2\uvec_j^2/2}\\&=e^{-\freq^2/2}.\end{aligned}$$
 
 Thus every unit projection is standard Gaussian. The converse is also true: if every unit projection of a random vector is standard Gaussian, then the vector is standard multivariate Gaussian. The reason is that every multivariate frequency vector can be written as a scalar times a unit direction, and characteristic functions uniquely determine distributions.
 
-That last uniqueness statement is doing real work. The proof below supplies the bridge instead of treating a theorem's name as an explanation.
+That last uniqueness statement is doing real work. The proof below supplies the bridge instead of treating a theorem’s name as an explanation.
 
 <details><summary>Required proof · characteristic-function uniqueness and the projection argument</summary>
 
@@ -172,13 +175,13 @@ Let $X$ be a random vector. Define its multivariate characteristic function as $
 
 For a Gaussian bump, the identity
 
-$$\frac{e^{-\|x-y\|^2/(2\epsilon^2)}}{(2\pi\epsilon^2)^{d/2}}=\frac1{(2\pi)^d}\int_{\mathbb R^d}e^{-iv^\top(x-y)}e^{-\epsilon^2\|v\|^2/2}\,dv$$
+$$\begin{aligned}&\frac{e^{-\|x-y\|^2/(2\epsilon^2)}}{(2\pi\epsilon^2)^{d/2}}\\&\quad=\frac1{(2\pi)^d}\int_{\mathbb R^d}e^{-iv^\top(x-y)}e^{-\epsilon^2\|v\|^2/2}\,dv\end{aligned}$$
 
 follows coordinate by coordinate from the scalar Gaussian characteristic function. In one coordinate, substitute $s=\epsilon v$ in the right-hand integral and evaluate the characteristic function at $-(x-y)/\epsilon$. Taking the product over coordinates gives the displayed identity.
 
 Average this bump over $y=X$. The Gaussian factor on the right is integrable, while the oscillatory factors have magnitude one, so the expectation and integral may be interchanged. This gives the smoothed density
 
-$$p_{X+\epsilon G}(x)=\frac1{(2\pi)^d}\int e^{-iv^\top x}\cf_X(v)e^{-\epsilon^2\|v\|^2/2}\,dv.$$
+$$\begin{aligned}&p_{X+\epsilon G}(x)\\&\quad=\frac1{(2\pi)^d}\int e^{-iv^\top x}\cf_X(v)e^{-\epsilon^2\|v\|^2/2}\,dv.\end{aligned}$$
 
 Equal characteristic functions therefore give equal smoothed densities for every positive $\epsilon$.
 
@@ -194,7 +197,7 @@ Finally, for any nonzero vector $v$, set $\freq=\|v\|$ and $\uvec=v/\|v\|$. If e
 
 </details>
 
-The proof uses **every** direction and **every** frequency. An implementation samples finitely many directions and frequencies. Its evidence is necessarily weaker. Fresh directions during training broaden the measurements over time, but a small score on today's grid is not a theorem that the learned population is Gaussian.
+The proof uses **every** direction and **every** frequency. An implementation samples finitely many directions and frequencies. Its evidence is necessarily weaker. Fresh directions during training broaden the measurements over time, but a small score on today’s grid is not a theorem that the learned population is Gaussian.
 
 Coordinate-wise normality is insufficient. Let $X$ be standard Gaussian and let an independent sign $S$ equal $-1$ or $1$ with equal probability. The vector $(X,SX)$ has Gaussian coordinate marginals and identity covariance, yet lies on two lines. Its diagonal projection is a mixture with a point mass at zero, so it cannot be standard Gaussian. Looking only along the coordinate axes misses this structure.
 
@@ -202,7 +205,7 @@ Coordinate-wise normality is insufficient. Let $X$ be standard Gaussian and let 
 
 ## From the integral to a finite computation
 
-Collect $M$ unit directions in the columns of $\U\in\mathbb R^{d\times M}$. Matrix multiplication gives projected samples $H=\Z\U$ of shape $[B,M]$. In general dimension, draw a vector with independent standard Gaussian coordinates and divide by its length. The Gaussian's rotational symmetry makes its direction uniform on the unit sphere. The zero vector has probability zero; numerical implementations still guard against a zero norm.
+Collect $M$ unit directions in the columns of $\U\in\mathbb R^{d\times M}$. Matrix multiplication gives projected samples $H=\Z\U$ of shape $[B,M]$. In general dimension, draw a vector with independent standard Gaussian coordinates and divide by its length. The Gaussian’s rotational symmetry makes its direction uniform on the unit sphere. The zero vector has probability zero; numerical implementations still guard against a zero norm.
 
 The population discrepancy is even in frequency. Indeed, $\ecf(-\freq)$ is the conjugate of $\ecf(\freq)$, and the target and window are even and real. Conjugation leaves squared magnitude unchanged. Therefore the full-line integral is twice its integral over nonnegative frequencies.
 
@@ -212,7 +215,7 @@ $$\alpha_k=\begin{cases}\Delta,&k=0\text{ or }k=K-1,\\2\Delta,&\text{otherwise.}
 
 Our finite, batch-size-scaled regularizer is
 
-$$\reg(\Z)=\frac{B}{M}\sum_{m=1}^{M}\sum_{k=0}^{K-1}\alpha_k\,\target(\freq_k)\left[(C_{mk}-\target(\freq_k))^2+S_{mk}^2\right].$$
+$$\begin{aligned}&\reg(\Z)\\&\quad=\frac{B}{M}\sum_{m=1}^{M}\sum_{k=0}^{K-1}\alpha_k\,\target(\freq_k)\\&\qquad\times\Big[(C_{mk}-\target(\freq_k))^2+S_{mk}^2\Big].\end{aligned}$$
 
 Here $C_{mk}=B^{-1}\sum_b\cos(\freq_k H_{bm})$ and $S_{mk}=B^{-1}\sum_b\sin(\freq_k H_{bm})$. The Gaussian target doubles as the window in this particular recipe. Every factor now has a source: $B$ is the statistic scaling, $1/M$ averages directions, $\alpha_k$ integrates the sampled curve with symmetry, and $\target$ weights frequencies.
 
@@ -224,7 +227,7 @@ The pinned LeWorldModel implementation uses $K=17$ and $A=3$. These numbers are 
 
 Truncation discards the tails beyond $A$. Since the squared discrepancy is at most four, the discarded integral is at most $8\int_A^\infty e^{-\omega^2/2}d\omega$. For $\omega\geq A>0$, use $1\leq\omega/A$ to obtain
 
-$$\int_A^\infty e^{-\omega^2/2}d\omega\leq\frac1A\int_A^\infty\omega e^{-\omega^2/2}d\omega=\frac{e^{-A^2/2}}A.$$
+$$\begin{aligned}\int_A^\infty e^{-\omega^2/2}d\omega&\leq\frac1A\int_A^\infty\omega e^{-\omega^2/2}d\omega\\&=\frac{e^{-A^2/2}}A.\end{aligned}$$
 
 Thus a conservative unscaled truncation bound is $8e^{-A^2/2}/A$. The scaled statistic multiplies this by $B$. This upper bound can be loose, but it explains why a finite interval is an approximation rather than an identity.
 
@@ -242,13 +245,13 @@ We can evaluate the unscaled, untruncated one-dimensional discrepancy using pair
 
 Expand the squared discrepancy into $|\ecf|^2-2\operatorname{Re}(\ecf)\target+\target^2$. The first term contains $B^2$ pairs because multiplying an average by its conjugate produces every combination of two sample indices. Apply the Gaussian integral identity to each term:
 
-$$\disc_B=\frac{\sqrt{2\pi}}{B^2}\sum_{b,c}e^{-(\proj_b-\proj_c)^2/2}-\frac{2\sqrt\pi}{B}\sum_b e^{-\proj_b^2/4}+\sqrt{\frac{2\pi}{3}}.$$
+$$\begin{aligned}\disc_B&=\frac{\sqrt{2\pi}}{B^2}\sum_{b,c}e^{-(\proj_b-\proj_c)^2/2}\\&\quad-\frac{2\sqrt\pi}{B}\sum_b e^{-\proj_b^2/4}+\sqrt{\frac{2\pi}{3}}.\end{aligned}$$
 
 <details><summary>Required derivation · account for all three terms</summary>
 
 The first term is $B^{-2}\sum_{b,c}\int e^{i\freq(\proj_b-\proj_c)}e^{-\freq^2/2}d\freq$. Regard the integral as $\sqrt{2\pi}$ times a standard Gaussian characteristic function evaluated at $\proj_b-\proj_c$. This yields the first exponential above.
 
-For the cross term, the target and window multiply to $e^{-\freq^2}$. Substituting $v=\sqrt2\freq$ gives $\int\cos(\freq\proj_b)e^{-\freq^2}d\freq=\sqrt\pi e^{-\proj_b^2/4}$. Retain the expansion's coefficient $-2/B$.
+For the cross term, the target and window multiply to $e^{-\freq^2}$. Substituting $v=\sqrt2\freq$ gives $\int\cos(\freq\proj_b)e^{-\freq^2}d\freq=\sqrt\pi e^{-\proj_b^2/4}$. Retain the expansion’s coefficient $-2/B$.
 
 For the final term, target squared times window is $e^{-3\freq^2/2}$, whose integral is $\sqrt{2\pi/3}$. No empirical samples occur in this term. Combining these three pieces proves the formula.
 
@@ -264,13 +267,13 @@ Let $w_k=\alpha_k\target(\freq_k)$ to shorten the notation. For one direction, d
 
 Apply the chain rule to each square. Its derivative is twice its inside times the derivative of that inside. The outer factor $B$ cancels the $1/B$ in the derivative of the mean:
 
-$$\frac{\partial\stat_B}{\partial\proj_b}=2\sum_kw_k\freq_k\left[-(C_k-\target_k)\sin(\freq_k\proj_b)+S_k\cos(\freq_k\proj_b)\right].$$
+$$\begin{aligned}\frac{\partial\stat_B}{\partial\proj_b}&=2\sum_kw_k\freq_k\Big[\\&\quad-(C_k-\target_k)\sin(\freq_k\proj_b)\\&\quad+S_k\cos(\freq_k\proj_b)\Big].\end{aligned}$$
 
 The Gaussian target does not depend on the sample, so its derivative is zero. For several directions, average their contributions. Since $H_{bm}=\sum_j\lat_{b,j}\U_{jm}$, its derivative with respect to $\lat_{b,j}$ is $\U_{jm}$. Hence
 
 $$\frac{\partial\reg}{\partial\lat_{b,j}}=\frac1M\sum_m\frac{\partial\stat_B^{(m)}}{\partial H_{bm}}\U_{jm}.$$
 
-The encoder's parameters affect its outputs. One more application of the chain rule yields $\partial\reg/\partial\theta_\ell=\sum_{b,j}(\partial\reg/\partial\lat_{b,j})(\partial\lat_{b,j}/\partial\theta_\ell)$. Automatic differentiation computes this composed derivative. It does not choose a better objective for us or remove the need to understand what is being differentiated.
+The encoder’s parameters affect its outputs. One more application of the chain rule yields $\partial\reg/\partial\theta_\ell=\sum_{b,j}(\partial\reg/\partial\lat_{b,j})(\partial\lat_{b,j}/\partial\theta_\ell)$. Automatic differentiation computes this composed derivative once we have specified the objective and its reductions.
 
 At the exact zero cloud, all sine terms and all imaginary averages are zero. The derivative above is therefore zero—even though the discrepancy is positive. A positive penalty at collapse is not the same as a nonzero escape gradient at exact collapse. Random initialization and nonzero variation matter; finite precision, other loss terms, and optimization dynamics matter too.
 
@@ -278,7 +281,7 @@ At the exact zero cloud, all sine terms and all imaginary averages are zero. The
 
 Consider one direction with $\proj_b=sx_b$, where the fixed $x_b$ have mean zero and second moment $m_2>0$. Near $s=0$, the cosine expansion gives $C_k=1-\freq_k^2s^2m_2/2+O(s^4)$. The sine average has no linear term because the sample mean is zero; it is $O(s^3)$. Squaring and keeping the leading change gives
 
-$$\stat_B(s)=\stat_B(0)-Bs^2m_2\sum_kw_k\freq_k^2(1-\target_k)+O(s^4).$$
+$$\begin{aligned}\stat_B(s)&=\stat_B(0)\\&\quad-Bs^2m_2\sum_kw_k\freq_k^2(1-\target_k)\\&\quad+O(s^4).\end{aligned}$$
 
 Every summand in the leading coefficient is nonnegative, and some are positive for a nontrivial frequency grid. Thus sufficiently small nonzero spread lowers this regularizer along that direction, even though the first derivative at $s=0$ vanishes. This is a local statement about the regularizer alone; the prediction term can compete with it.
 
@@ -324,7 +327,7 @@ Likewise, compute the empirical characteristic function over the intended batch 
 
 There is another finite-batch constraint. Center $B$ embedding vectors by subtracting their batch mean. Their sum is zero, so at most $B-1$ of those centered vectors are linearly independent. The sample covariance, formed from their outer products, therefore has rank at most $\min(d,B-1)$. A batch of 64 points in 192 dimensions cannot have full-rank sample covariance equal to $I_{192}$.
 
-This does not make projected distributional regularization meaningless. It means that exact population geometry and finite-batch geometry must not be conflated. The source distribution can be full-dimensional while every small sample covariance is rank-deficient.
+The source distribution can be full-dimensional while every small sample covariance is rank-deficient. Projection-based measurements can still train a useful distributional preference; finite-batch rank and population geometry describe different objects.
 
 Finally, Gaussianity is not semantics. Permuting which observation receives which embedding preserves the marginal cloud but can destroy temporal predictability. Conversely, predictable embeddings can omit distinctions needed by a particular goal. The prediction objective, exploration data, architecture, regularizer, and downstream evaluation work together; none can be interpreted in isolation.
 
@@ -366,9 +369,9 @@ For a small perturbation $\epsilon$, a central finite difference estimates a par
 
 We began with a loophole: an encoder can make agreement trivial by removing distinctions. We constructed a second preference that compares distributional measurements of its outputs with a known, noncollapsed reference. That preference has a computational form, gradients, finite-sample fluctuations, approximation errors, and limitations.
 
-The next chapter combines it with a predictor in executable code, and the laboratory then trains both networks. The decisive question becomes empirical: do the resulting representations support prediction and control on observations not used for the update? A neat cloud is one diagnostic. A useful learned model must survive further tests.
+The [implementation chapter](#implementation) combines it with a predictor in executable code, and the laboratory then trains both networks. The decisive question becomes empirical: do the resulting representations support prediction and control on observations not used for the update? A neat cloud is one diagnostic. A useful learned model must survive further tests.
 
-**Sources and correspondence.** SIGReg is introduced in [LeJEPA v1](https://arxiv.org/pdf/2511.08544v1). This chapter's implementation convention follows the [pinned LeWorldModel code](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/module.py), with its 17 nodes on $[0,3]$, Gaussian window, and batch multiplier. The requested endpoint is [LeWorldModel v1](https://arxiv.org/pdf/2603.19312v1). Reza Bayat's [SIGReg tutorial](https://rezabyt.github.io/blogposts/sigreg-tutorial.html) informed the requested pedagogical depth; the prose, derivations, experiments, and diagrams here are independently developed and checked. The downstream-risk theorem makes additional assumptions about probes and function classes; the geometric and entropy arguments here do not substitute for that theorem.
+**Sources and correspondence.** SIGReg is introduced in [LeJEPA v1](https://arxiv.org/pdf/2511.08544v1). This chapter’s implementation convention follows the [pinned LeWorldModel code](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/module.py), with its 17 nodes on $[0,3]$, Gaussian window, and batch multiplier. The requested endpoint is [LeWorldModel v1](https://arxiv.org/pdf/2603.19312v1). Reza Bayat’s [SIGReg tutorial](https://rezabyt.github.io/blogposts/sigreg-tutorial.html) informed the requested pedagogical depth; the prose, derivations, experiments, and diagrams here are independently developed and checked. The downstream-risk theorem makes additional assumptions about probes and function classes; the geometric and entropy arguments here do not substitute for that theorem.
 
 <figure class="generated-plate" data-art="S8"><img src="assets/generated/infographics/sigreg-1.png" alt="Six stages of SIGReg: embeddings, projection, unit phasors, average, Gaussian comparison and integration."/><figcaption>An overview of the calculation. The comparison inset shows magnitudes; the loss uses the full complex difference, including phase. The equations and computed examples beside this plate supply the exact measurement and gradient.</figcaption></figure>
 

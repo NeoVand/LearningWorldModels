@@ -10,15 +10,15 @@ Imagine watching a ball roll behind a screen. You expect it to reappear on the o
 
 <!-- VISUAL: P1 -->
 
-That comparison supplies a **learning signal**: information that can change the learner's adjustable parameters. “Unlabeled” is not “without structure.” Time, spatial continuity, different views of the same scene, and the consequences of actions all provide structure. Self-supervised learning constructs an input and a target from that structure. A withheld image patch is a target; the next camera frame is another. The learner is not told an answer by a human annotator, but it still has an objective.
+That comparison supplies a **learning signal**: information that can change the learner’s adjustable parameters. “Unlabeled” is not “without structure.” Time, spatial continuity, different views of the same scene, and the consequences of actions all provide structure. Self-supervised learning constructs an input and a target from that structure. A withheld image patch is a target; the next camera frame is another. The learner is not told an answer by a human annotator, but it still has an objective.
 
-A supervised classifier solves a narrower problem: given an observation, predict a supplied label. If all training labels say whether a cup is present, there is little direct incentive to preserve the cup's velocity or whether it is supported. A predictive learner can encounter pressure to preserve these quantities because they affect what happens next. That is a motivation, not a guarantee. A prediction objective can also exploit a shortcut such as the identity of the room or the unchanging background.
+A supervised classifier solves a narrower problem: given an observation, predict a supplied label. If all training labels say whether a cup is present, there is little direct incentive to preserve the cup’s velocity or whether it is supported. A predictive learner can encounter pressure to preserve these quantities because they affect what happens next. A prediction objective can also exploit a shortcut such as the identity of the room or the unchanging background.
 
-The central question is therefore not whether labels are good or bad. It is whether the training problem rewards the distinctions we will need later. For our mechanism, those distinctions include pose, motion, and response to action. Later goals may change without changing the mechanism's dynamics.
+The central question is therefore not whether labels are good or bad. It is whether the training problem rewards the distinctions we will need later. For our mechanism, those distinctions include pose, motion, and response to action. Later goals may change without changing the mechanism’s dynamics.
 
 ## What LeCun proposes, and what remains a proposal
 
-Yann LeCun's [2022 position paper, version 0.9.2](https://openreview.net/forum?id=BZ5a1r-kVsf), organizes a research program around learning from observation, planning through a world model, and representing the world at several levels of abstraction. It is a proposed synthesis, not a report that all its components have already been trained together successfully.
+Yann LeCun’s [2022 position paper, version 0.9.2](https://openreview.net/forum?id=BZ5a1r-kVsf), organizes a research program around learning from observation, planning through a world model, and representing the world at several levels of abstraction. It is a proposed synthesis, not a report that all its components have already been trained together successfully.
 
 Its six main responsibilities are worth separating carefully. **Perception** extracts a useful state description. A **world model** predicts how that description can evolve. **Cost** expresses preferences, including intrinsic costs and a learned critic that anticipates future costs. An **actor** selects actions, possibly by optimizing a sequence through the model. **Short-term memory** retains information that the current observation does not provide. A **configurator** adjusts the other components to the task and circumstances.
 
@@ -44,7 +44,7 @@ Suppose $s_t=(q_t,v_t)$ records position and velocity, while the camera reveals 
 
 Two pictures can help. If velocity is constant between frames separated by time $\Delta t$, then $q_t-q_{t-1}=v\Delta t$. Dividing both sides by $\Delta t$ gives $v=(q_t-q_{t-1})/\Delta t$. If acceleration or occlusion matters, more history or a different state estimator may be needed. History helps when the earlier observations contain information about the hidden quantities needed for prediction. Some hidden quantities may remain unobservable even from a long sequence.
 
-A state description is **Markov** for a prediction problem when, given that state and the relevant action, earlier history supplies no additional information about the next state. In everyday terms, the description has retained the past information needed for this prediction. Probability will later let us express that statement as conditional independence. It does not mean the world has no memory. The state must already include whatever memory matters. A compact learned embedding may fail to have that property even if the physical simulator's full state has it.
+A state description is **Markov** for a prediction problem when, given that state and the relevant action, earlier history supplies no additional information about the next state. In everyday terms, the description has retained the past information needed for this prediction. Probability will later let us express that statement as conditional independence. The state must already include whatever memory matters. A compact learned embedding may fail to have that property even if the physical simulator’s full state has it.
 
 ## Why predict a representation?
 
@@ -60,9 +60,9 @@ An encoder cannot create information missing from its input. It can organize inf
 
 ## A description can hide detail without resolving uncertainty
 
-Our map can leave out the tablecloth because a different tablecloth does not change the arm's motion. But removing that detail does not tell us whether an unseen person will push the arm. These are two different problems: deciding what to describe and representing what remains uncertain.
+Our map can leave out the tablecloth because a different tablecloth does not change the arm’s motion. But removing that detail does not tell us whether an unseen person will push the arm. These are two different problems: deciding what to describe and representing what remains uncertain.
 
-LeCun's broader proposal permits several compatible futures and uses a compatibility score called an energy. Lower scores mean a better fit. We will give this a mathematical definition after learning probability and prediction losses. LeWorldModel, our destination, uses a deterministic predictor; it implements a narrower part of that proposal.
+LeCun’s broader proposal permits several compatible futures and uses a compatibility score called an energy. Lower scores mean a better fit. We will give this a mathematical definition after learning probability and prediction losses. LeWorldModel, our destination, uses a deterministic predictor; it implements a narrower part of that proposal.
 
 ## Planning needs preferences as well as predictions
 
@@ -82,7 +82,7 @@ If each low-level step has $k$ alternatives, enumerating $H$ steps requires $k^H
 
 <!-- VISUAL: P4 -->
 
-LeCun's proposal also emphasizes memory. Moving one cup changes only a small portion of the world. A system that updates a persistent description of that cup may avoid reconstructing an entire scene description at every moment. Attention, taught later, provides one differentiable way to retrieve relevant stored information. A short frame history is a modest precursor, not a complete implementation of that idea.
+LeCun’s proposal also emphasizes memory. Moving one cup changes only a small portion of the world. A system that updates a persistent description of that cup may avoid reconstructing an entire scene description at every moment. Attention, taught later, provides one differentiable way to retrieve relevant stored information. A short frame history is a modest precursor, not a complete implementation of that idea.
 
 ## A first worked challenge
 

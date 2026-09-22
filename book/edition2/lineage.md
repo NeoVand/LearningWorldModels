@@ -30,7 +30,7 @@ Its evaluations include representation tasks such as classification and spatial 
 
 The input is passive video, not a sequence of motor commands for our particular robot. A video learner can infer patterns of movement while remaining unable to answer, “What will happen if I apply torque $a$?” That question requires some bridge between actions and visual changes.
 
-The paper uses a teacher-style target mechanism and evaluates frozen representations on downstream tasks. **Frozen evaluation** means the pretrained backbone is held fixed while a smaller readout is fitted. This isolates information accessible from the representation under that readout's capacity. Fine-tuning the entire model answers a different question because the representation can change using the downstream labels.
+The paper uses a teacher-style target mechanism and evaluates frozen representations on downstream tasks. **Frozen evaluation** means the pretrained backbone is held fixed while a smaller readout is fitted. This isolates information accessible from the representation under that readout’s capacity. Fine-tuning the entire model answers a different question because the representation can change using the downstream labels.
 
 A key lesson is that predicting features can produce useful motion and appearance information without reconstructing pixels. It is evidence for that training route on the tested data and tasks, not a proof that pixel prediction is universally unnecessary.
 
@@ -42,17 +42,17 @@ This separation answers two practical needs. Natural video contains extensive in
 
 The associated planning results should therefore be read with the pretraining investment visible. “No task-specific reward” does not mean no prior data. “Zero-shot” transfer to an evaluated robot setting does not mean the system has never seen related visual or robot data. Always ask what was held out and from which stage.
 
-LeWM explores a different tradeoff: jointly learn the encoder and predictor directly on environment-specific offline trajectories with a compact model. This can reduce dependence on a large frozen visual foundation model, but it also loses the benefit of that model's broad pretraining. These are different resource and transfer choices.
+LeWM explores a different tradeoff: jointly learn the encoder and predictor directly on environment-specific offline trajectories with a compact model. This can reduce dependence on a large frozen visual foundation model, but it also loses the benefit of that model’s broad pretraining. These are different resource and transfer choices.
 
 ## DINO-WM: start from a visual representation that already works
 
 [DINO-WM, 2411.04983v1](https://arxiv.org/pdf/2411.04983v1), learns dynamics over frozen DINOv2 visual features. DINOv2 supplies patch-level representations from image pretraining. Freezing the encoder removes the trainable-encoder collapse route while preserving a rich spatial description.
 
-The predictor learns how those features evolve under action, and a planner compares imagined features with a goal's features. The goal is supplied at test time; the model need not be retrained for each goal. This illustrates why latent dynamics and planning can be useful even without training the visual representation from scratch.
+The predictor learns how those features evolve under action, and a planner compares imagined features with a goal’s features. The goal is supplied at test time; the model need not be retrained for each goal. This illustrates why latent dynamics and planning can be useful even without training the visual representation from scratch.
 
-The representation's granularity affects computational cost. Predicting many patch tokens retains local spatial information but increases the work of repeated candidate rollouts. Compressing a frame into one vector can be cheaper but may discard fine spatial details. Neither choice wins by definition. The quality–compute tradeoff depends on the task and architecture.
+The representation’s granularity affects computational cost. Predicting many patch tokens retains local spatial information but increases the work of repeated candidate rollouts. Compressing a frame into one vector can be cheaper but may discard fine spatial details. Neither choice wins by definition. The quality–compute tradeoff depends on the task and architecture.
 
-LeWM's comparisons distinguish DINO-WM with additional proprioceptive inputs from a pixels-only comparison. **Proprioception** means measurements of the agent's own body, such as joint angles. Such measurements are valuable inputs, but including them changes the information available to the model. Compare like with like before attributing a gain solely to an objective.
+LeWM’s comparisons distinguish DINO-WM with additional proprioceptive inputs from a pixels-only comparison. **Proprioception** means measurements of the agent’s own body, such as joint angles. Such measurements are valuable inputs, but including them changes the information available to the model. Compare like with like before attributing a gain solely to an objective.
 
 <!-- VISUAL: H2 -->
 
@@ -60,7 +60,7 @@ LeWM's comparisons distinguish DINO-WM with additional proprioceptive inputs fro
 
 [PLDM, 2502.14819v1](https://arxiv.org/pdf/2502.14819v1), develops planning with learned latent dynamics and is the close end-to-end comparison in the LeWM paper. The important contrast is that perception can adapt to the dynamics task rather than remain fixed from unrelated pretraining.
 
-LeWM's baseline implementation uses prediction plus several VICReg-inspired constraints across examples and time, with an inverse-dynamics term available in the formulation. An inverse-dynamics model tries to infer the action from consecutive state representations. If two transitions require different actions, accurate inverse prediction can pressure the representation to retain the distinction. It can also introduce another loss coefficient and another modeling assumption.
+LeWM’s baseline implementation uses prediction plus several VICReg-inspired constraints across examples and time, with an inverse-dynamics term available in the formulation. An inverse-dynamics model tries to infer the action from consecutive state representations. If two transitions require different actions, accurate inverse prediction can pressure the representation to retain the distinction. It can also introduce another loss coefficient and another modeling assumption.
 
 Batch variance asks whether different trajectories at the same relative time remain distinguishable. Temporal variance asks whether one trajectory changes over its window. These are not the same requirement. For a stationary arm, low temporal variance can be correct even while different stationary poses should have substantial variance across the batch.
 
@@ -80,7 +80,7 @@ The word **sketched** refers to a randomized reduced measurement: instead of tes
 
 The model uses a vision transformer to turn a frame into a compact representation, a temporally causal predictor conditioned on actions, and a sampling-based planner. Its experiments examine goal-directed control, physical-variable probes, perturbation responses, computational cost, and training ablations.
 
-The important simplification is in the loss and training dependencies. The system still has a resolution, context length, latent dimension, learning rate, architecture, data distribution, planning horizon, and solver settings. “One effective hyperparameter” refers to the authors' reported practical loss-tuning story, not the literal number of choices in the whole system.
+The important simplification is in the loss and training dependencies. The system still has a resolution, context length, latent dimension, learning rate, architecture, data distribution, planning horizon, and solver settings. “One effective hyperparameter” refers to the authors’ reported practical loss-tuning story, not the literal number of choices in the whole system.
 
 ## Compare the training setups
 

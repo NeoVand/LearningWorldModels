@@ -8,7 +8,7 @@ A random variable is a rule that assigns a numerical value to an outcome. “The
 
 For a discrete variable, probabilities $p_i=P(X=x_i)$ are nonnegative and sum to one. For a continuous variable with density $p(x)$, probabilities belong to intervals or regions: $P(a\leq X\leq b)=\int_a^b p(x)\,dx$. The height $p(x)$ is not itself the probability of exactly $x$. Densities can exceed one; an interval of width $1/10$ with constant density 10 still has total probability one.
 
-An embedding distribution arises when observations vary and the encoder maps them to vectors. The encoder can be deterministic while its outputs are random because its inputs are sampled. That is the distribution SIGReg shapes. It is different from a model's distribution over alternative futures given one fixed observation.
+An embedding distribution arises when observations vary and the encoder maps them to vectors. The encoder can be deterministic while its outputs are random because its inputs are sampled. That is the distribution SIGReg shapes. It is different from a model’s distribution over alternative futures given one fixed observation.
 
 <!-- VISUAL: B1 -->
 
@@ -38,7 +38,7 @@ The off-diagonal covariances vanish by independence, leaving $B$ diagonal terms.
 
 ## Conditioning changes which average is relevant
 
-Conditional probability restricts the experiment to outcomes compatible with known information. For events with $P(A)>0$, define $P(B\mid A)=P(A\cap B)/P(A)$. Multiplying through yields the product rule. Writing the same joint probability in the opposite order yields Bayes' rule:
+Conditional probability restricts the experiment to outcomes compatible with known information. For events with $P(A)>0$, define $P(B\mid A)=P(A\cap B)/P(A)$. Multiplying through yields the product rule. Writing the same joint probability in the opposite order yields Bayes’ rule:
 
 $$P(A\mid B)=\frac{P(B\mid A)P(A)}{P(B)}.$$
 
@@ -84,7 +84,7 @@ $$I^2=\int_{\mathbb R^2}e^{-(x^2+y^2)/2}\,dx\,dy.$$
 
 The integrand depends only on distance $r$ from the origin. A thin annulus of radius $r$ and thickness $dr$ has area approximately $2\pi r\,dr$, with the relative error vanishing as the thickness goes to zero. Equivalently, polar coordinates have area element $r\,dr\,d\alpha$. Therefore
 
-$$I^2=2\pi\int_0^\infty re^{-r^2/2}\,dr=2\pi\int_0^\infty e^{-v}\,dv=2\pi,$$
+$$\begin{aligned}I^2&=2\pi\int_0^\infty re^{-r^2/2}\,dr\\&=2\pi\int_0^\infty e^{-v}\,dv=2\pi,\end{aligned}$$
 
 where $v=r^2/2$ gives $dv=r\,dr$. The last integral is one because an antiderivative of $e^{-v}$ is $-e^{-v}$. Since $I$ is positive, $I=\sqrt{2\pi}$. Nonnegative integrands justify combining these integrals; one can first integrate over bounded regions and then increase the regions.
 
@@ -92,7 +92,7 @@ where $v=r^2/2$ gives $dv=r\,dr$. The last integral is one because an antideriva
 
 Symmetry makes the mean zero. To derive its variance, note $p'(x)=-xp(x)$ and integrate by parts:
 
-$$\int x^2p(x)\,dx=-\int xp'(x)\,dx=-[xp(x)]_{-\infty}^{\infty}+\int p(x)\,dx=1.$$
+$$\begin{aligned}\int x^2p(x)\,dx&=-\int xp'(x)\,dx\\&=-[xp(x)]_{-\infty}^{\infty}+\int p(x)\,dx\\&=1.\end{aligned}$$
 
 The boundary term vanishes because the Gaussian exponential decays faster than $|x|$ grows. Integration by parts itself follows by integrating the product derivative $(uv)'=u'v+uv'$ and rearranging. We use this elementary bridge repeatedly, always checking boundaries.
 
@@ -106,7 +106,7 @@ Let $X$ be uniform on $[-1,1]$, and define $Y=X^2$. Symmetry gives $\mathbb E[X]
 
 We have proved only one direction: independence implies zero covariance. The counterexample disproves the converse. The next chapter will distinguish these properties for entire vectors.
 
-A mixture is another useful counterexample. Choose a branch with a coin, then sample a narrow Gaussian around either $-2$ or $+2$. The result has two peaks. Its mean is zero, and its variance can be computed by conditioning, but those two numbers do not make it a Gaussian. The book's distribution experiment compares mixtures, rings, lines, constants, and Gaussians so these distinctions remain visible.
+A mixture is another useful counterexample. Choose a branch with a coin, then sample a narrow Gaussian around either $-2$ or $+2$. The result has two peaks. Its mean is zero, and its variance can be computed by conditioning, but those two numbers do not make it a Gaussian. The book’s distribution experiment compares mixtures, rings, lines, constants, and Gaussians so these distinctions remain visible.
 
 <!-- VISUAL: B6 -->
 
@@ -114,15 +114,15 @@ A mixture is another useful counterexample. Choose a branch with a coin, then sa
 
 The training distribution describes examples the learner sees while fitting parameters. The evaluation distribution describes the cases on which we measure performance. A train–test split estimates transfer to fresh data only to the extent that the split represents the desired use.
 
-Overlapping video windows share observations and hidden episode conditions. Randomly splitting windows may place nearly identical transitions on both sides. Splitting entire episodes reduces this leakage. It does not ensure transfer to unfamiliar backgrounds, action ranges, or mechanisms. Those require explicit distribution shifts in the evaluation.
+Overlapping video windows share observations and hidden episode conditions. Randomly splitting windows may place nearly identical transitions on both sides. Splitting entire episodes reduces this leakage. Test transfer to unfamiliar backgrounds, action ranges, and mechanisms by introducing those distribution shifts explicitly at evaluation.
 
-The data-collecting policy also matters. If it never applies a negative torque at a particular pose, a model can fit the dataset without learning that counterfactual. Prediction from logged actions is evidence about observed coverage. It is not automatically identification of every causal action effect.
+The data-collecting policy also matters. If it never applies a negative torque at a particular pose, a model can fit the dataset without learning that counterfactual. The logged actions determine which consequences the data can teach; testing a missing action requires new coverage.
 
 ## Quantifying finite-sample uncertainty
 
 Suppose a controller succeeds independently on each task with probability $p$. A success indicator is 1 with probability $p$ and 0 otherwise. Its mean is $p$ and variance is $p-p^2=p(1-p)$. The sample success rate over $n$ tasks therefore has variance $p(1-p)/n$. Replacing $p$ by the observed rate gives a rough standard-error estimate, useful away from the endpoints and for sufficiently large independent samples.
 
-For 48 successes out of 50, the rate is $0.96$ and this estimated standard error is about $0.028$. This does not mean the true rate lies within 2.8 percentage points with certainty. A normal approximation interval would multiply the standard error by a chosen quantile, and it behaves poorly near boundaries. For small experiments, report the count as well as any interval, and specify how tasks and seeds were sampled.
+For 48 successes out of 50, the rate is $0.96$ and this estimated standard error is about $0.028$. The standard error describes sampling variability. A normal approximation interval multiplies it by a chosen quantile; near a boundary such as 100% success, that approximation behaves poorly. For small experiments, report the count as well as any interval, and specify how tasks and seeds were sampled.
 
 Variation across training seeds is another level of randomness. Testing three trained models on the same 50 tasks produces correlated evidence, not 150 wholly independent draws of a model–task pair. Separate variation from training, task selection, and evaluation randomness when possible. A plus-minus sign in a table is incomplete unless it says whether it denotes standard deviation, standard error, variance, or a confidence interval.
 

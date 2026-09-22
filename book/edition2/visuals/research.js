@@ -557,21 +557,19 @@ register("X1", {
     "Use a symbol’s defined role, not its letter alone, to read the mathematics.",
   draw: () =>
     cards([
-      ["Observed / given", tex("\\obs,\\quad x") + " · blue"],
+      ["Observation", tex("\\obs") + " · blue"],
       ["Representation", tex("\\lat,\\quad\\Z") + " · violet"],
-      ["Prediction / estimate", tex("\\pred,\\quad\\ecf") + " · teal"],
-      [
-        "Action / measuring choice",
-        tex("\\act,\\quad\\uvec,\\quad\\freq") + " · amber",
-      ],
+      ["Prediction", tex("\\pred") + " · teal"],
+      ["Action", tex("\\act") + " · amber"],
       ["Error / objective", tex("\\loss,\\quad\\reg,\\quad\\disc") + " · rose"],
       [
-        "Neutral structure",
-        "Operators, dimensions, indices and quantities without an assigned role remain neutral.",
+        "Analytical tools",
+        tex("\\uvec,\\quad\\freq,\\quad\\cf") + " · muted local palette",
       ],
+
     ]),
   caption:
-    "Color supplements notation; it never replaces labels or line styles. A physical arm has two joints, an embedding can have eight or 192 coordinates, and a density and its characteristic function live on different axes.",
+    "Operators, dimensions, indices and unassigned mathematical parameters remain neutral. Color supplements the defined symbols and labels; it never replaces them.",
 });
 register("X2", {
   title: "Trace each paper equation back to its tools",
