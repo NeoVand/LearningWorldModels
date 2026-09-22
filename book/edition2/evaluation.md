@@ -88,7 +88,7 @@ Varying $\xi$ can describe a set of compatible futures. Minimizing over $\xi$ as
 
 The target LeWorldModel uses a deterministic predictor. It does not instantiate the full latent-variable proposal. The distinction matters when reading its control successes: they do not establish that it has solved multimodal uncertainty.
 
-<figure class="generated-plate" data-art="E5"><img src="assets/generated/infographics/energy-final.png" alt="Alternative paths around an obstacle accompany a two-valley illustrative compatibility landscape."/><figcaption>The two valleys assign lower model energy to two compatible alternatives. This is a constructed compatibility score, not physical energy or an observed probability distribution. The numerical example shows the extra normalization needed for a density.</figcaption></figure>
+<figure class="generated-plate" data-art="E5"><img src="assets/generated/infographics/energy-1.png" alt="Alternative paths around an obstacle accompany a two-valley illustrative compatibility landscape."/><figcaption>The two valleys assign lower model energy to two compatible alternatives. This is a constructed compatibility score, not physical energy or an observed probability distribution. The numerical example shows the extra normalization needed for a density.</figcaption></figure>
 
 <!-- VISUAL: E5 -->
 

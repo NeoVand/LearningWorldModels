@@ -18,7 +18,7 @@ Reconstruction can be valuable when detailed rendering or broad information pres
 
 <figure class="diagram" data-diagram="jepa"></figure>
 
-<figure class="generated-plate" data-art="J1"><img src="assets/generated/infographics/jepa-corrected.png" alt="A common context branches into pixel reconstruction and a coordinate representation target."/><figcaption>A pixel prediction is compared with an observed image; a representation prediction is compared with an encoded target. The coordinates are learned features, not named physical quantities. The next diagrams specify parameter sharing and gradient flow.</figcaption></figure>
+<figure class="generated-plate" data-art="J1"><img src="assets/generated/infographics/jepa-3.png" alt="A common context branches into pixel reconstruction and a coordinate representation target."/><figcaption>A pixel prediction is compared with an observed image; a representation prediction is compared with an encoded target. The coordinates are learned features, not named physical quantities. The next diagrams specify parameter sharing and gradient flow.</figcaption></figure>
 
 <!-- VISUAL: J1 -->
 

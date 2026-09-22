@@ -1,5 +1,5 @@
 {
-  "status": "provisional editorial selections; awaiting optional user preference",
+  "status": "User-confirmed selections recorded individually; remaining selections are editorial.",
   "choices": {
     "P1": [
       "philosophy",
@@ -13,7 +13,7 @@
     ],
     "J1": [
       "jepa",
-      "jepa-corrected",
+      "jepa-3",
       "A common context branches into pixel reconstruction and a coordinate representation target."
     ],
     "S8": [
@@ -23,7 +23,7 @@
     ],
     "E5": [
       "evaluation",
-      "energy-final",
+      "energy-1",
       "Alternative paths around an obstacle accompany a two-valley illustrative compatibility landscape."
     ],
     "H3": [
@@ -35,6 +35,18 @@
   "confirmed_by_user": {
     "P4": {
       "selection": "hierarchy-4",
+      "date": "2026-09-22"
+    },
+    "J1": {
+      "selection": "jepa-3",
+      "date": "2026-09-22"
+    },
+    "E5": {
+      "selection": "energy-1",
+      "date": "2026-09-22"
+    },
+    "H3": {
+      "selection": "lineage-corrected-1",
       "date": "2026-09-22"
     }
   }

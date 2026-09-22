@@ -30,3 +30,7 @@ Update the matching `<img>` in `book/edition2/{chapter}.md` and `selection.json`
 ## Occlusion correction
 
 `occlusion-clear-path.png` replaces the selected occlusion draft. The path is parallel to and behind the screen. The top panel is a spatial schematic; the right panels show temporal camera views. Two earlier correction attempts were rejected for erroneous visibility cones; the final edit removes those cones. The built-in tool was used; complete prompts are in `occlusion-revision-prompts.json`.
+
+## Reader selections — 22 September 2026
+
+The reader selected Hierarchy 4, JEPA 3, Energy 1 and Lineage 1 (the gallery’s `lineage-corrected-1.png`). These supersede the earlier editorial choices listed above. The original selected compositions are preserved; the manuscript captions and editable architecture diagrams provide the precise method definitions. The book and print companion use these choices.
