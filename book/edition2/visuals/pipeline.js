@@ -1,3 +1,4 @@
+import { rolloutSpec } from "./experiments.js";
 import {
   register,
   row,
@@ -340,50 +341,8 @@ register("A2", {
   caption:
     "The cost surface is an explicitly defined two-action illustration. The world-model planner uses longer action sequences and a learned rollout cost. The standard-deviation floor prevents a prematurely degenerate search.",
 });
-register("A3", {
-  title: "One-step accuracy and rollout accuracy differ",
-  question: "When does the model consume its own previous error?",
-  controls: [range("horizon", "Steps", 1, 20, 1, 12)],
-  draw(s) {
-    const truth = [],
-      forced = [],
-      free = [];
-    let x = 1,
-      z = 1;
-    for (let i = 0; i <= s.horizon; i++) {
-      truth.push([i, x]);
-      free.push([i, z]);
-      forced.push([i, 1.04 * x + 0.03]);
-      x = 0.98 * x + 0.1;
-      z = 1.04 * z + 0.03;
-    }
-    return row(
-      panel(
-        "One observed context versus repeated feedback",
-        plot({
-          xmin: 0,
-          xmax: 20,
-          ymin: 0,
-          ymax: 5,
-          curves: [
-            { data: truth, color: "blue" },
-            { data: free, color: "teal" },
-            { data: forced.map(([i, y]) => [i + 1, y]), color: "amber" },
-          ],
-          xlabel: "time step",
-          ylabel: "state",
-        }),
-      ),
-      panel(
-        "The source of the mismatch",
-        eq("x_{t+1}=0.98x_t+0.10") + eq("\\hat x_{t+1}=1.04\\hat x_t+0.03"),
-        "Blue is the stated simulator. Amber predicts from true current states; teal feeds predictions back. These are measured errors of these two explicit rules, not the neural laboratory.",
-      ),
-    );
-  },
-  caption:
-    "Teacher forcing trains or evaluates with observed context. Free rollout changes the input distribution because prior predictions become context. The separate bound in the text is a worst-case inequality, not this measured trajectory.",
-});
+register("A3", rolloutSpec);
+
 register("A4", {
   title: "A long plan can be spent one action at a time",
   question:

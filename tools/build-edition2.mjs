@@ -150,9 +150,11 @@ function render(body, id) {
       `<section class="proof"><h3>Derivation · ${title}</h3>${body}</section>`,
   );
   return decorateControls(
-    html
-      .replace(/<table>/g, '<div class="table-wrap"><table>')
-      .replace(/<\/table>/g, "</table></div>"),
+    html.replace(
+      /<table(\s[^>]*)?>([\s\S]*?)<\/table>/g,
+      (_, attrs = "", body) =>
+        `<div class="table-wrap"><table${attrs}>${body}</table></div>`,
+    ),
   );
 }
 function themedMarkup(html) {

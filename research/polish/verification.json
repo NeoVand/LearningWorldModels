@@ -1,0 +1,50 @@
+{
+  "SGD": {
+    "initial": 10.760000000000002,
+    "final": 9.113034447315982e-15
+  },
+  "Momentum": {
+    "initial": 10.760000000000002,
+    "final": 3.7592463028972334e-7
+  },
+  "Adam": {
+    "initial": 10.760000000000002,
+    "final": 2.239608000906403e-7
+  },
+  "layouts": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "bad": [],
+      "distorted": 0
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "bad": [],
+      "distorted": 0
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "bad": [],
+      "distorted": 0
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "bad": [],
+      "distorted": 0
+    }
+  ],
+  "probe": "-1.08",
+  "sensor": {
+    "filter": "invert(1)",
+    "className": "sensor-image"
+  },
+  "errors": []
+}

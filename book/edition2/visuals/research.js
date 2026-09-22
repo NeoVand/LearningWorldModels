@@ -42,6 +42,7 @@ register("V1", {
       (v, i) =>
         (g += `<rect x="${70 + (i % 16) * 14}" y="${25 + Math.floor(i / 16) * 14}" width="14" height="14" fill="rgb(${v * 255},${v * 255},${v * 255})"/>`),
     );
+    g = `<g class="sensor-image">${g}</g>`;
     g += `<rect x="${70 + (s.patch % 4) * 56}" y="${25 + Math.floor(s.patch / 4) * 56}" width="56" height="56" fill="none" stroke="var(--amber)" stroke-width="3"/>`;
     const values = Array.from(
       { length: 16 },

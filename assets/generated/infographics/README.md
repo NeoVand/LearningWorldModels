@@ -26,3 +26,7 @@ The SIGReg production brief was a publication-style six-stage plate: embedding c
 ## Change a selection
 
 Update the matching `<img>` in `book/edition2/{chapter}.md` and `selection.json`, review the full-resolution result, then run `npm run build`. The HTML embeds the selected PNG, so it remains self-contained. Never use a raw composition draft as a source for equations or scientific claims.
+
+## Occlusion correction
+
+`occlusion-clear-path.png` replaces the selected occlusion draft. The path is parallel to and behind the screen. The top panel is a spatial schematic; the right panels show temporal camera views. Two earlier correction attempts were rejected for erroneous visibility cones; the final edit removes those cones. The built-in tool was used; complete prompts are in `occlusion-revision-prompts.json`.

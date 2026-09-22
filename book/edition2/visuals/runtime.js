@@ -41,7 +41,7 @@ for (const el of document.querySelectorAll("[data-visual]")) {
       b.innerHTML =
         icon(playing ? "pause" : "play") +
         "<span>" +
-        (playing ? "Pause" : "Play") +
+        (playing ? "Pause" : spec.tick ? "Train" : "Play") +
         "</span>";
       b.setAttribute("aria-pressed", String(playing));
     }
@@ -49,6 +49,7 @@ for (const el of document.querySelectorAll("[data-visual]")) {
   el.addEventListener("input", (e) => {
     if (e.target.dataset.key) {
       state[e.target.dataset.key] = +e.target.value;
+      spec.change?.(state, e.target.dataset.key);
       draw();
     }
   });
@@ -57,6 +58,7 @@ for (const el of document.querySelectorAll("[data-visual]")) {
     if (!b) return;
     if (b.dataset.value) {
       state[b.dataset.key] = b.dataset.value;
+      spec.change?.(state, b.dataset.key);
       draw();
       if (el.dataset.visual === "I3") {
         const patterns = {
@@ -83,7 +85,12 @@ for (const el of document.querySelectorAll("[data-visual]")) {
     }
     if (b.dataset.action === "play") {
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        state.time = (state.time + 30) % 241;
+        if (spec.tick) spec.tick(state);
+        else
+          state.time = Math.min(
+            spec.maxTime ?? 240,
+            state.time + (spec.maxTime ? 1 : 30),
+          );
         draw();
       } else {
         playing = !playing;
@@ -97,11 +104,35 @@ for (const el of document.querySelectorAll("[data-visual]")) {
       playLabel();
       draw();
     }
+    if (b.dataset.action?.startsWith("reset")) {
+      playing = false;
+      playLabel();
+    }
     if (spec.action && b.dataset.action) {
       spec.action(state, b.dataset.action);
       draw();
     }
   });
+  if (spec.pointer)
+    for (const kind of ["pointermove", "click"])
+      el.addEventListener(kind, (e) => {
+        const target = e.target.closest("svg[data-interactive]");
+        if (!target) return;
+        if (kind === "pointermove" && target.dataset.interactive !== "neuron")
+          return;
+        const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(
+          target.getScreenCTM().inverse(),
+        );
+        const before = state.probe;
+        spec.pointer(state, {
+          x: p.x,
+          y: p.y,
+          kind: kind === "click" ? "click" : "move",
+          target: target.dataset.interactive,
+        });
+        if (kind === "pointermove" && before === state.probe) return;
+        draw();
+      });
   new IntersectionObserver(
     (entries) => {
       visible = entries[0].isIntersecting;
@@ -113,9 +144,18 @@ for (const el of document.querySelectorAll("[data-visual]")) {
     if (playing && visible && !document.hidden) {
       if (last) acc += Math.min(0.05, (t - last) / 1000);
       let changed = false;
-      while (acc >= 1 / 60) {
-        state.time = (state.time + 1) % 241;
-        acc -= 1 / 60;
+      const interval = 1 / (spec.fps ?? 60);
+      while (acc >= interval) {
+        if (spec.maxTime && state.time >= spec.maxTime) {
+          playing = false;
+          playLabel();
+          acc = 0;
+          break;
+        }
+        if (spec.tick) spec.tick(state);
+        else
+          state.time = spec.maxTime ? state.time + 1 : (state.time + 1) % 241;
+        acc -= interval;
         changed = true;
       }
       if (changed) draw();

@@ -76,15 +76,18 @@ export function plot({
   xlabel = "x",
   ylabel = "y",
   extra = "",
+  height = 280,
 } = {}) {
+  const bottom = height - 45,
+    graphHeight = height - 80;
   const X = (x) => 35 + ((x - xmin) * 290) / (xmax - xmin),
-    Y = (y) => 235 - ((y - ymin) * 200) / (ymax - ymin);
+    Y = (y) => bottom - ((y - ymin) * graphHeight) / (ymax - ymin);
   const clipId = clipPrefix + "-plot-" + ++plotSerial;
   let s =
-    `<defs><clipPath id="${clipId}"><rect x="35" y="35" width="290" height="200"/></clipPath></defs>` +
-    line(35, 235, 325, 235) +
-    line(35, 35, 35, 235);
-  if (xmin < 0 && xmax > 0) s += line(X(0), 35, X(0), 235);
+    `<defs><clipPath id="${clipId}"><rect x="35" y="35" width="290" height="${graphHeight}"/></clipPath></defs>` +
+    line(35, bottom, 325, bottom) +
+    line(35, 35, 35, bottom);
+  if (xmin < 0 && xmax > 0) s += line(X(0), 35, X(0), bottom);
   if (ymin < 0 && ymax > 0) s += line(35, Y(0), 325, Y(0));
   const tick = (v, span) =>
     Number.isInteger(v) ? String(v) : f(v, span < 0.1 ? 3 : span < 1 ? 2 : 1);
@@ -92,10 +95,10 @@ export function plot({
     let x = xmin + ((xmax - xmin) * i) / 4,
       y = ymin + ((ymax - ymin) * i) / 4;
     s +=
-      text(X(x), 255, tick(x, xmax - xmin), "muted", "middle") +
+      text(X(x), bottom + 20, tick(x, xmax - xmin), "muted", "middle") +
       text(29, Y(y) + 4, tick(y, ymax - ymin), "muted", "end");
   }
-  s += text(326, 276, xlabel, "muted", "end") + text(36, 20, ylabel);
+  s += text(326, height - 4, xlabel, "muted", "end") + text(36, 20, ylabel);
   s += `<g clip-path="url(#${clipId})">`;
   curves.forEach(({ fn, color = "teal", data, area }) => {
     const pts =
@@ -105,7 +108,7 @@ export function plot({
         return [x, fn(x)];
       });
     if (area) {
-      const fillId=clipId+"-area-"+color;
+      const fillId = clipId + "-area-" + color;
       s += `<defs><linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${role(color)}" stop-opacity=".4"/><stop offset="1" stop-color="${role(color)}" stop-opacity=".025"/></linearGradient></defs>`;
       s += `<path d="M${X(pts[0][0])} ${Y(0)}${pts.map(([x, y]) => "L" + X(x) + " " + Y(y)).join("")}L${X(pts.at(-1)[0])} ${Y(0)}Z" fill="url(#${fillId})"/>`;
     }
@@ -118,7 +121,12 @@ export function plot({
     (p) => (s += dot(X(p[0]), Y(p[1]), p[3] ?? 3, p[2] ?? "violet", 0.8)),
   );
   s += "</g>";
-  return svg(s + extra, "Computed graph: " + xlabel + " against " + ylabel);
+  return svg(
+    s + extra,
+    "Computed graph: " + xlabel + " against " + ylabel,
+    360,
+    height,
+  );
 }
 export function scatter(points, { limit = 3, angle = null } = {}) {
   const M = (x) => 180 + x * 39;
@@ -137,7 +145,7 @@ export function scatter(points, { limit = 3, angle = null } = {}) {
   return svg(s, "Point cloud with equal horizontal and vertical units");
 }
 export const panel = (title, body, note = "") =>
-  `<div class="visual-panel"><h4>${title}</h4>${body}${note ? '<p class="visual-note">' + note + "</p>" : ""}</div>`;
+  `<div class="visual-panel"><h4>${title}</h4>${body}${note ? '<div class="visual-note">' + note + "</div>" : ""}</div>`;
 export const row = (...p) => `<div class="visual-panels">${p.join("")}</div>`;
 export const number = (label, value, unit = "") =>
   `<div class="visual-number"><strong>${value}</strong><span>${label}${unit ? " · " + unit : ""}</span></div>`;

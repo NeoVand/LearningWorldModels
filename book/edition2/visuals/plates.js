@@ -1,5 +1,7 @@
 import {
   register,
+  range,
+  button,
   row,
   panel,
   svg,
@@ -7,55 +9,42 @@ import {
   dot,
   line,
   path,
-  range,
   choices,
   tex,
 } from "./core.js";
 register("P1", {
-  title: "A hidden interval leaves several continuations",
+  title: "The object continues; the image loses it",
   question:
-    "The observations constrain a future without necessarily selecting just one.",
-  draw: () =>
-    row(
-      panel(
-        "Visible past",
-        svg(
-          line(20, 180, 340, 180) +
-            [55, 95, 135]
-              .map((x, i) => dot(x, 150, 10, "blue", 0.25 + i * 0.3))
-              .join("") +
-            `<rect x="165" y="60" width="90" height="120" fill="var(--surface-raised)" stroke="var(--line)"/>`,
-          "Three observed ball positions before an opaque screen",
-        ),
-        "Earlier positions supply motion evidence; a still image does not.",
-      ),
-      panel(
-        "Unseen continuation",
-        svg(
-          `<rect x="35" y="60" width="90" height="120" fill="var(--surface-raised)" stroke="var(--line)"/>` +
-            path(
-              [
-                [125, 150],
-                [210, 120],
-                [310, 110],
-              ],
-              "teal",
-            ) +
-            path(
-              [
-                [125, 150],
-                [210, 175],
-                [310, 190],
-              ],
-              "teal",
-            ),
-          "Two possible paths after occlusion",
-        ),
-        "The branches stand for uncertainty about hidden interactions. They are possible alternatives, not simultaneous copies of a ball.",
-      ),
-    ),
+    "Play one possible passage behind the screen. The camera cannot observe the ball during the middle interval.",
+  controls: [
+    button("play", "Play"),
+    button("reset", "Replay"),
+    range("time", "Time", 0, 240, 1, 45),
+  ],
+  animate: true,
+  draw(s) {
+    const x = 80 + (560 * s.time) / 240,
+      hidden = x > 267 && x < 453;
+    return svg(
+      `<defs><linearGradient id="screen-depth" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--surface-raised)"/><stop offset="1" stop-color="var(--inset)"/></linearGradient><radialGradient id="ball-light" cx=".3" cy=".25"><stop stop-color="var(--surface)"/><stop offset=".3" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--teal)"/></radialGradient></defs>` +
+        line(35, 137, 685, 137) +
+        `<circle cx="${x}" cy="118" r="13" fill="url(#ball-light)"/><rect x="255" y="35" width="210" height="102" rx="3" fill="url(#screen-depth)" stroke="var(--line)"/>` +
+        text(360, 82, "Screen in the foreground", "muted", "middle") +
+        text(
+          360,
+          105,
+          hidden ? "Ball fully hidden" : "Ball enters or leaves view",
+          "muted",
+          "middle",
+        ) +
+        text(35, 165, "The track runs behind the screen; it never meets it."),
+      "Camera view of one ball moving behind an opaque screen",
+      720,
+      182,
+    );
+  },
   caption:
-    "The generated temporal plate makes the missing interval concrete. The editable companion diagram states what is observed and what is hypothesized; no probabilities or trained forecasts are implied.",
+    "This animation supplies one possible physical continuation, not a learned prediction. When the ball is hidden, images alone cannot establish whether an unseen interaction changes its motion.",
 });
 register("P4", {
   title: "A subgoal connects two time scales",

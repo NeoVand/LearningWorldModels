@@ -1,4 +1,9 @@
 import {
+  optimizerSpec,
+  normalizationSpec,
+  neuronActivations,
+} from "./experiments.js";
+import {
   register,
   row,
   panel,
@@ -25,47 +30,56 @@ const cards = (items) =>
     .map(([a, b]) => `<div class="visual-card"><strong>${a}</strong>${b}</div>`)
     .join("") +
   "</div>";
+const fitTarget = (s, x) =>
+  s.target === "Bump"
+    ? Math.exp(-3 * x * x) - 0.3
+    : s.target === "Zigzag"
+      ? Math.abs(x) - 1
+      : Math.sin(2 * x);
 function initFit(s) {
   if (s.fit) return;
-  const r = rng(42);
+  const r = rng(42),
+    units = +(s.units ?? 8);
   s.fit = {
     steps: 0,
     a: 0,
     b: 0,
-    w: Array.from({ length: 8 }, () => normal(r) * 0.7),
-    c: Array.from({ length: 8 }, () => normal(r) * 0.4),
-    v: Array.from({ length: 8 }, () => normal(r) * 0.2),
+    w: Array.from({ length: units }, () => normal(r) * 0.7),
+    c: Array.from({ length: units }, () => normal(r) * 0.4),
+    v: Array.from({ length: units }, () => normal(r) * 0.2),
   };
 }
 function fitStep(s, n) {
   initFit(s);
-  const m = s.fit;
+  const m = s.fit,
+    units = m.w.length,
+    activation = neuronActivations[s.activation ?? "tanh"];
   for (let k = 0; k < n; k++) {
     const g = {
       a: 0,
       b: 0,
-      w: Array(8).fill(0),
-      c: Array(8).fill(0),
-      v: Array(8).fill(0),
+      w: Array(units).fill(0),
+      c: Array(units).fill(0),
+      v: Array(units).fill(0),
     };
     for (let i = 0; i < 41; i++) {
       const x = -2 + i * 0.1,
-        y = Math.sin(2 * x),
-        h = m.w.map((w, j) => Math.tanh(w * x + m.c[j])),
+        y = fitTarget(s, x),
+        h = m.w.map((w, j) => activation.fn(w * x + m.c[j])),
         pred = h.reduce((a, v, j) => a + m.v[j] * v, 0),
         error = (2 * (pred - y)) / 41,
         lin = (2 * (m.a * x + m.b - y)) / 41;
       g.a += lin * x;
       g.b += lin;
-      for (let j = 0; j < 8; j++) {
+      for (let j = 0; j < units; j++) {
         g.v[j] += error * h[j];
-        g.w[j] += error * m.v[j] * (1 - h[j] * h[j]) * x;
-        g.c[j] += error * m.v[j] * (1 - h[j] * h[j]);
+        g.w[j] += error * m.v[j] * activation.df(m.w[j] * x + m.c[j]) * x;
+        g.c[j] += error * m.v[j] * activation.df(m.w[j] * x + m.c[j]);
       }
     }
     m.a -= 0.03 * g.a;
     m.b -= 0.03 * g.b;
-    for (let j = 0; j < 8; j++) {
+    for (let j = 0; j < units; j++) {
       m.w[j] -= 0.03 * g.w[j];
       m.c[j] -= 0.03 * g.c[j];
       m.v[j] -= 0.03 * g.v[j];
@@ -74,54 +88,84 @@ function fitStep(s, n) {
   }
 }
 register("N3", {
-  title: "Let eight curved units fit a curved target",
+  title: "Build a curve from individual neurons",
   question:
-    "Both models see the same 41 points. Can a stack of affine maps reproduce these bends?",
+    "Change the target, activation or number of units. Train the same network, then inspect the curves that add up to its prediction.",
   controls: [
-    button("train", "Train 200 updates"),
+    choices("target", "Target", ["Sine", "Bump", "Zigzag"]),
+    choices("units", "Hidden units", ["1", "4", "8", "16"], "8"),
+    choices("activation", "Activation", ["tanh", "ReLU", "GELU", "Linear"]),
+    button("play", "Train / pause"),
+    button("train", "200 updates"),
     button("reset-fit", "Reset weights"),
+    choices("contributions", "Individual contributions", ["Hidden", "Shown"]),
   ],
+  animate: true,
+  fps: 8,
+  tick(s) {
+    fitStep(s, 25);
+  },
+  change(s, key) {
+    if (["target", "units", "activation"].includes(key)) delete s.fit;
+  },
   action(s, a) {
     if (a === "reset-fit") delete s.fit;
     else if (a === "train") fitStep(s, 200);
   },
   draw(s) {
     initFit(s);
-    const m = s.fit;
+    const m = s.fit,
+      activation = neuronActivations[s.activation],
+      predict = (x) =>
+        m.w.reduce(
+          (sum, w, j) => sum + m.v[j] * activation.fn(w * x + m.c[j]),
+          0,
+        ),
+      mse =
+        Array.from({ length: 41 }, (_, i) => {
+          const x = -2 + i * 0.1;
+          return (predict(x) - fitTarget(s, x)) ** 2;
+        }).reduce((a, b) => a + b) / 41;
+    const curves = [
+      { fn: (x) => fitTarget(s, x), color: "blue" },
+      { fn: (x) => m.a * x + m.b, color: "amber" },
+    ];
+    if (s.contributions === "Shown")
+      m.w.forEach((w, j) =>
+        curves.push({
+          fn: (x) => m.v[j] * activation.fn(w * x + m.c[j]),
+          color: j % 2 ? "violet" : "muted",
+        }),
+      );
+    curves.push({ fn: predict, color: "teal" });
     return row(
       panel(
-        "Random weights are visible from the start",
+        "Target and current fit",
         plot({
           xmin: -2,
           xmax: 2,
-          ymin: -1.5,
-          ymax: 1.5,
-          curves: [
-            { fn: (x) => Math.sin(2 * x), color: "blue" },
-            { fn: (x) => m.a * x + m.b, color: "amber" },
-            {
-              fn: (x) =>
-                m.w.reduce(
-                  (a, w, j) => a + m.v[j] * Math.tanh(w * x + m.c[j]),
-                  0,
-                ),
-              color: "teal",
-            },
-          ],
+          ymin: -1.8,
+          ymax: 1.8,
+          curves,
+          points: Array.from({ length: 21 }, (_, i) => {
+            const x = -2 + i * 0.2;
+            return [x, fitTarget(s, x), "blue", 2];
+          }),
           ylabel: "prediction",
         }),
-        `${m.steps} real gradient updates. Blue target; amber affine baseline; teal eight-neuron tanh model.`,
+        `${m.steps.toLocaleString()} actual gradient updates. Blue target; amber affine baseline; teal neural network.`,
       ),
       panel(
-        "Why depth alone does not suffice",
-        eq("A_2(A_1x+b_1)+b_2=(A_2A_1)x+(A_2b_1+b_2)") +
-          eq("\\hat y=\\sum_{j=1}^{8}v_j\\tanh(w_jx+b_j)"),
-        "Nonlinear units create bends that a single affine rule cannot express. This small full-batch demo uses explicit chain-rule derivatives and a fixed learning rate.",
+        "What the units contribute",
+        eq(`\\hat y=\\sum_{j=1}^{${m.w.length}}v_j\\sigma(w_jx+b_j)`) +
+          number("Mean squared error", f(mse, 4)) +
+          `<p class="visual-note">${m.w.length} hidden units · ${3 * m.w.length} trainable parameters. ${s.contributions === "Shown" ? "Each thin curve is one weighted unit. Their sum is the teal prediction." : "Show individual contributions to see how a collection of simple curves builds the fit."}</p>`,
+        "A linear activation keeps the whole model affine, however many units you add. Nonlinear activations let it bend.",
       ),
     );
   },
   caption:
-    "The target, seed, samples and training rate are fixed. Each click continues the same weights; reset returns to the original random initialization. This is a separate supervised example teaching optimization, not the world model.",
+    "Adapted from Jaxverse’s curve-fitting experiment. Training uses all 41 fixed samples, explicit chain-rule gradients and a learning rate of 0.03. Pause preserves weights; reset restores the seed. Changing the target, width or activation starts fresh. This supervised example is separate from the world-model laboratory.",
 });
 register("N4", {
   title: "Read a gradient as three local factors",
@@ -160,60 +204,8 @@ register("N4", {
   caption:
     "Every displayed factor is recomputed. A shared weight would receive a sum of such contributions from all of its uses and all batch examples.",
 });
-register("N5", {
-  title: "Optimizer memory smooths a sequence",
-  question:
-    "The first moving average is biased toward its zero initialization. What does correction change?",
-  controls: [range("n", "Updates shown", 1, 40, 1, 10)],
-  draw(s) {
-    let m = 0,
-      v = 0;
-    const gs = [],
-      ms = [],
-      hat = [],
-      vh = [];
-    for (let i = 1; i <= s.n; i++) {
-      const g = Math.sin(i * 0.8) + 0.5;
-      m = 0.9 * m + 0.1 * g;
-      v = 0.99 * v + 0.01 * g * g;
-      gs.push([i, g]);
-      ms.push([i, m]);
-      hat.push([i, m / (1 - 0.9 ** i)]);
-      vh.push([i, v / (1 - 0.99 ** i)]);
-    }
-    return row(
-      panel(
-        "Same gradients; different memory",
-        plot({
-          xmin: 0,
-          xmax: 40,
-          ymin: -1,
-          ymax: 2,
-          curves: [
-            { data: gs, color: "blue" },
-            { data: ms, color: "violet" },
-            { data: hat, color: "teal" },
-          ],
-          xlabel: "update",
-          ylabel: "gradient / first moment",
-        }),
-        "Blue gradient, violet uncorrected first moment, teal bias-corrected first moment.",
-      ),
-      panel(
-        "Updates use different quantities",
-        eq("\\Delta\\theta_{\\rm SGD}=-\\eta g_k") +
-          eq("\\Delta\\theta_{\\rm momentum}=-\\eta m_k") +
-          eq(
-            "\\Delta\\theta_{\\rm Adam}=-\\eta\\frac{\\hat m_k}{\\sqrt{\\hat v_k}+\\epsilon}",
-          ) +
-          number("Corrected second moment", f(vh.at(-1)[1])),
-        "These are responses to one prescribed gradient sequence, not evidence that one optimizer solves every problem faster.",
-      ),
-    );
-  },
-  caption:
-    "The curves use β₁ = 0.9 and β₂ = 0.99. Corrected moments divide out the missing mass caused by starting the recurrence at zero.",
-});
+register("N5", optimizerSpec);
+
 register("N6", {
   title: "The fit alone leaves a choice",
   question:
@@ -262,65 +254,8 @@ register("N6", {
   caption:
     "Regularization expresses a preference among explanations compatible with the data. The choice must match the task; “simpler” is not a universal guarantee of truth.",
 });
-register("N7", {
-  title: "Which entries share a normalization?",
-  question:
-    "A row is one example. A column is one feature. Change the reduction axis.",
-  controls: [
-    choices("mode", "Operation", [
-      "LayerNorm",
-      "BatchNorm · training",
-      "BatchNorm · evaluation",
-    ]),
-  ],
-  draw(s) {
-    const a = [
-        [1, 2, 6],
-        [3, 4, 2],
-      ],
-      out = a.map(() => Array(3));
-    for (let i = 0; i < 2; i++)
-      for (let j = 0; j < 3; j++) {
-        const values = s.mode === "LayerNorm" ? a[i] : a.map((r) => r[j]),
-          mu =
-            s.mode === "BatchNorm · evaluation"
-              ? 2
-              : values.reduce((x, y) => x + y) / values.length,
-          variance =
-            s.mode === "BatchNorm · evaluation"
-              ? 4
-              : values.reduce((v, x) => v + (x - mu) ** 2, 0) / values.length;
-        out[i][j] = (a[i][j] - mu) / Math.sqrt(variance + 1e-5);
-      }
-    return row(
-      panel(
-        "Input: batch × feature",
-        svg(
-          a
-            .flatMap((r, i) =>
-              r.map(
-                (v, j) =>
-                  `<rect x="${45 + j * 90}" y="${60 + i * 80}" width="75" height="65" rx="8" fill="var(--${s.mode === "LayerNorm" ? (i ? "violet" : "blue") : ["blue", "violet", "amber"][j]})" opacity=".18"/>` +
-                  text(82 + j * 90, 99 + i * 80, String(v), "ink", "middle"),
-              ),
-            )
-            .join(""),
-          "Two by three array with normalization groups",
-        ),
-      ),
-      panel(
-        "Normalized values",
-        eq("\\frac{x-\\mu}{\\sqrt{\\sigma^2+10^{-5}}}") +
-          `<table><tbody>${out.map((r) => "<tr>" + r.map((v) => "<td>" + f(v) + "</td>").join("") + "</tr>").join("")}</tbody></table>`,
-        s.mode === "BatchNorm · evaluation"
-          ? "Illustrative stored statistics μ = 2, variance = 4 are used, not this batch’s moments."
-          : "Gain = 1 and offset = 0. Epsilon prevents division by zero.",
-      ),
-    );
-  },
-  caption:
-    "LayerNorm uses features within an example. BatchNorm during training uses examples for each feature; its evaluation rule uses stored statistics. These are normalization operations, not automatically regularizers.",
-});
+register("N7", normalizationSpec);
+
 register("P2", {
   title: "Follow one decision through the proposed agent",
   question:

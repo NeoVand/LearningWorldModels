@@ -1,3 +1,4 @@
+import { descentSpec, jacobianSpec, neuronSpec } from "./experiments.js";
 import {
   register,
   row,
@@ -769,54 +770,8 @@ register("D1", {
   caption:
     "The derivative is a limit of ratios, not division by a zero step. We only evaluate the finite difference at positive h.",
 });
-register("D2", {
-  title: "Two knobs, one downhill direction",
-  question:
-    "Increase the step size. Does a step opposite the gradient always lower the loss?",
-  controls: [
-    range("x", "First parameter", -2, 2, 0.05, 1.4),
-    range("y", "Second parameter", -2, 2, 0.05, 0.8),
-    range("eta", "Learning rate", 0, 1, 0.01, 0.15),
-  ],
-  draw(s) {
-    const grad = [2 * s.x, 8 * s.y],
-      next = [s.x - s.eta * grad[0], s.y - s.eta * grad[1]],
-      loss = (x, y) => x * x + 4 * y * y;
-    let contour = "";
-    for (let k = 1; k <= 7; k++)
-      contour += `<ellipse cx="180" cy="140" rx="${18 * k}" ry="${9 * k}" fill="none" stroke="var(--line)"/>`;
-    return row(
-      panel(
-        "Contours and one update",
-        svg(
-          contour +
-            path(
-              [
-                [180 + 45 * s.x, 140 - 45 * s.y],
-                [180 + 45 * next[0], 140 - 45 * next[1]],
-              ],
-              "teal",
-              3,
-            ) +
-            dot(180 + 45 * s.x, 140 - 45 * s.y, 5, "blue"),
-          "Elliptic contours and a gradient update",
-        ),
-      ),
-      panel(
-        "The two coordinate slices",
-        eq("L(x,y)=x^2+4y^2") +
-          eq(`\\nabla L=(${f(grad[0])},${f(grad[1])})^\\top`) +
-          number(
-            "Loss before → after",
-            `${f(loss(s.x, s.y))} → ${f(loss(...next))}`,
-          ),
-        "The y direction has four times the curvature. A large step overshoots even though the initial direction is downhill.",
-      ),
-    );
-  },
-  caption:
-    "This explicit quadratic is an illustration. The gradient combines two partial derivatives; curvature determines which finite step sizes remain safe.",
-});
+register("D2", descentSpec);
+
 register("D3", {
   title: "Multiply along paths; add across paths",
   question:
@@ -851,98 +806,8 @@ register("D3", {
   caption:
     "Read the graph forward to compute values, then backward to accumulate sensitivities. The chain rule multiplies local effects; shared paths require addition.",
 });
-function localGrid(s, J) {
-  const M = ([x, y]) => [180 + 100 * x, 140 - 100 * y],
-    transform = (a, b) => [
-      (s.x + a) ** 2 + s.y + b - s.x * s.x - s.y,
-      (s.x + a) * (s.y + b) - s.x * s.y,
-    ];
-  let body = line(20, 140, 340, 140) + line(180, 10, 180, 270);
-  for (const v of [-0.2, -0.1, 0, 0.1, 0.2])
-    for (const axis of [0, 1]) {
-      const inputs = Array.from({ length: 25 }, (_, i) =>
-        axis ? [v, -0.2 + i / 60] : [-0.2 + i / 60, v],
-      );
-      body +=
-        path(
-          inputs.map(([a, b]) => M(transform(a, b))),
-          "blue",
-        ) +
-        path(
-          inputs.map(([a, b]) =>
-            M([J[0][0] * a + J[0][1] * b, J[1][0] * a + J[1][1] * b]),
-          ),
-          "teal",
-          1,
-        );
-    }
-  return svg(
-    body,
-    "True nonlinear image and Jacobian approximation of the same local input grid",
-  );
-}
-register("D4", {
-  title: "Each Jacobian column answers one perturbation",
-  question:
-    "Change only one input coordinate. Compare the true output displacement with its linear approximation.",
-  controls: [
-    range("x", "Base x", -0.8, 1.5, 0.02, 0.8),
-    range("y", "Base y", -0.8, 1.5, 0.02, 0.6),
-    range("h", "Perturbation", -0.5, 0.5, 0.01, 0.1),
-    choices("axis", "Change", ["x", "y"]),
-  ],
-  draw(s) {
-    const J = [
-        [2 * s.x, 1],
-        [s.y, s.x],
-      ],
-      dx = s.axis === "x" ? s.h : 0,
-      dy = s.axis === "y" ? s.h : 0,
-      actual = [
-        (s.x + dx) ** 2 + s.y + dy - s.x * s.x - s.y,
-        (s.x + dx) * (s.y + dy) - s.x * s.y,
-      ],
-      pred = [2 * s.x * dx + dy, s.y * dx + s.x * dy];
-    return row(
-      panel(
-        "Function and local table",
-        eq("f(x,y)=(x^2+y,xy)^\\top") +
-          matrix(
-            J.map((r) =>
-              r.map((v, i) =>
-                i === (s.axis === "x" ? 0 : 1)
-                  ? "\\htmlClass{math-act}{" + f(v, 2) + "}"
-                  : v,
-              ),
-            ),
-          ),
-      ),
-      panel(
-        "Displacements",
-        plot({
-          xmin: -1.5,
-          xmax: 1.5,
-          ymin: -1.5,
-          ymax: 1.5,
-          points: [
-            [...actual, "blue", 6],
-            [...pred, "teal", 4],
-          ],
-          xlabel: "first output change",
-          ylabel: "second output change",
-        }),
-        `Actual (${actual.map((x) => f(x, 3)).join(", ")}); linear (${pred.map((x) => f(x, 3)).join(", ")}).`,
-      ),
-      panel(
-        "A small grid near the base point",
-        localGrid(s, J),
-        "Blue curves are the true output of a 0.4 × 0.4 input grid. Teal lines are its Jacobian image, centered at the same output. Equal units on both axes.",
-      ),
-    );
-  },
-  caption:
-    "A Jacobian is a table of partial derivatives. Its first column predicts changes caused by the first input alone. The linearization error shrinks with the perturbation.",
-});
+register("D4", jacobianSpec);
+
 register("D5", {
   title: "A local approximation has a neighborhood",
   question: "How far from the base point would you trust each approximation?",
@@ -1070,77 +935,8 @@ export const activations = {
     tex: "x/(1+e^{-x})",
   },
 };
-register("N1", {
-  title: "A neuron is a circuit and a curve",
-  question:
-    "Weight changes the input scale; bias shifts the transition; amplitude changes the output scale.",
-  controls: [
-    range("w", "Weight w", -4, 4, 0.05, 2),
-    range("b", "Bias b", -2, 2, 0.05, 0),
-    range("v", "Amplitude v", -2, 2, 0.05, 1),
-    range("probe", "Input probe", -2, 2, 0.02, 0.4),
-    choices("activation", "Activation", Object.keys(activations), "tanh"),
-  ],
-  draw(s) {
-    const a = activations[s.activation],
-      z = s.w * s.probe + s.b,
-      y = s.v * a.fn(z);
-    return row(
-      panel(
-        "Follow the signal",
-        svg(
-          line(50, 65, 160, 140, "blue") +
-            line(50, 215, 160, 140, "violet") +
-            line(180, 140, 280, 140, "teal") +
-            [
-              [50, 65, "x"],
-              [50, 215, "1"],
-              [170, 140, "Σ"],
-              [285, 140, "σ"],
-            ]
-              .map(
-                ([x, y, t]) =>
-                  `<circle cx="${x}" cy="${y}" r="23" fill="var(--surface)" stroke="var(--line)"/>` +
-                  (t === "σ"
-                    ? path(
-                        Array.from({ length: 41 }, (_, i) => {
-                          const q = -2 + i * 0.1;
-                          return [
-                            x + q * 8,
-                            y - 8 * Math.max(-2, Math.min(2, a.fn(q))),
-                          ];
-                        }),
-                        "teal",
-                        1.5,
-                      ) + text(x, y + 43, "σ", "teal", "middle")
-                    : text(x, y + 4, t, "ink", "middle")),
-              )
-              .join("") +
-            formula(67, 20, 105, `w=${f(s.w)}`) +
-            formula(67, 215, 105, `b=${f(s.b)}`) +
-            formula(185, 78, 145, `wx+b=${f(z)}`) +
-            formula(182, 190, 165, `y=v\\sigma(wx+b)`),
-          "Neuron circuit with rim-trimmed edges",
-        ),
-        `Input ${f(s.probe)} → preactivation ${f(z)} → activation ${f(a.fn(z))} → output ${f(y)}.`,
-      ),
-      panel(
-        "The whole neuron",
-        plot({
-          xmin: -2,
-          xmax: 2,
-          ymin: -3,
-          ymax: 3,
-          curves: [{ fn: (x) => s.v * a.fn(s.w * x + s.b), color: "teal" }],
-          points: [[s.probe, y, "amber", 5]],
-          ylabel: "output",
-        }),
-      ),
-    );
-  },
-  caption:
-    "Adapted from Jaxverse’s circuit-and-curve demonstration. GELU uses xΦ(x), with a numerically evaluated normal CDF; ReLU has no ordinary derivative at zero.",
-});
+register("N1", neuronSpec);
+
 register("N2", {
   title: "Activation and local sensitivity",
   question:
