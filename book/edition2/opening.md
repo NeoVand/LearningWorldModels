@@ -2,6 +2,8 @@
 
 <p class="course-kicker">A complete learning path · mathematics, neural networks, prediction and action</p>
 
+<div class="course-banner"><img src="assets/generated/banners/10a.png" alt="A blue ball on a physical ramp is translated into a violet geometric representation, with a teal path imagining its future motion." fetchpriority="high"/></div>
+
 <p class="lead">How can a machine learn what will happen next—and use that knowledge to decide what to do? This course builds the answer from basic mathematics to Yann LeCun’s joint-embedding predictive architecture, or JEPA, and the research paper <em>LeWorldModel</em> (LeWM).</p>
 
 <div class="course-promise"><div><strong>Start with</strong><p>Basic algebra, a first encounter with vectors and probability, and the idea of a derivative. No deep-learning background is needed.</p></div><div><strong>Build the missing tools</strong><p>Embeddings, covariance, gradients, neurons, regularization, normality tests, characteristic functions and attention—each introduced before we need it.</p></div><div><strong>Finish by doing</strong><p>Derive SIGReg, train a small world model in your browser, plan through its predictions, and read LeWorldModel’s equations and experiments critically.</p></div></div>

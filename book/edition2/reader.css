@@ -136,3 +136,9 @@ nav input:focus-visible {background:transparent;box-shadow:none;}
  .katex-display.math-more { mask-image:linear-gradient(to right,#000 calc(100% - 18px),transparent); }
  .katex-display.math-scrollable:focus-visible { outline:1px solid var(--plot-line); outline-offset:3px; }
 }
+
+.course-banner { margin:28px 0 30px; overflow:hidden; border-radius:6px; }
+.course-banner img { display:block; width:100%; height:auto; }
+:root[data-theme="dark"] .course-banner img { filter:brightness(.92); }
+@media(max-width:600px) { .course-banner { margin:20px 0 24px; border-radius:4px; } }
+@media print { .course-banner { margin:16px 0 20px; break-inside:avoid; } :root[data-theme="dark"] .course-banner img { filter:none; } }
