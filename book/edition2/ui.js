@@ -1,6 +1,7 @@
 import "./visuals/runtime.js";
 import { icon } from "../../tools/icons.mjs";
 import "./foundation-labs.js";
+import "./voice-ui.js";
 import { initialArm, poseError } from "../world/simulator.ts";
 import { renderSensor } from "../world/sensor.ts";
 import * as math from "./numerics.js";

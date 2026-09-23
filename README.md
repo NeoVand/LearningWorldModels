@@ -6,9 +6,17 @@
 
 An interactive course on world models, building the required mathematics from first-year probability, linear algebra and calculus through JEPA, SIGReg and **LeWorldModel, arXiv:2603.19312v1**. The book includes extended derivations and a genuine browser-trained visual world model.
 
-**Current status: working draft undergoing design and pedagogical revision.** The 20-chapter manuscript and planned visual coverage are implemented; the latest revision keeps plot comparisons in one row, improves plot scales, and makes important numerical results prominent in HTML and print. See [the figure-layout review](research/layout-review/REVIEW.md) for changes and verification.
+**Current status: working draft undergoing design and pedagogical revision.** The 20-chapter manuscript and planned visual coverage are implemented. The course now also has optional narrated reading and a live voice tutor, grounded in a passage index. See [the figure-layout review](research/layout-review/REVIEW.md) for the earlier visual changes and verification.
 
-Open **`world-models.html`** locally, or use the GitHub Pages link above. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 92 new teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
+Open **`world-models.html`** locally, or use the GitHub Pages link above. Both `world-models.html` and `second-edition.html` are identical outputs of one manuscript. The book contains 20 chapters, typeset mathematics, 15 architecture/geometry diagrams, 93 teaching figures, seven generated illustrations, highlighted reference code, six foundational numerical desks, the SIGReg experiments, and the actual training/planning laboratory. All reading assets and the numerical runtime are embedded. No account or network is required for reading or local experiments.
+
+## Listen and discuss
+
+The header's **Listen** control starts continuous narration at the current passage. Double-click a passage, or select text and use the small **Listen / Explain** menu, to focus on one part. Figures, tables, code blocks, and labs have their own actions. The compact player provides pause, next, previous, seeking, and a Follow toggle. Its generated audio is cached locally; 93 teaching figures, all 15 tables, and all 128 display equations have authored or reviewed spoken explanations. The course index covers every source equation, including inline math, and lets the tutor refer to an exact visible passage.
+
+**Assistant** starts a GPT-Live 1 voice conversation. It can search the book, retrieve a section or equation with its teaching context, scroll to it, highlight it, move a validated widget control, and start its ElevenLabs narration. You can also type a question in the same panel. The assistant uses the current section, selection, and visible widget settings as context, and the rest of the book is retrieved as needed.
+
+Open the settings icon beside Print and enter your own ElevenLabs and OpenAI API keys. The site sends them directly from your browser to those providers; they are never built into the HTML or committed to Git. By default, keys stay in this browser tab's session storage. **Remember keys on this device** explicitly opts into local storage; **Clear keys** removes them. The local `.env` is Git-ignored and used only for development tests. Narration and live assistance require internet access and provider billing; the rest of the course remains usable without them. GPT-Live 1 voice requires HTTPS or localhost and microphone access. The public GitHub Pages edition is a bring-your-own-key static site, so its browser-side key handling differs from OpenAI's recommended trusted-server session setup. Use a project key with spending limits that suit you.
 
 The 230-page print companion is `output/pdf/before-the-move-complete.pdf`, with required derivations and worked solutions expanded. The original roughly 100-page estimate was exceeded to retain the developed explanations rather than compress the mathematics. Printed training curves are explicitly labeled recorded measurements.
 
@@ -26,6 +34,8 @@ The opening arm moves through exact two-link simulator geometry. The laboratory 
 - Reading order, prerequisite links, learning outcomes, and reference route: `book/edition2/curriculum.mjs`.
 - Shared semantic LaTeX macros: `book/edition2/notation.mjs`.
 - Typography and controls: `book/edition2/style.css`, `polish.css`, `reader.css`, `reader.js`, and `ui.js`. Theme roles live in `palette.js`.
+- Listening interface, timed ElevenLabs audio, and GPT-Live 1 WebRTC session: `book/edition2/voice-ui.js`, `voice.css`, `voice-narration.js`, and `live-assistant.js`. The browser-side index bridge is `voice-index-runtime.js`.
+- Narration source, reviewed display-equation scripts, and figure scripts: `book/voice/`. Rebuild the index with `node tools/build-voice-index.mjs`; the book build embeds it in both HTML outputs.
 - Foundational numerical desks: `book/edition2/foundation-labs.js`; normality simulation: `normality.js` in the same directory.
 - Teaching figures: `book/edition2/visuals/`. `core.js` provides scoped LaTeX, SVG and control primitives; subject modules register individual figures; `runtime.js` handles interaction and motion. Place a figure with `<!-- VISUAL: ID -->` in a chapter. Initial states are rendered into the HTML during the build.
 - Editable architecture/geometry diagrams: `tools/figures.mjs`. Jaxverse-derived arm geometry is shared through `tools/arm-plates.mjs`; moving scenarios are in `visuals/arm.js`.
@@ -48,7 +58,8 @@ Run `npm install`, then `npm run build`. The delivered HTML does not require the
 - `npm run verify:visuals`: numerical figure checks and browser interaction/theme checks, including untrained forecasts and short pause/resume.
 - `npm run verify:continuous`: a separate real training run beyond 5,000 updates, then resume. This is intentionally a longer check.
 - `npm run audit:visuals`: every teaching figure in both themes at desktop/phone sizes, plus slider endpoints.
-- `npm run verify:layout`: all 92 teaching figures at desktop, tablet, phone, and print widths; checks comparison rows, equation fit, SVG labels, and undistorted circles.
+- `npm run verify:layout`: all 93 teaching figures at desktop, tablet, phone, and print widths; checks comparison rows, equation fit, SVG labels, and undistorted circles.
+- `npm run verify:voice`: narration-index coverage and browser binding, then voice-interface layout, settings, selection, and course-tool checks without provider calls. The live provider handshake and ElevenLabs playback have also been checked manually with local, uncommitted keys.
 - `npm run print`: complete PDF with recorded training example.
 - `python tools/book-print-audit.py`: contact sheets and PDF boundary checks after rendering page images with Poppler. Requires Pillow, pypdf, and pdfplumber.
 

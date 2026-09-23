@@ -151,7 +151,7 @@ let mathFrame;
 function refreshMathOverflow() {
   cancelAnimationFrame(mathFrame);
   mathFrame = requestAnimationFrame(() => {
-    document.querySelectorAll("article .katex-display").forEach((el) => {
+    document.querySelectorAll("article .katex-display, article p .katex").forEach((el) => {
       const overflow =
         el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 2;
       el.classList.toggle("math-scrollable", overflow);

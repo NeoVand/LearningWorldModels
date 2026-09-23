@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "widgets": {
+    "G3": [
+      {
+        "title": "Every pair in the outer product",
+        "headers": ["row coordinate", "first column coordinate", "second column coordinate"],
+        "speech": "Read the row as a choice from x and the column as a choice from y. Each cell multiplies those two chosen coordinates. With x equal to one and two, and y equal to three and four, the first row is three and four; the second is six and eight. Nothing is added across a row or column. That is why the outer product keeps four answers, whereas the dot product on the left adds matching products to get one answer."
+      }
+    ],
+    "C1": [
+      {
+        "title": "Signed contributions to covariance",
+        "headers": ["point", "centered x times centered y"],
+        "speech": "Each row is one centered point. The second column multiplies that point's horizontal deviation by its vertical deviation. Equal signs make a positive contribution to covariance; opposite signs make a negative contribution. Average the four contributions to obtain the off-diagonal covariance entry. Moving the fourth point changes the mean, so even the first three rows can change. The displayed numbers update with the controls."
+      }
+    ],
+    "N7": [
+      {
+        "title": "Representations before normalization",
+        "headers": ["example", "feature one", "feature two", "feature three"],
+        "speech": "This first table contains the original representations: examples A, B, and C are rows; learned features one, two, and three are columns. The marked cell is feature two of example A. For layer normalization, read across A's row to get its mean and variance. For training-time batch normalization, read down feature two's column instead. In evaluation with stored batch statistics, neither current row nor column supplies the moments. Changing example B updates the numbers in this table and may change the statistics used for A."
+      },
+      {
+        "title": "Representations after normalization",
+        "headers": ["example", "feature one", "feature two", "feature three"],
+        "speech": "This second table keeps exactly the same row and column labels, but each cell now shows its normalized output. Compare feature two of A with the same cell in the first table. Under layer normalization, altering B leaves A's normalized value alone because A's own row supplies its statistics. Under training-time batch normalization, B can change A's value because they share a feature column. Stored evaluation statistics keep A's value fixed when B changes. The numbers update as you change mode or example B."
+      }
+    ],
+    "S6": [
+      {
+        "title": "Pair values in the closed-form SIGReg check",
+        "headers": ["first projected sample", "second projected sample"],
+        "speech": "Rows and columns choose two projected samples. A cell is the exponential of minus half the squared distance between that pair. Each diagonal cell is one because a sample is zero distance from itself; off-diagonal cells shrink as the two samples get farther apart. Summing these cells gives the empirical-against-empirical part of the closed-form discrepancy. The other two terms, shown beside the table, compare the empirical samples with the Gaussian target and the target with itself."
+      }
+    ],
+    "R3": [
+      {
+        "title": "From local weights to a prediction",
+        "headers": ["stored label", "raw kernel weight", "normalized weight"],
+        "speech": "Each row is a stored observation with a label. The raw weight says how close its location is to the current query under the triangular kernel. Divide every raw weight by their sum to obtain the normalized column; those normalized weights add to one whenever at least one neighbor has support. Multiply each label by its normalized weight and add to predict the local outcome. If every raw weight is zero, the denominator is zero and the normalized column is undefined, so the widget reports no supported neighbor. The numbers update when you move the query or change bandwidth."
+      }
+    ],
+    "H1": [
+      {
+        "title": "How three JEPA training questions differ",
+        "headers": ["method", "context supplied", "representation target", "training boundary"],
+        "speech": "Compare each method along three axes: what context is visible, what representation must be predicted, and where gradient flow stops or training stages separate. I J E P A sees parts of one image and predicts representations of masked image regions with a moving-average target encoder. V J E P A extends that question across space and time in video. V J E P A two first learns from video, then uses a separate robot stage in which observations and actions help predict action-conditioned future features. This last stage is not identical to its video pretraining."
+      }
+    ],
+    "W3": [
+      {
+        "title": "Push-T success across three training seeds",
+        "headers": ["model", "reported Push-T success"],
+        "speech": "This appendix comparison reports Push-T success over three training seeds, using the same fifty trajectories. The printed results are DINO-WM ninety-two point zero plus or minus one point six three; P L D M seventy-eight point zero plus or minus five point zero; and LeWM ninety-six point zero plus or minus two point eight three. The paper labels the reported spread variance, but this course preserves the printed plus-or-minus values without treating them as confidence intervals or standard errors. Read these alongside the distinct figure-level results and their protocols."
+      }
+    ]
+  }
+}

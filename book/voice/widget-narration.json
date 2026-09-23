@@ -1,0 +1,1803 @@
+{
+  "schemaVersion": 1,
+  "widgets": {
+    "O1": {
+      "title": "Observe → encode → imagine",
+      "speech": "The camera panel shows a real rendered view of a two-link arm, while the middle panel shows a hand-built pose code. Ghostly arm outlines on the right are imagined futures under the proposed action. Play advances the frames; the time slider scrubs; Push, Reverse, and Release change the imagined command. Notice that an image tells us where the arm is, while a useful world model must also infer how it is moving.",
+      "controls": [
+        {
+          "key": "play",
+          "label": "Play",
+          "type": "button"
+        },
+        {
+          "key": "reset",
+          "label": "Replay",
+          "type": "button"
+        },
+        {
+          "key": "time",
+          "label": "Time",
+          "type": "range",
+          "min": 0,
+          "max": 240,
+          "step": 1,
+          "defaultValue": 0
+        },
+        {
+          "key": "command",
+          "label": "Proposed action",
+          "type": "choices",
+          "defaultValue": "Push",
+          "options": [
+            "Push",
+            "Reverse",
+            "Release"
+          ]
+        }
+      ]
+    },
+    "O2": {
+      "title": "The picture hides the velocity",
+      "speech": "These two arms look identical in their first frame, yet one begins with positive joint velocity and the other with negative velocity. Play or scrub forward to see their paths diverge under the same command. Reveal earlier frames to uncover the missing motion clue. The picture alone is an incomplete physical state: history can matter even when the latest pixels match.",
+      "controls": [
+        {
+          "key": "play",
+          "label": "Play",
+          "type": "button"
+        },
+        {
+          "key": "reset",
+          "label": "Replay",
+          "type": "button"
+        },
+        {
+          "key": "time",
+          "label": "Elapsed frames",
+          "type": "range",
+          "min": 0,
+          "max": 240,
+          "step": 1,
+          "defaultValue": 0
+        },
+        {
+          "key": "history",
+          "label": "Earlier frames",
+          "type": "choices",
+          "defaultValue": "Hidden",
+          "options": [
+            "Hidden",
+            "Revealed"
+          ]
+        }
+      ]
+    },
+    "P3": {
+      "title": "Keep a distinction; ignore a distraction",
+      "speech": "Three pictures compare an arm pose with its appearance. The first two have the same elbow angle on different surfaces; the third changes the elbow. The pose code separates the changed arm, while the constant code merges everything. Switch the surface to change a distraction; move the elbow slider to change what matters for motion. A representation should preserve useful distinctions without preserving every pixel.",
+      "controls": [
+        {
+          "key": "surface",
+          "label": "New surface",
+          "type": "choices",
+          "defaultValue": "Striped",
+          "options": [
+            "Striped",
+            "Dotted"
+          ]
+        },
+        {
+          "key": "angle",
+          "label": "Elbow angle",
+          "type": "range",
+          "min": -0.8,
+          "max": 2.2,
+          "step": 0.01,
+          "defaultValue": 1.45
+        }
+      ]
+    },
+    "T1": {
+      "title": "The empirical CDF jumps at observations",
+      "speech": "The horizontal axis is a threshold, and the vertical axis is the fraction of observations at or below it. Each included observation makes the empirical curve jump. Two observations tie at minus one half, so the curve jumps twice as far there. The blue smooth curve is a fixed normal reference. Change how many observations are included and see how finite samples make a staircase, not a smooth population curve.",
+      "controls": [
+        {
+          "key": "n",
+          "label": "Observations included",
+          "type": "range",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "defaultValue": 6
+        }
+      ]
+    },
+    "T2": {
+      "title": "Each sample contributes one statistic",
+      "speech": "The left panel shows one observed sample and its discrepancy from a chosen normal reference. The right histogram comes from hundreds of fresh samples generated under that reference; each repeat contributes one discrepancy, not one raw observation. Change sample size or the observed-sample family. The resulting tail fraction measures how unusual this statistic is under that null procedure; it is not the probability that the null is true.",
+      "controls": [
+        {
+          "key": "n",
+          "label": "Sample size",
+          "type": "range",
+          "min": 8,
+          "max": 64,
+          "step": 8,
+          "defaultValue": 24
+        },
+        {
+          "key": "mode",
+          "label": "Observed sample",
+          "type": "choices",
+          "defaultValue": "normal",
+          "options": [
+            "normal",
+            "shifted",
+            "two-point"
+          ]
+        }
+      ]
+    },
+    "T3": {
+      "title": "Fitting the reference changes the test",
+      "speech": "The same observations are compared two ways: against a fixed standard normal curve, and against a normal curve fitted to those very observations. The axes show value horizontally and accumulated probability vertically. Move the sample shift or choose another random seed. Fitting may make the observed gap smaller, but a valid test must also fit every simulated null sample before calculating its reference distribution.",
+      "controls": [
+        {
+          "key": "shift",
+          "label": "Sample shift",
+          "type": "range",
+          "min": -1,
+          "max": 1,
+          "step": 0.05,
+          "defaultValue": 0.6
+        },
+        {
+          "key": "seed",
+          "label": "Sample seed",
+          "type": "range",
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "defaultValue": 12
+        }
+      ]
+    },
+    "T4": {
+      "title": "The same discrepancy can answer three different questions",
+      "speech": "This comparison separates three uses of one discrepancy formula. As a training penalty, it is a differentiable signal used to change parameters. As a calibrated test statistic, it is compared with values from samples generated under a specified null. For power, we repeat under an alternative and count rejections. The numerical expression can be identical while the experiment and meaning differ.",
+      "controls": []
+    },
+    "S1": {
+      "title": "Turn each sample into an arrow",
+      "speech": "Each sample becomes a unit arrow in the complex plane. Its angle is frequency times sample value, and the empirical characteristic function is the arrow average. Change the frequency to rotate all arrows; switch to an asymmetric sample to see that their vertical components need not cancel. Highlight one sample to follow its contribution. The average encodes the distribution, not just its mean.",
+      "controls": [
+        {
+          "key": "omega",
+          "label": "Frequency ω",
+          "type": "range",
+          "min": 0,
+          "max": 6,
+          "step": 0.05,
+          "defaultValue": 1.2
+        },
+        {
+          "key": "sample",
+          "label": "Sample",
+          "type": "choices",
+          "defaultValue": "Symmetric",
+          "options": [
+            "Symmetric",
+            "Asymmetric"
+          ]
+        },
+        {
+          "key": "selected",
+          "label": "Highlighted sample",
+          "type": "range",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "S2": {
+      "title": "Space and frequency tell different stories",
+      "speech": "On the left, the horizontal axis is sample value and the curve is a Gaussian density. On the right, the horizontal axis is frequency and the curves show its characteristic function. Moving the mean shifts the density but rotates the complex frequency signature. Changing standard deviation widens the density and makes the signature decay faster. The window later used by S I G Reg is a separate measurement choice.",
+      "controls": [
+        {
+          "key": "mu",
+          "label": "Mean",
+          "type": "range",
+          "min": -1.5,
+          "max": 1.5,
+          "step": 0.05,
+          "defaultValue": 0.6
+        },
+        {
+          "key": "sigma",
+          "label": "Standard deviation",
+          "type": "range",
+          "min": 0.3,
+          "max": 1.8,
+          "step": 0.05,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "S3": {
+      "title": "A correct population still gives a noisy batch",
+      "speech": "Each mark is an independently drawn Gaussian batch, even though all batches come from the correct target population. The plot shows batch size times discrepancy across repeats. Increase the batch-size exponent to change how many samples contribute to each estimate; change the stream for new repeats. The typical raw discrepancy shrinks with more samples, yet any one finite batch still fluctuates.",
+      "controls": [
+        {
+          "key": "exponent",
+          "label": "Batch size exponent",
+          "type": "range",
+          "min": 3,
+          "max": 8,
+          "step": 1,
+          "defaultValue": 5
+        },
+        {
+          "key": "seed",
+          "label": "Repeat stream",
+          "type": "range",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "defaultValue": 3
+        }
+      ]
+    },
+    "S4": {
+      "title": "The axes can hide dependence",
+      "speech": "The left square shows a two-dimensional point cloud. The middle panel is a histogram after projecting onto one direction, and the right panel gives that projection's frequency signature. Rotate the measuring direction from an axis toward a diagonal. Some structure invisible to axis-only checks becomes obvious at an angle. Matching a few tested projections is weaker than matching every possible projection.",
+      "controls": [
+        {
+          "key": "angle",
+          "label": "Projection angle",
+          "type": "range",
+          "min": 0,
+          "max": 1.57,
+          "step": 0.01,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "S5": {
+      "title": "The window and the grid solve different problems",
+      "speech": "The left plot shows weighted squared frequency discrepancy against positive frequency. Its tail outside the cutoff is omitted. The right plot measures grid error as the number of knots changes. Widen the cutoff to include more of the tail; add knots to approximate the curve better inside the chosen interval. These fix different numerical errors, so a fine grid cannot restore a discarded tail.",
+      "controls": [
+        {
+          "key": "limit",
+          "label": "Positive cutoff A",
+          "type": "range",
+          "min": 0.5,
+          "max": 6,
+          "step": 0.1,
+          "defaultValue": 3
+        },
+        {
+          "key": "knots",
+          "label": "Knots K",
+          "type": "range",
+          "min": 3,
+          "max": 49,
+          "step": 2,
+          "defaultValue": 17
+        }
+      ]
+    },
+    "S6": {
+      "title": "Expand the square into pairs",
+      "speech": "The pairwise view checks the same S I G Reg integral without a frequency grid. Expanding a squared difference produces three contributions: sample against sample, sample against Gaussian target, and target against itself. The displayed pair kernel gives each pair a weight. Agreement between the pair formula and numerical quadrature is useful evidence that both implementations use the intended normalization.",
+      "controls": []
+    },
+    "S7": {
+      "title": "A differentiable penalty can be stationary at collapse",
+      "speech": "The horizontal axis is a sample's projected value and the vertical axis is the regularizer gradient returned to it. At exact collapse, every sample is at zero; a nonzero penalty can still have zero derivative there. Increase symmetric separation to inspect the nearby response, then select another sample to follow. A nonzero loss does not guarantee that gradient descent can escape a symmetric collapsed point.",
+      "controls": [
+        {
+          "key": "spread",
+          "label": "Symmetric separation",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.005,
+          "defaultValue": 0
+        },
+        {
+          "key": "selected",
+          "label": "Sample",
+          "type": "range",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "S8": {
+      "title": "The complete measurement, without hidden steps",
+      "speech": "This diagram traces a full S I G Reg measurement. A batch of representations is projected along sampled directions. Each one-dimensional batch produces an empirical characteristic function, compared with the Gaussian target over weighted frequencies. Numerical integration gives one penalty per direction; averaging them gives the training term. Keep track of the axes and reduction order, because changing either silently changes the objective.",
+      "controls": []
+    },
+    "E1": {
+      "title": "A probe measures accessibility to a chosen decoder",
+      "speech": "The horizontal axis is a physical quantity, while the vertical axis is a probe's decoded estimate from a representation. Compare a simple linear encoding with the other encoding and inspect fit on held-out examples. A good score says that this chosen decoder can access the quantity with this training data. A poor score does not prove that the information is absent from every possible decoder.",
+      "controls": [
+        {
+          "key": "encoding",
+          "label": "Encoding",
+          "type": "choices",
+          "defaultValue": "Linear",
+          "options": [
+            "Linear",
+            "Cubic"
+          ]
+        }
+      ]
+    },
+    "E2": {
+      "title": "Rotation renames coordinates",
+      "speech": "The same points appear in original and rotated coordinate systems. Rotate them and compare distances: rotation changes the names of coordinates but preserves geometric distance. A sampled coordinate-based score can nevertheless change if the evaluation procedure samples axes rather than all directions. Separate properties of the representation from properties of the measurement rule.",
+      "controls": [
+        {
+          "key": "angle",
+          "label": "Rotation",
+          "type": "range",
+          "min": 0,
+          "max": 6.28,
+          "step": 0.02,
+          "defaultValue": 0.8
+        }
+      ]
+    },
+    "E3": {
+      "title": "An angle lives on a circle",
+      "speech": "True and predicted angles sit on a circle. Drag either angle across the wraparound point near minus pi and pi. The ordinary subtraction can report almost a full turn even when the shortest arc is tiny. The relevant error for a circular joint is the wrapped angular difference, not the straight-line difference of two printed numbers.",
+      "controls": [
+        {
+          "key": "q",
+          "label": "True angle",
+          "type": "range",
+          "min": -3.14,
+          "max": 3.14,
+          "step": 0.01,
+          "defaultValue": 3.05
+        },
+        {
+          "key": "pred",
+          "label": "Predicted angle",
+          "type": "range",
+          "min": -3.14,
+          "max": 3.14,
+          "step": 0.01,
+          "defaultValue": -3.05
+        }
+      ]
+    },
+    "E4": {
+      "title": "Neighbor probabilities are not ruler distances",
+      "speech": "The display shows two groups of neighbors, while the summaries compare probabilities assigned within and across groups. Adjust the visible gap. A prettier gap on a two-dimensional drawing does not itself establish a faithful high-dimensional geometry. Neighbor probabilities can preserve local relationships even when rulers drawn on the display suggest a different distance story.",
+      "controls": [
+        {
+          "key": "gap",
+          "label": "Display gap",
+          "type": "range",
+          "min": 1,
+          "max": 5,
+          "step": 0.1,
+          "defaultValue": 1.5
+        }
+      ]
+    },
+    "E5": {
+      "title": "Turn compatibility into a probability only after normalization",
+      "speech": "The first curve is an energy: low values mark compatible outcomes, but its height is not a probability. The second curve exponentiates negative energy and divides by its total area to become a density. Change temperature to make preferences sharper or flatter. The normalizing total matters; without it, compatible scores cannot be read as probabilities.",
+      "controls": [
+        {
+          "key": "temperature",
+          "label": "Temperature τ",
+          "type": "range",
+          "min": 0.15,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 0.7
+        }
+      ]
+    },
+    "E6": {
+      "title": "Change appearance or break continuity?",
+      "speech": "The plotted sequence compares position across frames under an intervention. Switch interventions to distinguish an appearance change or temporary occlusion from a broken physical trajectory. A model may keep the same underlying object through altered pixels, but evidence of physical continuity needs a test that follows the object, not just surface similarity.",
+      "controls": [
+        {
+          "key": "event",
+          "label": "Intervention",
+          "type": "choices",
+          "defaultValue": "Occlusion",
+          "options": [
+            "Normal",
+            "Color change",
+            "Occlusion",
+            "Teleport"
+          ]
+        }
+      ]
+    },
+    "E7": {
+      "title": "Straightness measures a turn, not prediction accuracy",
+      "speech": "Two consecutive displacement arrows form an adjustable turn. The cosine ruler ranges from minus one for reversal through zero for a right angle to one for straight continuation. Move the turn angle and see that this statistic measures local direction change. A straight trajectory can still be predicted at the wrong location, so straightness is not accuracy.",
+      "controls": [
+        {
+          "key": "angle",
+          "label": "Turn angle",
+          "type": "range",
+          "min": 0,
+          "max": 3.14,
+          "step": 0.02,
+          "defaultValue": 1.57
+        }
+      ]
+    },
+    "E8": {
+      "title": "An expectile moves when the two sides cost differently",
+      "speech": "The horizontal axis is a proposed prediction; the vertical axis is asymmetric squared loss averaged over three possible outcomes. Move the expectile weight to penalize one side more than the other. With equal weights the minimum is the ordinary mean; unequal costs shift it. An expectile is a decision under a loss function, not a new observation.",
+      "controls": [
+        {
+          "key": "tau",
+          "label": "Expectile weight τ",
+          "type": "range",
+          "min": 0.1,
+          "max": 0.9,
+          "step": 0.05,
+          "defaultValue": 0.5
+        }
+      ]
+    },
+    "R1": {
+      "title": "Small input spread makes a slope noisy",
+      "speech": "Two plots show the fitted slope across repeated noise draws. Each uses the same relationship, but the horizontal spread of input values differs. Increase input magnitude to make the slope estimate less sensitive to noise; change the stream to see other samples. If inputs barely vary, dividing by their tiny spread amplifies random errors.",
+      "controls": [
+        {
+          "key": "spread",
+          "label": "Input magnitude a",
+          "type": "range",
+          "min": 0.1,
+          "max": 1,
+          "step": 0.05,
+          "defaultValue": 1
+        },
+        {
+          "key": "seed",
+          "label": "Noise stream",
+          "type": "range",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "defaultValue": 4
+        }
+      ]
+    },
+    "R2": {
+      "title": "A covariance preference needs a task assumption",
+      "speech": "The ellipse depicts a fixed total covariance spread allocated between two directions. Adjust first-axis variance and the ridge penalty. One direction can help a downstream task more than the other, but that preference requires a task assumption. Covariance shape alone cannot declare which representation is useful.",
+      "controls": [
+        {
+          "key": "variance",
+          "label": "First-axis variance",
+          "type": "range",
+          "min": 0.1,
+          "max": 1.9,
+          "step": 0.05,
+          "defaultValue": 1
+        },
+        {
+          "key": "ridge",
+          "label": "Ridge λ",
+          "type": "range",
+          "min": 0,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 0.2
+        }
+      ]
+    },
+    "R3": {
+      "title": "A local prediction is a weighted average",
+      "speech": "Each stored point receives a kernel weight according to its distance from the query; the graph plots weight against stored location. Move the query or widen the bandwidth. After normalizing weights to sum to one, their weighted average predicts locally. Too narrow a window uses few points; too wide a window blurs important variation.",
+      "controls": [
+        {
+          "key": "query",
+          "label": "Query",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 0
+        },
+        {
+          "key": "bandwidth",
+          "label": "Bandwidth h",
+          "type": "range",
+          "min": 0.1,
+          "max": 3,
+          "step": 0.05,
+          "defaultValue": 2
+        }
+      ]
+    },
+    "R4": {
+      "title": "Symmetry cancels only with balanced density",
+      "speech": "The first curve multiplies a symmetric kernel by a local data density, and the second shows a simple label function. Tilt the density or change the window width. Even when the kernel itself is symmetric, more data on one side can make the weighted local prediction shift. Symmetry cancels only when the effective weights are balanced.",
+      "controls": [
+        {
+          "key": "slope",
+          "label": "Density slope k",
+          "type": "range",
+          "min": -0.8,
+          "max": 0.8,
+          "step": 0.05,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "bandwidth",
+          "label": "Half-width h",
+          "type": "range",
+          "min": 0.1,
+          "max": 1,
+          "step": 0.05,
+          "defaultValue": 0.6
+        }
+      ]
+    },
+    "R5": {
+      "title": "Density, log density, and score are different functions",
+      "speech": "Three aligned plots show a Gaussian density, its logarithm, and the derivative of that log, called the score. Change the Gaussian scale. The density is nonnegative and integrates to one; log density can be negative; score is a slope pointing toward more likely values. These related functions carry different units and interpretations.",
+      "controls": [
+        {
+          "key": "sigma",
+          "label": "Gaussian scale σ",
+          "type": "range",
+          "min": 0.3,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "R6": {
+      "title": "Where the theorem stops",
+      "speech": "This chain of assumptions marks the limited theorem proved in the chapter. Follow each step from data assumptions through the local prediction rule to its conclusion. The result describes that specified regime; it does not automatically establish a universal advantage for a world-model representation or every downstream controller.",
+      "controls": []
+    },
+    "V1": {
+      "title": "From image patches to a token sequence",
+      "speech": "The left image uses a small teaching camera, while the right diagram shows the larger research image divided into patches. Choose a patch to follow its pixels into one token of the transformer sequence. Patch position must remain available because identical pixel patches at different locations mean different things. The teaching image and research image have different dimensions; do not treat them as interchangeable inputs.",
+      "controls": [
+        {
+          "key": "patch",
+          "label": "Selected patch",
+          "type": "range",
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "defaultValue": 5
+        }
+      ]
+    },
+    "V2": {
+      "title": "One query creates one row of weights",
+      "speech": "A query token compares itself with keys and produces scores. Softmax turns that query's scores into a row of nonnegative weights that sum to one. Select another query to see a different row, then read the weighted combination of value vectors below. Attention weights say how this particular query mixes available values; they are not global importance labels for tokens.",
+      "controls": [
+        {
+          "key": "query",
+          "label": "Query token",
+          "type": "range",
+          "min": 0,
+          "max": 2,
+          "step": 1,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "V3": {
+      "title": "Mask before the maximum and exponential",
+      "speech": "The lower triangular region marks which past and present positions a causal query may attend to. Choose a query row and inspect a future token coordinate. The forbidden score must be removed before computing the maximum and exponential for stable softmax. If it is merely zeroed afterward, the probabilities over allowed tokens no longer have the intended normalization.",
+      "controls": [
+        {
+          "key": "query",
+          "label": "Query row",
+          "type": "range",
+          "min": 0,
+          "max": 2,
+          "step": 1,
+          "defaultValue": 0
+        },
+        {
+          "key": "future",
+          "label": "Future token coordinate",
+          "type": "range",
+          "min": -5,
+          "max": 5,
+          "step": 0.1,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "V4": {
+      "title": "Normalization, conditioning, and an identity path",
+      "speech": "This diagram follows one transformer block. Normalization rescales features within a token. An action signal conditions the computation, and the residual path carries the input forward. Change the action or residual gate to inspect which route carries information. The identity path helps a deep stack change its representation without having to rebuild the whole signal at every layer.",
+      "controls": [
+        {
+          "key": "action",
+          "label": "Action signal",
+          "type": "range",
+          "min": -1,
+          "max": 1,
+          "step": 0.05,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "gate",
+          "label": "Residual gate",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.02,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "V5": {
+      "title": "Heads share an input, not their projection matrices",
+      "speech": "Several attention heads receive the same input tokens but use different learned projection matrices, so their comparisons can differ. The upper path is self-attention in a temporal predictor. The lower path is cross-attention in a diagnostic decoder, where queries and source tokens come from different roles. Shared input does not imply shared weights or identical attention maps.",
+      "controls": []
+    },
+    "H1": {
+      "title": "What is hidden, and what supplies the target?",
+      "speech": "This diagram asks exactly which information is hidden from the prediction input and where the target comes from. Follow observation, masking, target embedding, and prediction arrows in order. A self-supervised objective can use withheld parts of the data as targets without providing human labels, but the masking boundary determines what the model can legitimately infer.",
+      "controls": []
+    },
+    "H2": {
+      "title": "Frozen features and joint learning are different boundaries",
+      "speech": "The columns compare frozen visual features with systems that update their visual encoder jointly with dynamics. In a frozen path, the dynamics learner adapts to a fixed code. In joint learning, prediction gradients can change the code itself. A model comparison must specify that training boundary before attributing a gain to the predictor architecture.",
+      "controls": []
+    },
+    "H3": {
+      "title": "Choose the comparison axis before choosing a winner",
+      "speech": "This comparison has three independent questions: what the model predicts, how representation geometry is constrained, and whether dynamics training updates the visual encoder. Read across one question at a time. Methods can agree on one axis and differ on another, so a single label such as world model hides important design choices.",
+      "controls": []
+    },
+    "W1": {
+      "title": "The research model’s dimensions fit together",
+      "speech": "The upper tensor route follows batch and time through encoding and prediction. The lower route follows representation dimensions, projection directions, and sampled frequencies into S I G Reg. Each reduction removes an axis only after its meaning has been used. Track shapes before implementation: many plausible-looking code mistakes are really reductions over the wrong dimension.",
+      "controls": []
+    },
+    "W2": {
+      "title": "The paper spends actions in blocks",
+      "speech": "The timeline starts with observed context frames and shifts prediction targets into the future. Twenty-five proposed actions are grouped into five blocks of five. The planner chooses a long candidate sequence, executes only the next block, observes again, then replans. The block boundary explains how a long imagination horizon coexists with feedback from the real system.",
+      "controls": []
+    },
+    "W3": {
+      "title": "Reported results, with the exceptions visible",
+      "speech": "The visual reports success percentages and planning time from the paper's specified version-one comparison, while a separate panel shows the multiple-seed protocol. Read the exception labels and denominators before comparing bars. These are reported empirical results for particular tasks and evaluation settings; they do not by themselves prove universal superiority.",
+      "controls": []
+    },
+    "L6": {
+      "title": "Keep the failed trajectories in view",
+      "speech": "The plots show joint root-mean-square error against executed action for three nearby goals and one distant stress goal. The horizontal line is the success tolerance. Choose a recorded seed and trajectory to inspect. Crossing the line once and ending below it are separate outcomes, so keep failed or drifting trajectories visible when interpreting a success claim.",
+      "controls": [
+        {
+          "key": "seed",
+          "label": "Recorded seed",
+          "type": "choices",
+          "defaultValue": "17",
+          "options": [
+            "17",
+            "41",
+            "73"
+          ]
+        },
+        {
+          "key": "goal",
+          "label": "Trajectory to inspect",
+          "type": "choices",
+          "defaultValue": "Local 1",
+          "options": [
+            "Local 1",
+            "Local 2",
+            "Local 3",
+            "Distant"
+          ]
+        }
+      ]
+    },
+    "K1": {
+      "title": "Label the information boundary yourself",
+      "speech": "This exercise asks you to label the information boundary in an experiment. Decide which frames, actions, targets, and future observations are available at each stage, then reveal the worked answer. If an allegedly predictive input already contains the answer, a high score tells us little about world-model reasoning.",
+      "controls": [
+        {
+          "key": "answer",
+          "label": "Worked answer",
+          "type": "choices",
+          "defaultValue": "Hidden",
+          "options": [
+            "Hidden",
+            "Reveal"
+          ]
+        }
+      ]
+    },
+    "K2": {
+      "title": "An experiment report starts at update zero",
+      "speech": "An experiment report should show its state before any update as well as after training. Trace data, model, optimizer, seed, and evaluation rule. Recording update zero makes it possible to distinguish learned improvement from a good initialization, a baseline shortcut, or a plotting choice.",
+      "controls": []
+    },
+    "X1": {
+      "title": "One role, one color",
+      "speech": "Each color in the notation key marks a consistent role, such as observation, latent representation, action, or target. Read the symbols by role before following a long equation. Color is an aid; the symbols and spoken names carry the same meaning when color cannot be seen.",
+      "controls": []
+    },
+    "X2": {
+      "title": "Trace each paper equation back to its tools",
+      "speech": "This map connects the paper's equations to earlier tools in the course. Follow an equation backward to its probability, calculus, linear algebra, or optimization prerequisite. The links are a study route: when a paper formula feels compressed, open the supporting derivation rather than treating its notation as a new fact to memorize.",
+      "controls": []
+    },
+    "P1": {
+      "title": "The object continues; the image loses it",
+      "speech": "The camera view shows a ball crossing behind an opaque screen. As time advances, the image loses the ball and later regains it. The object's path can continue through the hidden interval even though the camera has no pixels for it there. Move the time control to separate what is observed from what must be inferred.",
+      "controls": [
+        {
+          "key": "play",
+          "label": "Play",
+          "type": "button"
+        },
+        {
+          "key": "reset",
+          "label": "Replay",
+          "type": "button"
+        },
+        {
+          "key": "time",
+          "label": "Time",
+          "type": "range",
+          "min": 0,
+          "max": 240,
+          "step": 1,
+          "defaultValue": 45
+        }
+      ]
+    },
+    "P4": {
+      "title": "A subgoal narrows the next search",
+      "speech": "The small action tree compares many low-level sequences with a search that first chooses a higher-level crossing. Each choice narrows what remains to be searched locally; choosing that higher-level plan has its own cost. The figure illustrates why planning at several timescales can reduce the next search without making the overall problem disappear.",
+      "controls": []
+    },
+    "J1": {
+      "title": "A learned target can move toward the prediction",
+      "speech": "A pixel predictor compares its output with a fixed future image. A joint-embedding predictor compares its output with an encoder's representation of that future image. If the encoder learns, its target can move. Follow both comparison arrows and ask what stops prediction and target from meeting at an uninformative constant code.",
+      "controls": []
+    },
+    "O3": {
+      "title": "A route through the prerequisites",
+      "speech": "This route through the course begins with vectors and probability, adds differentiation and neural networks, then builds self-supervised prediction, normality, transformers, experiments, and planning. Each prerequisite supplies a tool used later by the research model. Use the route as a map rather than a speed test; a missing earlier idea is worth revisiting.",
+      "controls": []
+    },
+    "G1": {
+      "title": "Four pixels, two coordinates",
+      "speech": "Two tiny images place bright pixels in different corners. Their row sums are the same two numbers, so this simple encoder maps both images to one code. Distinct inputs can collide after compression. A useful embedding need not preserve every pixel, but it must preserve distinctions that matter for the future task.",
+      "controls": []
+    },
+    "G2": {
+      "title": "A matrix moves every point by the same rule",
+      "speech": "The left square grid is the original set of points; the right shows the same grid after a matrix acts on every point. Select a map and watch straight lines stay straight while directions and scale may change. A matrix is one consistent rule applied to all vectors, not a separate hand-drawn move for each point.",
+      "controls": [
+        {
+          "key": "map",
+          "label": "Map",
+          "type": "choices",
+          "defaultValue": "Identity",
+          "options": [
+            "Identity",
+            "Rotate",
+            "Shear",
+            "Scale",
+            "Rank one"
+          ]
+        }
+      ]
+    },
+    "G3": {
+      "title": "The order changes the shape",
+      "speech": "The dot product multiplies matching coordinates and adds to one number. The outer product multiplies every coordinate of one vector by every coordinate of another, making a grid of numbers. Follow the rows and columns. The two operations use the same multiplication symbol in some notation, so their output shape tells you which operation is meant.",
+      "controls": []
+    },
+    "G4": {
+      "title": "A shadow with a sign",
+      "speech": "The arrow is a vector; the chosen line is a direction. Its signed projection measures how far the arrow points along that line, while the residual is perpendicular to it. Move either vector coordinate or turn the line. A negative projection means pointing against the chosen direction, not a negative physical length.",
+      "controls": [
+        {
+          "key": "x",
+          "label": "Horizontal coordinate",
+          "type": "range",
+          "min": -2.8,
+          "max": 2.8,
+          "step": 0.05,
+          "defaultValue": 1.6
+        },
+        {
+          "key": "y",
+          "label": "Vertical coordinate",
+          "type": "range",
+          "min": -2.8,
+          "max": 2.8,
+          "step": 0.05,
+          "defaultValue": 2
+        },
+        {
+          "key": "angle",
+          "label": "Direction angle",
+          "type": "range",
+          "min": -3.14,
+          "max": 3.14,
+          "step": 0.01,
+          "defaultValue": 0.6
+        }
+      ]
+    },
+    "G5": {
+      "title": "A square, a line, a point",
+      "speech": "Three transformed grids show rank two, rank one, and rank zero. Rank two keeps a two-dimensional patch of possible outputs; rank one squeezes it onto a line; rank zero sends every point to one point. Rank tells us how many independent output directions survive a linear map.",
+      "controls": []
+    },
+    "B1": {
+      "title": "Height is not probability",
+      "speech": "The left panel assigns probability mass directly to individual outcomes. The middle plots a continuous density against value; its height can exceed one because probability is area, not height. The right plots accumulated area, called the cumulative distribution function. Narrow the density or move the interval boundary to see which quantity changes and which still totals one.",
+      "controls": [
+        {
+          "key": "sigma",
+          "label": "Standard deviation",
+          "type": "range",
+          "min": 0.15,
+          "max": 1.5,
+          "step": 0.01,
+          "defaultValue": 0.35
+        },
+        {
+          "key": "bound",
+          "label": "Right boundary",
+          "type": "range",
+          "min": -1,
+          "max": 2,
+          "step": 0.02,
+          "defaultValue": 0.4
+        }
+      ]
+    },
+    "B2": {
+      "title": "A mean that stays put while spread changes",
+      "speech": "The left bars are probabilities on three outcomes: one at zero and two equally far to either side. Their balance point stays at zero because the outer contributions cancel. The right curve plots variance against outer distance. Move probability outward or increase distance; squared distance makes spread grow even though the mean stays put.",
+      "controls": [
+        {
+          "key": "mass",
+          "label": "Total outer probability",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "distance",
+          "label": "Outer distance",
+          "type": "range",
+          "min": 0.1,
+          "max": 3,
+          "step": 0.05,
+          "defaultValue": 2
+        }
+      ]
+    },
+    "B3": {
+      "title": "A positive report filters the population",
+      "speech": "The grid has one hundred equally likely cases, including real events and positive reports. Switch the displayed subset and compare the chance of an event before and after hearing a positive report. A report filters the sample space; its reliability depends on both how often real events occur and how often the report fires by mistake.",
+      "controls": [
+        {
+          "key": "filter",
+          "label": "Show",
+          "type": "choices",
+          "defaultValue": "All 100",
+          "options": [
+            "All 100",
+            "Positive reports"
+          ]
+        }
+      ]
+    },
+    "B4": {
+      "title": "The least-squares answer can be an impossible future",
+      "speech": "The left plot has two possible future outcomes, while the right curve shows expected squared error for each proposed prediction. Move the outcome probability and then move the proposed prediction. The loss minimum is their probability-weighted mean, which can sit between the two outcomes where the future never actually lands.",
+      "controls": [
+        {
+          "key": "p",
+          "label": "Probability of +1",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "guess",
+          "label": "Proposed prediction",
+          "type": "range",
+          "min": -1.5,
+          "max": 1.5,
+          "step": 0.01,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "B5": {
+      "title": "A one-dimensional integral becomes an area",
+      "speech": "The circular picture cuts a two-dimensional Gaussian into thin rings. A ring farther from the center has more circumference, even as density falls. Counting density times ring area turns a two-dimensional integral into a one-dimensional area calculation. The radius factor comes from geometry; it is not an arbitrary correction.",
+      "controls": []
+    },
+    "B6": {
+      "title": "Uncorrelated does not mean independent",
+      "speech": "The left point cloud shows the joint distribution of two variables; the right shows a thin conditional slice. Switch between independent and dependent constructions, then move the slice. Zero covariance only cancels one average product. The slice can still change with the first variable, revealing dependence that covariance alone missed.",
+      "controls": [
+        {
+          "key": "kind",
+          "label": "Distribution",
+          "type": "choices",
+          "defaultValue": "Independent",
+          "options": [
+            "Independent",
+            "Parabola",
+            "Crossing lines"
+          ]
+        },
+        {
+          "key": "slice",
+          "label": "Slice center",
+          "type": "range",
+          "min": -1.5,
+          "max": 1.5,
+          "step": 0.05,
+          "defaultValue": 0.7
+        }
+      ]
+    },
+    "B7": {
+      "title": "What is being repeated?",
+      "speech": "The left plot repeats an entire experiment and shows how its estimated success fraction varies across runs. The right nests tasks within separately trained models. Increase trials per experiment and watch sampling fluctuation change without creating extra independent model trainings. When reporting uncertainty, count the actual unit that was repeated.",
+      "controls": [
+        {
+          "key": "n",
+          "label": "Trials per experiment",
+          "type": "range",
+          "min": 10,
+          "max": 210,
+          "step": 10,
+          "defaultValue": 50
+        }
+      ]
+    },
+    "C1": {
+      "title": "Covariance is an average of signed products",
+      "speech": "Each point is centered by subtracting its coordinate means. Its contribution to covariance is the product of its two centered coordinates: same-sign deviations add positive terms, opposite signs negative terms. Move the fourth point and watch both the cloud and the signed contributions. Covariance is an average of these products, not a count of diagonal-looking points.",
+      "controls": [
+        {
+          "key": "x",
+          "label": "Fourth point x",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1.5
+        },
+        {
+          "key": "y",
+          "label": "Fourth point y",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "C2": {
+      "title": "The last centered row is already determined",
+      "speech": "Three centered row vectors are placed head to tail and form a closed path. The final one is forced to return to the start because centered rows sum to zero. This dependency is why sample covariance commonly divides by sample size minus one when estimating population covariance from a fitted sample mean.",
+      "controls": []
+    },
+    "C3": {
+      "title": "Whitening changes scale along principal directions",
+      "speech": "The same cloud appears before and after a linear transform that rotates into principal directions and rescales each by inverse square-root variance. Select a stage to follow the ellipse toward a rounder cloud. Whitening makes covariance close to identity under its assumptions; it does not make every transformed distribution Gaussian.",
+      "controls": [
+        {
+          "key": "stage",
+          "label": "Stage",
+          "type": "choices",
+          "defaultValue": "Original",
+          "options": [
+            "Original",
+            "Rotate",
+            "Rescale",
+            "Rotate back"
+          ]
+        }
+      ]
+    },
+    "C4": {
+      "title": "Identity covariance does not specify a shape",
+      "speech": "The point cloud can have identity covariance while still forming crossing lines rather than a Gaussian blob. Choose a population and projection direction. The right plot compares its one-dimensional cumulative distribution with a Gaussian reference. Means and covariances summarize only part of a distribution's shape.",
+      "controls": [
+        {
+          "key": "shape",
+          "label": "Population",
+          "type": "choices",
+          "defaultValue": "Crossing lines",
+          "options": [
+            "Gaussian",
+            "Ring",
+            "Crossing lines"
+          ]
+        },
+        {
+          "key": "direction",
+          "label": "Projection",
+          "type": "choices",
+          "defaultValue": "Horizontal",
+          "options": [
+            "Horizontal",
+            "Diagonal",
+            "Vertical"
+          ]
+        }
+      ]
+    },
+    "D1": {
+      "title": "Shrink the step; keep the ratio",
+      "speech": "The curve plots a function against its input. A secant joins the base point to a nearby point, and its slope is the change in output divided by the change in input. Move the base point or shrink the positive step. As the second point approaches, the secant slope approaches the tangent slope, which is the derivative at that point.",
+      "controls": [
+        {
+          "key": "x",
+          "label": "Base point",
+          "type": "range",
+          "min": -0.9,
+          "max": 1.5,
+          "step": 0.01,
+          "defaultValue": 0.6
+        },
+        {
+          "key": "h",
+          "label": "Positive step h",
+          "type": "range",
+          "min": 0.01,
+          "max": 1,
+          "step": 0.01,
+          "defaultValue": 0.5
+        }
+      ]
+    },
+    "D2": {
+      "title": "Follow the slope across a landscape",
+      "speech": "The surface gives loss over two model parameters, and the path shows repeated gradient steps. Change the starting position, step size, or update count. The gradient points uphill, so an optimizer steps the other way. A larger step may cover ground quickly but can overshoot; a smaller step is steadier but may need more updates.",
+      "controls": [
+        {
+          "key": "play",
+          "label": "Play",
+          "type": "button"
+        },
+        {
+          "key": "step",
+          "label": "One update",
+          "type": "button"
+        },
+        {
+          "key": "reset",
+          "label": "Reset",
+          "type": "button"
+        },
+        {
+          "key": "time",
+          "label": "Updates",
+          "type": "range",
+          "min": 0,
+          "max": 160,
+          "step": 1,
+          "defaultValue": 20
+        },
+        {
+          "key": "eta",
+          "label": "Step size η",
+          "type": "range",
+          "min": 0.005,
+          "max": 0.18,
+          "step": 0.005,
+          "defaultValue": 0.05
+        },
+        {
+          "key": "x",
+          "label": "Start x",
+          "type": "range",
+          "min": -3.5,
+          "max": 3.5,
+          "step": 0.05,
+          "defaultValue": 2
+        },
+        {
+          "key": "y",
+          "label": "Start y",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1.3
+        }
+      ]
+    },
+    "D3": {
+      "title": "Multiply along paths; add across paths",
+      "speech": "The computation graph sends input x through two routes to the output: one through an intermediate squared value and one direct bypass. Change x or the bias and trace both routes. To differentiate, multiply local derivatives along each path and add contributions where paths meet. A gradient is an account of every way one input can affect the final loss.",
+      "controls": [
+        {
+          "key": "x",
+          "label": "Input x",
+          "type": "range",
+          "min": -0.8,
+          "max": 1,
+          "step": 0.02,
+          "defaultValue": 0.4
+        },
+        {
+          "key": "bias",
+          "label": "Bias b",
+          "type": "range",
+          "min": -1,
+          "max": 1,
+          "step": 0.02,
+          "defaultValue": 0.3
+        }
+      ]
+    },
+    "D4": {
+      "title": "The Jacobian is a local map",
+      "speech": "The blue grid is the exact nonlinear map near a chosen input; the teal grid is its local Jacobian approximation. Change the base point, alter one input, or expand the neighborhood. Each Jacobian column describes the output change from nudging one input coordinate. The linear approximation is local: farther away, curvature separates the two grids.",
+      "controls": [
+        {
+          "key": "x",
+          "label": "Base x",
+          "type": "range",
+          "min": -0.8,
+          "max": 1.5,
+          "step": 0.02,
+          "defaultValue": 0.8
+        },
+        {
+          "key": "y",
+          "label": "Base y",
+          "type": "range",
+          "min": -0.8,
+          "max": 1.5,
+          "step": 0.02,
+          "defaultValue": -0.6
+        },
+        {
+          "key": "radius",
+          "label": "Neighborhood radius",
+          "type": "range",
+          "min": 0.05,
+          "max": 0.7,
+          "step": 0.01,
+          "defaultValue": 0.4
+        },
+        {
+          "key": "h",
+          "label": "Step / neighborhood radius",
+          "type": "range",
+          "min": -1,
+          "max": 1,
+          "step": 0.05,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "axis",
+          "label": "Change one input",
+          "type": "choices",
+          "defaultValue": "x",
+          "options": [
+            "x",
+            "y"
+          ]
+        }
+      ]
+    },
+    "D5": {
+      "title": "A local approximation has a neighborhood",
+      "speech": "The plot compares an exponential curve with local approximations around a base point. Increase the neighborhood and inspect the right endpoint. The first-order line follows value and slope, while higher-order terms can capture more bending. An approximation can be excellent near its anchor and poor outside its neighborhood.",
+      "controls": [
+        {
+          "key": "radius",
+          "label": "Neighborhood radius",
+          "type": "range",
+          "min": 0.1,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "D6": {
+      "title": "Variance as a function of direction",
+      "speech": "The left graph plots variance after projecting a cloud onto a direction indexed by angle. The right shows that direction on a unit circle, its tangent, and the cloud's covariance ellipse. Turn the direction. At a maximum or minimum, a tiny legal rotation changes variance only to second order, so the tangential derivative vanishes.",
+      "controls": [
+        {
+          "key": "angle",
+          "label": "Direction · radians",
+          "type": "range",
+          "min": 0,
+          "max": 6.28,
+          "step": 0.01,
+          "defaultValue": 0.7
+        }
+      ]
+    },
+    "N1": {
+      "title": "One neuron: follow a number through the circuit",
+      "speech": "Follow one number through a complete neuron: multiply input by its weight, add bias, bend it through an activation, then scale the result for output. The lower graph repeats that computation for many input values. Change weight, bias, activation, or probe input and watch both the circuit and curve. Reveal the local slope to see sensitivity where the probe sits.",
+      "controls": [
+        {
+          "key": "activation",
+          "label": "Activation",
+          "type": "choices",
+          "defaultValue": "tanh",
+          "options": [
+            "Linear",
+            "Sigmoid",
+            "tanh",
+            "ReLU",
+            "Leaky ReLU",
+            "Softplus",
+            "GELU",
+            "SiLU"
+          ]
+        },
+        {
+          "key": "w",
+          "label": "Input weight w",
+          "type": "range",
+          "min": -4,
+          "max": 4,
+          "step": 0.05,
+          "defaultValue": 2
+        },
+        {
+          "key": "b",
+          "label": "Bias b",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 0
+        },
+        {
+          "key": "v",
+          "label": "Output weight v",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1
+        },
+        {
+          "key": "probe",
+          "label": "Input probe",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.02,
+          "defaultValue": 0.4
+        },
+        {
+          "key": "tangent",
+          "label": "Local slope",
+          "type": "choices",
+          "defaultValue": "Hidden",
+          "options": [
+            "Hidden",
+            "Shown"
+          ]
+        }
+      ]
+    },
+    "N2": {
+      "title": "Activation and local sensitivity",
+      "speech": "The graph puts activation output and its local slope against input. Change activation type or move the input probe. A nonlinearity lets a network make shapes that stacked linear maps alone cannot; its derivative tells learning how strongly a small upstream change reaches the output at this input.",
+      "controls": [
+        {
+          "key": "kind",
+          "label": "Activation",
+          "type": "choices",
+          "defaultValue": "tanh",
+          "options": [
+            "Linear",
+            "ReLU",
+            "tanh",
+            "GELU",
+            "SiLU"
+          ]
+        },
+        {
+          "key": "probe",
+          "label": "Input x",
+          "type": "range",
+          "min": -3,
+          "max": 3,
+          "step": 0.02,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "N3": {
+      "title": "Build a curve from individual neurons",
+      "speech": "The upper graph compares a target curve with the current model fit. The contribution view shows how hidden neurons add their individual bent responses. Change target, hidden-unit count, or activation, then reveal individual contributions. Many simple nonlinear pieces can combine into a flexible curve, but a good fit must still be learned from data.",
+      "controls": [
+        {
+          "key": "target",
+          "label": "Target",
+          "type": "choices",
+          "defaultValue": "Sine",
+          "options": [
+            "Sine",
+            "Bump",
+            "Zigzag"
+          ]
+        },
+        {
+          "key": "units",
+          "label": "Hidden units",
+          "type": "choices",
+          "defaultValue": "8",
+          "options": [
+            "1",
+            "4",
+            "8",
+            "16"
+          ]
+        },
+        {
+          "key": "activation",
+          "label": "Activation",
+          "type": "choices",
+          "defaultValue": "tanh",
+          "options": [
+            "tanh",
+            "ReLU",
+            "GELU",
+            "Linear"
+          ]
+        },
+        {
+          "key": "play",
+          "label": "Train / pause",
+          "type": "button"
+        },
+        {
+          "key": "train",
+          "label": "200 updates",
+          "type": "button"
+        },
+        {
+          "key": "reset-fit",
+          "label": "Reset weights",
+          "type": "button"
+        },
+        {
+          "key": "contributions",
+          "label": "Individual contributions",
+          "type": "choices",
+          "defaultValue": "Hidden",
+          "options": [
+            "Hidden",
+            "Shown"
+          ]
+        }
+      ]
+    },
+    "N4": {
+      "title": "Read a gradient as three local factors",
+      "speech": "The forward path runs from input through a weighted sum and nonlinearity to prediction. The backward calculation multiplies three local factors: downstream sensitivity, activation slope, and the input reaching the weight. Adjust input or either weight. Backpropagation is repeated chain rule, with each factor answering how one nearby stage changes the next.",
+      "controls": [
+        {
+          "key": "w",
+          "label": "Input weight",
+          "type": "range",
+          "min": -0.8,
+          "max": 1.8,
+          "step": 0.02,
+          "defaultValue": 0.5
+        },
+        {
+          "key": "v",
+          "label": "Output weight",
+          "type": "range",
+          "min": -0.8,
+          "max": 1.8,
+          "step": 0.02,
+          "defaultValue": 1.2
+        },
+        {
+          "key": "x",
+          "label": "Input",
+          "type": "range",
+          "min": -1,
+          "max": 1,
+          "step": 0.02,
+          "defaultValue": 0.8
+        }
+      ]
+    },
+    "N5": {
+      "title": "Three optimizers, one starting point",
+      "speech": "The landscape shows paths taken from the same starting point by plain gradient descent, momentum, and Adam. Another graph tracks loss versus update. Change landscape, step size, starting point, or update count. Momentum carries a smoothed direction from previous steps; Adam also rescales directions using past squared gradients. Their behavior depends on the landscape and settings.",
+      "controls": [
+        {
+          "key": "landscape",
+          "label": "Landscape",
+          "type": "choices",
+          "defaultValue": "Bowl",
+          "options": [
+            "Bowl",
+            "Ravine",
+            "Two basins"
+          ]
+        },
+        {
+          "key": "play",
+          "label": "Play",
+          "type": "button"
+        },
+        {
+          "key": "step",
+          "label": "One update",
+          "type": "button"
+        },
+        {
+          "key": "reset",
+          "label": "Reset",
+          "type": "button"
+        },
+        {
+          "key": "time",
+          "label": "Updates",
+          "type": "range",
+          "min": 0,
+          "max": 160,
+          "step": 1,
+          "defaultValue": 20
+        },
+        {
+          "key": "eta",
+          "label": "Step size η",
+          "type": "range",
+          "min": 0.005,
+          "max": 0.18,
+          "step": 0.005,
+          "defaultValue": 0.05
+        },
+        {
+          "key": "x",
+          "label": "Start x",
+          "type": "range",
+          "min": -3.5,
+          "max": 3.5,
+          "step": 0.05,
+          "defaultValue": 2
+        },
+        {
+          "key": "y",
+          "label": "Start y",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 1.3
+        }
+      ]
+    },
+    "N6": {
+      "title": "The fit alone leaves a choice",
+      "speech": "Several curves pass through the same observation, so matching that one point does not determine what happens elsewhere. The objective graph combines data fit with a penalty for curvature. Change curvature or penalty weight. Regularization expresses a preference among models that fit the observed data; it does not prove that the preferred shape is physically correct.",
+      "controls": [
+        {
+          "key": "curvature",
+          "label": "Curvature c",
+          "type": "range",
+          "min": -2,
+          "max": 2,
+          "step": 0.02,
+          "defaultValue": 1
+        },
+        {
+          "key": "lambda",
+          "label": "Penalty weight",
+          "type": "range",
+          "min": 0,
+          "max": 2,
+          "step": 0.02,
+          "defaultValue": 0.5
+        }
+      ]
+    },
+    "N7": {
+      "title": "Normalize across features—or across examples?",
+      "speech": "The displayed table contains features for two examples. Layer normalization uses features within each example; batch normalization uses examples within each feature during training, and evaluation uses stored training statistics. Change example B or the statistics mode. Watch which normalized values respond: the axis over which statistics are computed determines which examples influence one another.",
+      "controls": [
+        {
+          "key": "mode",
+          "label": "Statistics come from",
+          "type": "choices",
+          "defaultValue": "LayerNorm",
+          "options": [
+            "LayerNorm",
+            "BatchNorm",
+            "Stored statistics"
+          ]
+        },
+        {
+          "key": "shift",
+          "label": "Change example B",
+          "type": "range",
+          "min": -2,
+          "max": 4,
+          "step": 0.1,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "P2": {
+      "title": "Follow one decision through the proposed agent",
+      "speech": "The agent diagram follows one decision from observation to representation, from representation through imagined futures, then from chosen plan to one physical action. The loop repeats after a new observation. Read the arrows in time order. Encoding, prediction, planning, and control have different roles; a plausible imagined trajectory is useful only if it helps select an action that works in the world.",
+      "controls": []
+    },
+    "J2": {
+      "title": "Both uses of shared weights contribute",
+      "speech": "One encoder parameter is used twice: once to make the current representation and again to make the future target. Move that parameter or disable the target-side gradient. The total derivative includes contributions through every path where a shared parameter appears. Stopping one path changes the learning rule, even when the forward numbers initially look identical.",
+      "controls": [
+        {
+          "key": "theta",
+          "label": "Shared encoder parameter",
+          "type": "range",
+          "min": -1.5,
+          "max": 1.5,
+          "step": 0.02,
+          "defaultValue": 0.8
+        },
+        {
+          "key": "target",
+          "label": "Target gradient",
+          "type": "choices",
+          "defaultValue": "Enabled",
+          "options": [
+            "Enabled",
+            "Stopped"
+          ]
+        }
+      ]
+    },
+    "J3": {
+      "title": "Agreement can improve by forgetting",
+      "speech": "The representation cloud can shrink toward one point. As its scale falls, paired predictions and targets can agree more easily because there is less information left to disagree about. Change scale or collapse mode and inspect both the cloud and objective. Prediction agreement alone is insufficient; the code must retain useful variation.",
+      "controls": [
+        {
+          "key": "scale",
+          "label": "Representation scale",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "defaultValue": 1
+        },
+        {
+          "key": "collapse",
+          "label": "Collapse",
+          "type": "choices",
+          "defaultValue": "All directions",
+          "options": [
+            "All directions",
+            "One direction"
+          ]
+        }
+      ]
+    },
+    "J4": {
+      "title": "Moment constraints change different aspects of a cloud",
+      "speech": "Three cloud panels show different safeguards against collapse. Centering moves the mean, a variance floor keeps each coordinate from becoming constant, and a covariance penalty discourages redundant coordinates. Change cloud type or scale. These constraints address different failure modes; even together, simple moments do not fully determine the cloud's distribution.",
+      "controls": [
+        {
+          "key": "kind",
+          "label": "Cloud",
+          "type": "choices",
+          "defaultValue": "Gaussian",
+          "options": [
+            "Gaussian",
+            "Ring",
+            "Correlated"
+          ]
+        },
+        {
+          "key": "scale",
+          "label": "Scale",
+          "type": "range",
+          "min": 0.1,
+          "max": 2,
+          "step": 0.05,
+          "defaultValue": 0.5
+        }
+      ]
+    },
+    "J5": {
+      "title": "The action belongs between the frames",
+      "speech": "Three frames are aligned with actions that occur between them. Switch alignment and check which action is given to the predictor for each transition. The model must receive the command that actually caused a frame change. An off-by-one shift can teach a precise implementation of the wrong causal question.",
+      "controls": [
+        {
+          "key": "alignment",
+          "label": "Alignment",
+          "type": "choices",
+          "defaultValue": "Correct",
+          "options": [
+            "Correct",
+            "Shifted by one"
+          ]
+        }
+      ]
+    },
+    "I1": {
+      "title": "The same frames, two memory layouts",
+      "speech": "The same six frames are arranged in two memory layouts: grouped by example or grouped by time. Follow one example's frames through the transpose. Rearranging dimensions should change where data is stored, not which frame follows which. Preserving those identities matters when a sequence model expects time along a particular axis.",
+      "controls": []
+    },
+    "I2": {
+      "title": "Average before squaring",
+      "speech": "Two arrows on the complex unit circle are averaged before taking squared magnitude. Turn the second arrow. If they oppose one another, their average can cancel even though each arrow has length one. Averaging magnitudes first would miss that cancellation. The order of mean and square is part of the S I G Reg formula.",
+      "controls": [
+        {
+          "key": "angle",
+          "label": "Second phasor angle",
+          "type": "range",
+          "min": 0,
+          "max": 6.28,
+          "step": 0.02,
+          "defaultValue": 3.14
+        }
+      ]
+    },
+    "I3": {
+      "title": "Trace a two-by-two batch",
+      "speech": "A tiny batch has two examples and two coordinates. Select a projection direction and step through projection, phase, average, and discrepancy. At each step, keep track of which axis has been reduced and which remains. The displayed code highlights the corresponding operation, connecting array shapes to the mathematical calculation.",
+      "controls": [
+        {
+          "key": "stage",
+          "label": "Operation",
+          "type": "choices",
+          "defaultValue": "Projection",
+          "options": [
+            "Projection",
+            "Phase",
+            "Average",
+            "Discrepancy"
+          ]
+        },
+        {
+          "key": "direction",
+          "label": "Direction column",
+          "type": "range",
+          "min": 1,
+          "max": 2,
+          "step": 1,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "I4": {
+      "title": "Different windows can share the same frame",
+      "speech": "The frame diagram shows training and validation windows that can overlap even when their starting indices differ. Switch split strategy and inspect the source episode of each frame. If evaluation sees frames from an episode used for training, the split may measure memorization of that episode rather than generalization to unseen trajectories.",
+      "controls": [
+        {
+          "key": "split",
+          "label": "Split",
+          "type": "choices",
+          "defaultValue": "Random windows",
+          "options": [
+            "Random windows",
+            "Whole episodes"
+          ]
+        }
+      ]
+    },
+    "I5": {
+      "title": "A checkpoint is more than weights",
+      "speech": "A checkpoint includes model weights, optimizer moving averages, update count, and random state. Follow what survives a pause and what must be restored to continue the same training run. A plot of metrics records what happened, but cannot by itself reproduce the next optimizer step.",
+      "controls": []
+    },
+    "A1": {
+      "title": "The same model, different things to change",
+      "speech": "The top feedback loop learns model weights from recorded observations and actions. The bottom loop holds those weights fixed while it searches over candidate future actions. Follow what each arrow updates. Training asks how to change the model; planning asks what to do with the current model. Confusing those variables can make an implementation silently optimize the wrong object.",
+      "controls": []
+    },
+    "A2": {
+      "title": "Search, keep, refit, repeat",
+      "speech": "Candidate action pairs form a cloud. The planner scores them, keeps the elite samples, and refits the sampling distribution around those better candidates. Advance the cross-entropy-method iteration to see the cloud concentrate. This is a search heuristic: concentration helps explore promising actions but does not certify a global optimum.",
+      "controls": [
+        {
+          "key": "iteration",
+          "label": "CEM iteration",
+          "type": "range",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "defaultValue": 0
+        }
+      ]
+    },
+    "A3": {
+      "title": "One good step does not guarantee a good rollout",
+      "speech": "The left path predicts one step at a time while replacing its input with a fresh real observation. The right path feeds each prediction back into the model for the next step. Increase the prediction horizon. Small errors can compound along the open-loop rollout, so one-step accuracy alone does not guarantee useful long-horizon planning.",
+      "controls": [
+        {
+          "key": "horizon",
+          "label": "Prediction steps",
+          "type": "range",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "defaultValue": 20
+        }
+      ]
+    },
+    "A4": {
+      "title": "A long plan can be spent one action at a time",
+      "speech": "The timeline shows a proposed action sequence and the shorter prefix actually executed before observing again. Set the planning horizon and requested prefix. A longer imagined plan can guide the next move, while a short execution prefix lets new observations correct errors. Count planned actions separately from actions already spent in the world.",
+      "controls": [
+        {
+          "key": "horizon",
+          "label": "Planning horizon",
+          "type": "range",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "defaultValue": 8
+        },
+        {
+          "key": "prefix",
+          "label": "Requested execution prefix",
+          "type": "range",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "defaultValue": 1
+        }
+      ]
+    },
+    "A5": {
+      "title": "A cheap endpoint can hide two failures",
+      "speech": "The two checks expose ways a cheap endpoint cost can mislead. One coordinate is scaled down in the latent code, making a sizable physical miss seem cheap; in the other case an object reaches the goal position while moving fast enough to leave it. Change the retained coordinate scale. A good plan may need physical calibration and arrival-state checks, not just a small latent endpoint distance.",
+      "controls": [
+        {
+          "key": "scale",
+          "label": "Keep the second coordinate",
+          "type": "range",
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "defaultValue": 0.1
+        }
+      ]
+    }
+  }
+}

@@ -14,6 +14,14 @@ import Science from "@hugeicons/core-free-icons/TestTube01Icon";
 import Moon from "@hugeicons/core-free-icons/Moon02Icon";
 import Sun from "@hugeicons/core-free-icons/Sun03Icon";
 import Close from "@hugeicons/core-free-icons/Cancel01Icon";
+import Settings from "@hugeicons/core-free-icons/Settings01Icon";
+import Headphones from "@hugeicons/core-free-icons/HeadphonesIcon";
+import Mic from "@hugeicons/core-free-icons/Mic02Icon";
+import MicOff from "@hugeicons/core-free-icons/MicOff02Icon";
+import Next from "@hugeicons/core-free-icons/NextIcon";
+import Previous from "@hugeicons/core-free-icons/PreviousIcon";
+import Stop from "@hugeicons/core-free-icons/StopIcon";
+import Volume from "@hugeicons/core-free-icons/VolumeUpIcon";
 const icons = {
   play: Play,
   pause: Pause,
@@ -31,6 +39,14 @@ const icons = {
   moon: Moon,
   sun: Sun,
   close: Close,
+  settings: Settings,
+  headphones: Headphones,
+  mic: Mic,
+  micOff: MicOff,
+  next: Next,
+  previous: Previous,
+  stop: Stop,
+  volume: Volume,
 };
 export function icon(name) {
   const nodes = icons[name];

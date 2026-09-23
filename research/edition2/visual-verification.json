@@ -1,5 +1,5 @@
 {
-  "verified": "2026-09-21T22:37:56.749Z",
+  "verified": "2026-09-23T00:11:57.686Z",
   "numerics": {
     "gradientError": 1.2213785538506272e-11,
     "integralError": 5.204170427930421e-16,
@@ -26,7 +26,7 @@
         1,
         1
       ],
-      "formulaOverflow": 2
+      "formulaOverflow": 0
     },
     {
       "width": 390,
@@ -37,7 +37,7 @@
         1,
         1
       ],
-      "formulaOverflow": 45
+      "formulaOverflow": 0
     }
   ],
   "trials": [],

@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "purpose": "Source-grounded teaching guidance for the conversational assistant. These notes are not chapter text or narration scripts.",
+  "notes": [
+    {
+      "id": "partial-observation",
+      "topic": "A camera frame is not the complete state",
+      "chapterId": "opening",
+      "keywords": [
+        "camera",
+        "occlusion",
+        "hidden state",
+        "velocity",
+        "observation",
+        "Markov"
+      ],
+      "explanation": "An observation is what the sensor currently gives us, not everything that physically exists. A ball may disappear behind a screen while continuing to move. One still image can also show position without revealing velocity. The same frame can therefore be consistent with different futures. The book uses a short observation history and actions to reduce that ambiguity, but it does not claim that every hidden property can be recovered from them.",
+      "teachingMove": "Ask the learner to predict where a ball will reappear from one frozen frame, then from two frames. Let them name the extra information the second frame supplies. Return to the opening camera figure and distinguish the ball's path from the camera's visible pixels.",
+      "source": "book/edition2/opening.md; book/edition2/philosophy.md"
+    },
+    {
+      "id": "proposal-versus-system",
+      "topic": "LeCun's research program is broader than LeWorldModel",
+      "chapterId": "philosophy",
+      "keywords": [
+        "LeCun",
+        "architecture",
+        "configurator",
+        "memory",
+        "hierarchy",
+        "H-JEPA",
+        "proposal"
+      ],
+      "explanation": "The 2022 position paper describes interacting roles for perception, a world model, cost, an actor, short-term memory, and a configurator, and it motivates multiple levels of abstraction. Those roles form a research proposal. The book's browser model and LeWorldModel study selected pieces of that proposal: learned visual representations, action-conditioned prediction, a goal cost, and planning. Neither demonstrates a trained general configurator or a complete hierarchical agent.",
+      "teachingMove": "Use a transit-system analogy: a map, route search, destination preference, and memory of delays do different jobs. Ask which pieces the current experiment actually trains, then point to the philosophy chapter's six-role diagram and its explicit scope statement.",
+      "source": "book/edition2/philosophy.md; papers/lecun-autonomous-2022.pdf (version 0.9.2)"
+    },
+    {
+      "id": "self-supervision-versus-reward",
+      "topic": "Reward-free learning still needs a goal when acting",
+      "chapterId": "philosophy",
+      "keywords": [
+        "self-supervised",
+        "reward-free",
+        "goal",
+        "preference",
+        "offline",
+        "action labels"
+      ],
+      "explanation": "Self-supervision means the training targets come from the observations' own structure: a later encoded frame supplies a prediction target. LeWorldModel's representation and dynamics training does not require reward labels, but the offline trajectories do contain actions. At planning time an encoded goal image defines a preference through terminal latent distance. Thus reward-free training does not mean that action selection is preference-free or that the system learned every possible goal without further specification.",
+      "teachingMove": "Have the learner split one episode into two columns: what the model saw while learning, and what the planner is given when choosing actions. Ask them to locate the future frame, action, reward label, and goal image in those columns.",
+      "source": "book/edition2/philosophy.md; book/edition2/paper.md §3.1 and Eqs. 4–5; papers/leworldmodel-v1.pdf"
+    },
+    {
+      "id": "embedding-is-a-choice",
+      "topic": "An embedding can discard distinctions",
+      "chapterId": "geometry",
+      "keywords": [
+        "embedding",
+        "encoder",
+        "injective",
+        "pixels",
+        "information",
+        "rank"
+      ],
+      "explanation": "A deep-learning embedding is a coordinate description produced by an encoder; its name does not guarantee that different inputs remain different. The book's row-sum encoder maps two different 2-by-2 images to the same two numbers. Losing irrelevant pixel detail may be helpful, but losing a distinction needed for future prediction or action is harmful. Output dimension and visual neatness alone cannot tell which happened.",
+      "teachingMove": "Use the four-pixel example and calculate both row sums aloud. Ask the learner to change pixels within one row while keeping its total fixed. The unchanged embedding makes information loss tangible before any neural-network terminology appears.",
+      "source": "book/edition2/geometry.md, 'From an image to a list of numbers' and 'Rank measures available directions'"
+    },
+    {
+      "id": "conditional-mean",
+      "topic": "Squared-error prediction can average incompatible futures",
+      "chapterId": "probability",
+      "keywords": [
+        "mean",
+        "squared error",
+        "multimodal",
+        "future",
+        "conditional expectation",
+        "uncertainty"
+      ],
+      "explanation": "For a fixed input, the number minimizing expected squared error is the conditional mean. This follows by expanding the expected square around that mean: the cross term vanishes. If a ball can go left or right, the mean position may lie at a location the ball almost never visits. A deterministic predictor trained with squared error is therefore not, by itself, a model of the full set of possible futures.",
+      "teachingMove": "Offer two equally likely outcomes, minus one and plus one. Compare the squared errors of predicting either endpoint with predicting zero. Zero wins the average loss even though it is never observed. Then connect the toy result to the optional uncertainty latent discussed later.",
+      "source": "book/edition2/probability.md; book/edition2/evaluation.md, 'Compatibility, energy, and multiple futures'"
+    },
+    {
+      "id": "density-not-point-probability",
+      "topic": "A density's height is not a point probability",
+      "chapterId": "probability",
+      "keywords": [
+        "density",
+        "probability",
+        "continuous",
+        "area",
+        "CDF",
+        "normal distribution"
+      ],
+      "explanation": "For a continuous variable, probability belongs to an interval and is the area under the density over that interval. The density's height can exceed one if the distribution is narrow; total area still equals one. A single exact point has probability zero in a continuous model. A discrete mass function is different: it assigns probability directly to outcomes. The cumulative distribution function accumulates probability up to a threshold, so subtracting two CDF values gives an interval probability.",
+      "teachingMove": "Draw two rectangles of equal area but different widths; the narrower one must be taller. Ask whether a height above one violates total probability. Then move to the book's area-under-the-curve widget and invite the learner to change interval endpoints.",
+      "source": "book/edition2/probability.md, density and CDF derivations"
+    },
+    {
+      "id": "whitening-not-gaussianity",
+      "topic": "Matching mean and covariance does not determine a distribution",
+      "chapterId": "clouds",
+      "keywords": [
+        "covariance",
+        "whitening",
+        "isotropic",
+        "Gaussian",
+        "ring",
+        "moments",
+        "PCA"
+      ],
+      "explanation": "Mean and covariance describe center and second-order spread. Whitening can make a cloud have zero mean and identity covariance when the required inverse exists. A ring of radius square root of two in two dimensions has those same population moments as a standard two-dimensional Gaussian, yet the ring has no interior points. Consequently covariance control alone does not make embeddings Gaussian. The word isotropic can refer to identity covariance or to full rotational symmetry; those are different strengths of claim.",
+      "teachingMove": "Show the ring and Gaussian clouds with the same coordinate variances. Ask the learner where a point near the origin is likely to appear. That missing interior motivates looking beyond averages and variances rather than treating SIGReg as an arbitrary extra penalty.",
+      "source": "book/edition2/clouds.md, 'Whitening is a moment operation'; book/edition2/sigreg.md; papers/lejepa-v1.pdf"
+    },
+    {
+      "id": "gradient-target",
+      "topic": "Differentiate with respect to the variable being changed",
+      "chapterId": "calculus",
+      "keywords": [
+        "gradient",
+        "Jacobian",
+        "chain rule",
+        "training",
+        "planning",
+        "derivative"
+      ],
+      "explanation": "The chain rule tracks how a small change propagates through a computation. In training, observations and actions in the dataset are fixed while encoder and predictor parameters change; the needed derivative is loss with respect to parameters. In planning, the trained parameters are fixed while candidate actions change; the needed derivative, if used, is cost with respect to actions. A Jacobian column answers what happens when one input coordinate is perturbed. Mixing these derivative targets confuses learning with control.",
+      "teachingMove": "Write a three-box chain: input, model output, loss. Circle the quantity the learner is allowed to adjust in the current task. Only then apply the chain rule, naming each local derivative's input and output.",
+      "source": "book/edition2/calculus.md; book/edition2/learning.md; book/edition2/planning.md, 'Separate learning from planning'"
+    },
+    {
+      "id": "regularization-is-preference",
+      "topic": "A regularizer expresses a preference, not a mathematical cure-all",
+      "chapterId": "learning",
+      "keywords": [
+        "regularization",
+        "SIGReg",
+        "weight decay",
+        "dropout",
+        "loss",
+        "optimizer",
+        "coefficient"
+      ],
+      "explanation": "An added loss term chooses among fits by favoring a property, such as spread or a target distribution. The prediction loss asks whether a future embedding is predicted; SIGReg asks about the distribution of embeddings across examples. AdamW weight decay changes parameter updates and is a separate choice. A coefficient has meaning only with the exact averaging and scaling convention for both terms. No regularizer can certify that learned features encode physical state without an appropriate evaluation.",
+      "teachingMove": "Ask what each term rewards in two extreme models: one that predicts perfectly by mapping every image to a constant, and one that has a spread-out cloud but ignores actions. Let the learner see why the terms must be judged together.",
+      "source": "book/edition2/learning.md; book/edition2/jepa.md; book/edition2/paper.md, 'Configuration is part of the scientific object'"
+    },
+    {
+      "id": "collapse-and-zero-gradient",
+      "topic": "An unfavorable collapsed solution can still be stationary",
+      "chapterId": "jepa",
+      "keywords": [
+        "collapse",
+        "constant embedding",
+        "stationary point",
+        "gradient",
+        "anti-collapse",
+        "VICReg"
+      ],
+      "explanation": "Complete collapse maps every observation to one vector, making next-embedding prediction trivially easy. A spread penalty can assign that solution a high loss. That does not imply gradient descent can escape an exactly symmetric collapsed point: a variance hinge derivative contains each sample's deviation from the mean, which is zero when all samples coincide. The SIGReg chapter identifies an analogous exact-collapse gradient caveat. Initialization, perturbations, architecture, and optimization remain part of the training story.",
+      "teachingMove": "Separate two questions aloud: 'Is this point desirable according to the loss?' and 'Which way does the gradient point exactly here?' Use a bowl-shaped sketch with a flat or symmetric point to show why a penalty's value and its derivative are different facts.",
+      "source": "book/edition2/jepa.md, 'Why the variance penalty has a gradient caveat'; book/edition2/sigreg.md, collapsed-gradient discussion"
+    },
+    {
+      "id": "target-gradient-route",
+      "topic": "The target encoder receives gradients in LeWorldModel",
+      "chapterId": "jepa",
+      "keywords": [
+        "stop-gradient",
+        "teacher",
+        "EMA",
+        "target branch",
+        "end-to-end",
+        "LeWM"
+      ],
+      "explanation": "Some joint-embedding methods hold a target branch fixed for a step using stop-gradient or update a teacher by a moving average. LeWorldModel's main training loss uses the same trainable encoder for context and target observations and does not detach the target in that path. The prediction error therefore sends gradients through both branches. This distinction is central to its 'end-to-end' claim, but the absence of stop-gradient alone does not prevent constant embeddings; SIGReg supplies a countervailing objective.",
+      "teachingMove": "Draw two copies of the encoder feeding a prediction comparison, then trace the backward arrows. First cross out the target arrow to represent stop-gradient; then restore it for LeWM. Ask what remains to stop both outputs becoming constant.",
+      "source": "book/edition2/jepa.md; book/edition2/paper.md, 'Equation 1'; papers/leworldmodel-v1.pdf §3.1; research/lewm-module-pinned.py"
+    },
+    {
+      "id": "normality-test-versus-penalty",
+      "topic": "SIGReg is used as a training penalty, not as a p-value",
+      "chapterId": "testing",
+      "keywords": [
+        "normality test",
+        "p-value",
+        "null hypothesis",
+        "critical value",
+        "SIGReg",
+        "statistic"
+      ],
+      "explanation": "A classical test specifies a null distribution, computes a statistic, calibrates how large it can be under the null, and follows a decision rule. SIGReg borrows a distributional discrepancy but optimizes it as a differentiable loss. Its value is not automatically a p-value, and minimizing it does not mean a finite batch has literally become an independent Gaussian sample. Failing to reject a test also would not prove equality of distributions. The standardized target matters: fitting an arbitrary Gaussian to a shrunken cloud would excuse the very collapse the regularizer is meant to oppose.",
+      "teachingMove": "Ask the learner what number would answer 'how surprising is this under the null?' versus 'which way should parameters move?' Show that a p-value requires a null reference distribution, whereas a gradient requires a differentiable objective.",
+      "source": "book/edition2/testing.md; book/edition2/sigreg.md, 'Samples fluctuate even when the target is correct'"
+    },
+    {
+      "id": "characteristic-arrows",
+      "topic": "A characteristic function averages complex arrows",
+      "chapterId": "sigreg",
+      "keywords": [
+        "characteristic function",
+        "complex",
+        "phasor",
+        "frequency",
+        "cosine",
+        "sine"
+      ],
+      "explanation": "At a chosen real frequency omega, a scalar sample x becomes the unit arrow with angle omega times x: its horizontal coordinate is cosine and its vertical coordinate is sine. Average the arrows over samples before comparing with the Gaussian target. The resulting characteristic function is a fingerprint indexed by frequency. Frequency is a measurement setting, not time in the world model. Keeping only the arrow length would discard phase information about shifts; the loss compares both real and imaginary coordinates.",
+      "teachingMove": "Use two arrows pointing opposite ways. Their average is zero even though each has length one. Then shift every sample and watch the mean arrow rotate. This makes the imaginary discrepancy's role visible before writing the complex formula.",
+      "source": "book/edition2/sigreg.md, 'From a point on a circle to a distributional fingerprint' and 'Estimate the fingerprint from a batch'"
+    },
+    {
+      "id": "target-versus-window",
+      "topic": "The Gaussian target and frequency window have different jobs",
+      "chapterId": "sigreg",
+      "keywords": [
+        "target",
+        "window",
+        "frequency",
+        "Gaussian",
+        "weight",
+        "integral",
+        "quadrature"
+      ],
+      "explanation": "For a standard Gaussian projection, the target characteristic function is exp of minus omega squared over two. In this recipe the frequency window has the same formula, but it plays another role: it weights how much each frequency's mismatch counts in the integral. The target specifies the desired distribution; the window sets measurement emphasis and makes the integral finite. Changing the window while retaining the target changes the loss. Neither expression is a Gaussian density over embedding coordinates.",
+      "teachingMove": "Compare a target answer on an exam with the marking scheme's point weights. The same printed number could appear in both places but answer and weight remain different roles. Have the learner point to the squared difference before the window multiplication.",
+      "source": "book/edition2/sigreg.md, 'Estimate the fingerprint from a batch'"
+    },
+    {
+      "id": "finite-batch-floor",
+      "topic": "A correct population still gives a nonzero finite-batch discrepancy",
+      "chapterId": "sigreg",
+      "keywords": [
+        "batch",
+        "sampling floor",
+        "finite sample",
+        "B",
+        "scaled statistic",
+        "independence"
+      ],
+      "explanation": "At one frequency, independent draws from the target have an empirical characteristic-function mean that fluctuates around the true mean. Its expected squared error is (1 minus the squared magnitude of the population characteristic function) divided by batch size B. Thus the unscaled integrated discrepancy has an order-one-over-B floor. Multiplying by B produces a statistic with an order-one null expectation. These statements assume fresh independent draws from a fixed distribution; optimized finite embedding points need not behave like such draws.",
+      "teachingMove": "Have the learner average a few random coin flips twice and compare the two averages. Even when the coin is fair, neither small batch must equal one half. Only then point to the B factor in the SIGReg code and ask whether it makes the null score vanish.",
+      "source": "book/edition2/sigreg.md, 'Samples fluctuate even when the target is correct'"
+    },
+    {
+      "id": "all-directions-versus-samples",
+      "topic": "The projection theorem is an ideal statement",
+      "chapterId": "sigreg",
+      "keywords": [
+        "Cramér–Wold",
+        "projection",
+        "direction",
+        "finite",
+        "Gaussian",
+        "identification"
+      ],
+      "explanation": "If every unit-direction projection of a population vector is standard Gaussian, the entire vector is standard multivariate Gaussian: every multivariate frequency can be written as a scalar times one unit direction, and characteristic functions identify distributions. Actual training checks finitely many sampled directions and frequencies on finite batches. It therefore optimizes a useful approximation rather than verifying the universal premise of the theorem. More directions improve coverage but do not turn a fixed empirical point cloud into a continuous Gaussian.",
+      "teachingMove": "Compare inspecting a sculpture from every possible angle with taking a few snapshots. The theorem speaks about every angle and the full underlying object; the training loop has a finite photo album. Ask which conclusion the finite album can justify.",
+      "source": "book/edition2/sigreg.md, 'Why projections can reveal a multivariate distribution'; papers/lejepa-v1.pdf; papers/leworldmodel-v1.pdf Appendix A"
+    },
+    {
+      "id": "quadrature-is-implementation",
+      "topic": "Frequency integration becomes a specified finite numerical rule",
+      "chapterId": "sigreg",
+      "keywords": [
+        "quadrature",
+        "trapezoid",
+        "frequency nodes",
+        "K",
+        "cutoff",
+        "implementation"
+      ],
+      "explanation": "The mathematical discrepancy integrates a weighted squared characteristic-function difference over the whole real frequency line. The pinned LeWorldModel implementation approximates it with 17 nodes on the nonnegative interval from zero to three, doubles the positive half by symmetry, and applies trapezoid endpoint weights. A larger cutoff reduces omitted tail but does not fix coarse sampling; a denser grid reduces discretization error on its chosen interval but cannot recover omitted tail. The paper appendix discusses another possible range, so the executable rule and the ideal integral must be named separately.",
+      "teachingMove": "Show the plotted integrand, mark the last sampled frequency, and shade the unmeasured tail. Then add nodes without moving the endpoint, followed by moving the endpoint without adding nodes. Ask what each change can improve.",
+      "source": "book/edition2/sigreg.md, 'From the integral to a finite computation'; book/edition2/paper.md, 'Equations 2, 3, and 6'; research/lewm-module-pinned.py"
+    },
+    {
+      "id": "sigreg-axis-contract",
+      "topic": "SIGReg compares examples at a fixed time position",
+      "chapterId": "implementation",
+      "keywords": [
+        "axis",
+        "time",
+        "batch",
+        "feature",
+        "tensor",
+        "reduction",
+        "SIGReg"
+      ],
+      "explanation": "In the pinned training convention, embeddings have time, batch, and feature axes. At each time position, SIGReg projects the batch of examples and averages across the batch before squaring the characteristic-function difference; then it averages the resulting losses across directions and time. Flattening time and batch would mix positions from the same trajectory, alter dependencies, and change the statistic and its scale. Similarly, coordinate-averaged prediction MSE and a squared vector norm differ by a factor of feature width when their other reductions match.",
+      "teachingMove": "Put three colored cards on a table labeled time, example, and feature. Ask which collection should form one 'cloud.' Move only the example card into the average. Show how a different card order changes the question rather than merely code formatting.",
+      "source": "book/edition2/implementation.md; book/edition2/sigreg.md, 'Batch axes and sample size'; book/edition2/paper.md §3.1; research/lewm-module-pinned.py"
+    },
+    {
+      "id": "planning-metric-risk",
+      "topic": "Small latent distance need not mean physical success",
+      "chapterId": "planning",
+      "keywords": [
+        "latent distance",
+        "goal image",
+        "planner",
+        "metric",
+        "physical success",
+        "collision"
+      ],
+      "explanation": "The planner encodes a goal image and searches for actions whose predicted final embedding is close to that goal embedding. This is useful only if the encoder preserves distinctions relevant to the task and distances in that coordinate system make useful guidance. A probe might recover position through a complicated nonlinear readout while direct Euclidean distance remains a poor control cost. The planner can also exploit model errors or missing data coverage. Physical success must be checked after executing actions in the environment.",
+      "teachingMove": "Use a map analogy: a map can list every city correctly yet place their page coordinates so straight-line distance is a poor driving route. Ask the learner to compare latent goal cost, decoded physical error, and actual final state.",
+      "source": "book/edition2/planning.md, 'Why latent distance might help, and when it misleads'; book/edition2/evaluation.md"
+    },
+    {
+      "id": "teacher-forcing-and-correction",
+      "topic": "Good one-step prediction does not ensure good rollouts",
+      "chapterId": "planning",
+      "keywords": [
+        "teacher forcing",
+        "rollout",
+        "MPC",
+        "replanning",
+        "Lipschitz",
+        "error accumulation"
+      ],
+      "explanation": "Training often predicts from encoded observed history. A planning rollout feeds earlier predictions back into the predictor, so it may visit inputs unlike the training contexts. Under explicit one-step error and Lipschitz assumptions, rollout error obeys E next at most L times E current plus epsilon; repeated substitution gives a geometric sum. Those assumptions are not guaranteed by JEPA. Model-predictive control limits drift by executing a prefix, observing again, and replanning. LeWorldModel's reported execution prefix can cover five action blocks rather than the browser's one action.",
+      "teachingMove": "Have the learner repeat a small measurement error while drawing a path. After three steps, replace the imagined position with a fresh camera observation. Ask what correction changed and what errors may still remain.",
+      "source": "book/edition2/planning.md, 'Teacher forcing does not eliminate rollout error' and 'MPC spends predictions in short installments'; papers/leworldmodel-v1.pdf Appendix D"
+    },
+    {
+      "id": "probes-not-control",
+      "topic": "Recoverable information is weaker evidence than successful control",
+      "chapterId": "evaluation",
+      "keywords": [
+        "probe",
+        "decoder",
+        "t-SNE",
+        "physical state",
+        "control",
+        "evaluation"
+      ],
+      "explanation": "A probe fits a readout from frozen embeddings to labeled physical quantities and asks what information is accessible to that readout on held-out data. It does not prove that the planner uses the information, that latent Euclidean distance is a good objective, or that multi-step predictions are reliable. A post-training image decoder is also a diagnostic; its reconstructions combine decoder and model limitations. A t-SNE plot preserves selected local-neighborhood relations and cannot establish global physical distance. Prediction and actual control need separate tests.",
+      "teachingMove": "Ask three sequential questions: Can a frozen readout recover position? Can the predictor forecast held-out transitions? Can a planner reach and hold the goal? Let the learner assign each displayed figure or table to the question it actually answers.",
+      "source": "book/edition2/evaluation.md, 'Three levels of evidence', 'A decoder is a diagnostic instrument', and 'Why t-SNE is not a map of physical distance'; papers/leworldmodel-v1.pdf §5"
+    },
+    {
+      "id": "energy-not-probability",
+      "topic": "Compatibility energy and surprise are not calibrated probability",
+      "chapterId": "evaluation",
+      "keywords": [
+        "energy",
+        "probability",
+        "surprise",
+        "likelihood",
+        "uncertainty",
+        "latent"
+      ],
+      "explanation": "An energy is a scalar compatibility score; lower values indicate a better fit under the learned constraints. It is not physical energy and need not sum or integrate to one. A Gibbs conversion would require exponentiating and dividing by a finite normalization integral. Likewise, next-embedding squared error can be called a surprise signal in an operational sense, but it becomes a negative log likelihood only under an explicit calibrated noise model. The broader JEPA proposal can introduce an uncertainty variable xi for multiple futures; the LeWorldModel predictor evaluated here is deterministic.",
+      "teachingMove": "Present three numbers: a squared prediction error, a normalized probability, and an energy score. Ask which can be interpreted as a chance without an additional model or denominator. Use a fork-in-the-road future to explain why one deterministic guess can be inadequate.",
+      "source": "book/edition2/evaluation.md, 'Compatibility, energy, and multiple futures', 'Energy is not automatically probability', and 'Surprise is an error before it is a probability'"
+    },
+    {
+      "id": "gaussian-theory-scope",
+      "topic": "Gaussian-geometry arguments have stated assumptions",
+      "chapterId": "theory",
+      "keywords": [
+        "LeJEPA",
+        "Gaussian",
+        "Fisher",
+        "probe",
+        "optimal",
+        "theorem",
+        "assumptions"
+      ],
+      "explanation": "LeJEPA motivates a Gaussian target through specified downstream probe analyses and distributional geometry. These arguments do not prove that any trained encoder will recover true physical state, that every downstream task is optimal, or that control will succeed. A Fisher-information calculation concerns a density and perturbation model; local nonlinear probe approximations need smoothness, bandwidth, sample-size, and tail conditions. The book deliberately separates its rigorous derivations from broader interpretations of the paper.",
+      "teachingMove": "Ask the learner to finish the sentence 'If these assumptions hold, then ...' before using the word optimal. Point to the exact probe class and distribution conditions, then name the separate empirical test needed for physical state or planning.",
+      "source": "book/edition2/theory.md; papers/lejepa-v1.pdf"
+    },
+    {
+      "id": "attention-mask-and-normalization",
+      "topic": "A causal attention mask does not settle every information-flow question",
+      "chapterId": "transformers",
+      "keywords": [
+        "attention",
+        "causal mask",
+        "BatchNorm",
+        "LayerNorm",
+        "query",
+        "key",
+        "value"
+      ],
+      "explanation": "Attention uses a query to score keys and forms a weighted combination of values. A causal mask excludes disallowed future positions before softmax so their weights become zero. In the pinned predictor, Batch Normalization in a projector pools flattened batch-and-time examples during training, so the attention mask alone is not a complete statement about all training-time information flow. Evaluation mode normally uses stored running statistics. Layer Normalization instead normalizes features within each example or token; the two operations should not be interchanged.",
+      "teachingMove": "Use a library lookup: query is a question, keys are index cards, values are the pages retrieved. Cover forbidden future cards before choosing weights. Then ask whether any other shared statistic, such as a batch mean, could still mix examples during training.",
+      "source": "book/edition2/transformers.md; book/edition2/paper.md, 'The encoder: one frame becomes one compact vector'; research/lewm-module-pinned.py"
+    },
+    {
+      "id": "paper-implementation-and-evidence",
+      "topic": "Read LeWorldModel v1, pinned code, and results at their own levels",
+      "chapterId": "paper",
+      "keywords": [
+        "LeWorldModel",
+        "v1",
+        "paper",
+        "code",
+        "configuration",
+        "SIGReg weight",
+        "success rate",
+        "reproduction"
+      ],
+      "explanation": "The paper's compact equations omit some averaging axes and numerical choices. Its appendix and pinned implementation differ on details such as the discussed frequency interval and the executable 17-node rule; main-text SIGReg weight 0.1 and inspected default 0.09 also differ. The book has inspected code and configurations but has not rerun the full benchmark. Reported control results vary by environment: the method is not uniformly best. A displayed success-rate difference of 96% versus 78% is 18 percentage points, about 23.1% relative to 78%. These distinctions prevent an attractive headline from becoming an unsupported universal claim.",
+      "teachingMove": "For any requested number, ask 'paper statement, checked-in default, or our measured browser run?' Then show the relevant line, reduction, and experimental setup. Have the learner compute both percentage-point and relative changes before describing an improvement.",
+      "source": "book/edition2/paper.md, 'Configuration is part of the scientific object' and 'Section 4'; papers/leworldmodel-v1.pdf; research/lewm-module-pinned.py"
+    }
+  ]
+}
