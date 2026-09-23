@@ -1,3 +1,10 @@
+const preparedCache = new WeakMap();
+const stopWords = new Set([
+  "a", "an", "and", "are", "at", "can", "does", "for", "from", "how", "i",
+  "in", "is", "it", "me", "of", "on", "or", "our", "the", "this", "to",
+  "we", "what", "when", "where", "which", "why", "with", "you",
+]);
+
 const normalize = (text) =>
   String(text ?? "")
     .normalize("NFKD")
@@ -6,51 +13,123 @@ const normalize = (text) =>
     .replace(/\s+/g, " ")
     .trim();
 
-function score(query, item, section) {
-  const q = normalize(query);
-  if (!q) return 0;
-  const title = normalize(item.title);
-  const sectionTitle = normalize(section?.title);
-  const body = normalize(`${item.text} ${item.speech} ${item.agentNote ?? ""}`);
-  const terms = q.split(" ").filter((term) => term.length > 2);
-  if (!terms.length) return 0;
-  const matches = terms.filter(
-    (term) =>
-      title.includes(term) ||
-      sectionTitle.includes(term) ||
-      body.includes(term),
-  ).length;
+function termsOf(text) {
+  return [...new Set(normalize(text)
+    .split(" ")
+    .filter((term) => (term.length > 2 || /^\d+$/.test(term)) && !stopWords.has(term))
+    .map((term) => term.length > 4 && term.endsWith("s") ? term.slice(0, -1) : term))];
+}
+
+function preparedFor(index) {
+  if (preparedCache.has(index)) return preparedCache.get(index);
+  const sections = new Map(index.sections.map((section) => [section.id, section]));
+  const records = index.items.map((item) => {
+    const guide = item.teachingGuide;
+    const text = [item.text, item.speech, item.agentNote].filter(Boolean).join(" ");
+    const context = [item.equationContext?.setup, item.equationContext?.nextStep].filter(Boolean).join(" ");
+    return {
+      item,
+      title: normalize(item.title),
+      section: normalize(sections.get(item.sectionId)?.title),
+      aliases: (item.searchAliases ?? []).map(normalize),
+      text: normalize(text),
+      guide: normalize(guide && [guide.idea, guide.reason, guide.caution, guide.example, ...(guide.steps ?? [])].filter(Boolean).join(" ")),
+      context: normalize(context),
+    };
+  });
+  const prepared = { records, sections, byId: new Map(index.items.map((item) => [item.id, item])) };
+  preparedCache.set(index, prepared);
+  return prepared;
+}
+
+function score(query, terms, record, options) {
+  const fields = [record.title, record.section, ...record.aliases, record.text, record.guide, record.context];
+  let matches = 0;
+  let points = 0;
+  for (const term of terms) {
+    if (!fields.some((field) => field.includes(term))) continue;
+    matches++;
+    points += record.aliases.some((alias) => alias.includes(term)) ? 8 :
+      record.title.includes(term) ? 6 :
+      record.section.includes(term) ? 3 :
+      record.guide.includes(term) ? 3 :
+      record.text.includes(term) ? 2 : 0.5;
+  }
   if (!matches) return 0;
-  return (
-    matches / terms.length +
-    (title.includes(q) ? 2 : 0) +
-    (sectionTitle.includes(q) ? 1 : 0) +
-    (body.includes(q) ? 0.5 : 0)
-  );
+  points *= 0.35 + 0.65 * matches / terms.length;
+  if (record.aliases.some((alias) => alias === query)) points += 40;
+  else if (record.aliases.some((alias) => alias.includes(query) || query.includes(alias))) points += 22;
+  if (record.title === query) points += 15;
+  else if (record.title.includes(query)) points += 8;
+  if (record.section.includes(query)) points += 5;
+  if (record.item.kind === "equation" && /\b(?:equation|eq|formula|derive|derivation|gradient)\b/.test(query)) points += 3;
+  if (options?.focusId === record.item.id) points += 5;
+  else if (options?.sectionId && options.sectionId === record.item.sectionId) points += 1.5;
+  else if (options?.chapterId && options.chapterId === record.item.chapterId) points += 0.75;
+  return points;
 }
 
 export function searchCourseIndex(
   index,
   query,
-  { chapterId, kinds, limit = 8 } = {},
+  { chapterId, sectionId, focusId, kinds, limit = 8 } = {},
 ) {
-  const sections = new Map(
-    index.sections.map((section) => [section.id, section]),
-  );
-  return index.items
+  const normalized = normalize(query);
+  const paperNumber = normalized.match(/\b(?:equation|eq)\s*(\d+)\b/)?.[1];
+  if (paperNumber) {
+    const exact = index.items.find((item) =>
+      item.kind === "equation" &&
+      item.chapterId === "paper" &&
+      item.searchAliases?.some((alias) => normalize(alias) === `leworldmodel equation ${paperNumber}`)
+    );
+    return exact && (!chapterId || chapterId === "paper") && (!kinds || kinds.includes("equation"))
+      ? [{ ...exact, relevance: 100 }]
+      : [];
+  }
+  const terms = termsOf(query);
+  if (!terms.length) return [];
+  return preparedFor(index).records
     .filter(
-      (item) =>
+      ({ item }) =>
         (!chapterId || item.chapterId === chapterId) &&
         (!kinds || kinds.includes(item.kind)),
     )
-    .map((item) => ({
-      item,
-      relevance: score(query, item, sections.get(item.sectionId)),
+    .map((record) => ({
+      item: record.item,
+      relevance: score(normalized, terms, record, { chapterId, sectionId, focusId }),
     }))
     .filter(({ relevance }) => relevance > 0)
-    .sort((a, b) => b.relevance - a.relevance)
+    .sort((a, b) => b.relevance - a.relevance || a.item.sourceLine - b.item.sourceLine)
     .slice(0, limit)
     .map(({ item, relevance }) => ({ ...item, relevance }));
+}
+
+// A specific numbered paper equation should never fall back to a nearby
+// paragraph or to another chapter's unrelated formula. This helper resolves
+// exact references first, then uses the ranked search for concept questions.
+export function findEquationForQuery(index, query, options = {}) {
+  const normalized = normalize(query);
+  const number = normalized.match(/\b(?:equation|eq)\s*(\d+)\b/)?.[1];
+  if (number) {
+    // The course's numbered equations belong to its destination paper. A
+    // bare "Equation 4" therefore has one exact source anchor; if a number
+    // is absent, do not point at an unrelated formula with lexical overlap.
+    return index.items.find((item) =>
+      item.kind === "equation" &&
+      item.chapterId === "paper" &&
+      item.searchAliases?.some((alias) => normalize(alias) === `leworldmodel equation ${number}`)
+    ) ?? null;
+  }
+  if (!number && /^(?:this|the|current|here)\s*(?:equation|formula)$/.test(normalized)) {
+    const focused = preparedFor(index).byId.get(options.focusId);
+    return focused?.kind === "equation" || focused?.kind === "widgetEquation" ? focused : null;
+  }
+  const matches = searchCourseIndex(index, query, {
+    ...options,
+    kinds: ["equation", "widgetEquation"],
+    limit: 1,
+  });
+  return matches[0]?.relevance >= 8 ? matches[0] : null;
 }
 
 export function findPassage(index, selectedText, chapterId) {

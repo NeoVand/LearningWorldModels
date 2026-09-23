@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "items": {
+    "paper-equation-a4abd25aba": {
+      "aliases": ["LeWorldModel equation 1", "paper prediction loss", "teacher forced prediction loss"],
+      "guide": {
+        "idea": "Predict the next image's embedding, not its pixels.",
+        "steps": ["Encode the actual next observation to make the target vector.", "Use the context and aligned action to predict that same next time.", "Subtract coordinates, square, and reduce; both encoder branches remain trainable."],
+        "reason": "The encoder must preserve predictable structure and the predictor must model its change.",
+        "caution": "A constant encoder makes this loss zero. The paper's compact squared norm and code's coordinate mean differ in scale."
+      }
+    },
+    "paper-equation-7bc997b089": {
+      "aliases": ["LeWorldModel equation 6", "paper unit projection", "h m equals Z u m"],
+      "guide": {
+        "idea": "A unit direction acts as a ruler laid through the embedding cloud.",
+        "steps": ["Choose a feature-space vector of length one.", "Dot each embedding with it, retaining one scalar for each example and time position.", "Pass the scalar batch to a one-dimensional distributional comparison."],
+        "reason": "Univariate normality measurements are easier to compute than direct high-dimensional ones.",
+        "caution": "Z has time, batch, and feature axes; the product contracts only the feature axis. The ideal theorem needs all directions."
+      }
+    },
+    "paper-equation-cf1682b537": {
+      "aliases": ["LeWorldModel equation 2", "paper SIGReg equation", "average normality scores over directions"],
+      "guide": {
+        "idea": "Score each projected distribution and average the scores, not the projected values.",
+        "steps": ["Equation 6 supplies one scalar batch per direction.", "T compares its characteristic function with the Gaussian target over frequencies.", "Add the M scores and divide by M."],
+        "reason": "A non-Gaussian arrangement hidden in one direction may appear in another.",
+        "caution": "Finite directions and frequency nodes approximate the all-directions, all-frequencies ideal."
+      }
+    },
+    "paper-equation-1544d68410": {
+      "aliases": ["LeWorldModel equation 3", "paper total objective", "prediction plus SIGReg", "lambda regularizer weight"],
+      "guide": {
+        "idea": "Two pressures act on the same encoder: predict the next representation and resist collapse.",
+        "steps": ["Prediction loss compares forecast and encoded next observation.", "SIGReg measures distributional mismatch of projected batches.", "Lambda sets their relative training weight."],
+        "reason": "Prediction alone admits a trivial constant-vector solution.",
+        "caution": "Lambda's effect depends on the exact executable reductions. Gaussian-looking latents do not by themselves guarantee task-relevant semantics."
+      }
+    },
+    "paper-equation-19aecf226e": {
+      "aliases": ["LeWorldModel equation 4", "paper latent planning cost", "goal embedding terminal cost"],
+      "guide": {
+        "idea": "Score a candidate plan by how close its imagined final embedding is to the encoded goal.",
+        "steps": ["Encode the goal image once.", "Roll out candidate actions to a predicted final vector.", "Square the distance between that vector and the goal vector."],
+        "reason": "An image goal can guide search without a new reward model for that goal.",
+        "caution": "Latent proximity is a proxy, not a direct measurement of physical success."
+      }
+    },
+    "paper-equation-be7f83adba": {
+      "aliases": ["LeWorldModel equation 5", "paper action optimization", "arg min over actions", "CEM action sequence"],
+      "guide": {
+        "idea": "During planning, change proposed actions while keeping the learned model fixed.",
+        "steps": ["Propose actions.", "Predict their endpoint and score it with Equation 4.", "Search for a lower-cost sequence; the paper uses CEM."],
+        "reason": "This turns a predictive model into a decision process.",
+        "caution": "Arg min names a sequence, not its cost. CEM does not certify a global optimum; the paper's compact horizon indices need a start-time convention in code."
+      }
+    },
+    "sigreg-equation-204ccdb125": {
+      "aliases": ["characteristic function definition", "complex arrow average", "cosine sine fingerprint"],
+      "guide": {
+        "idea": "At a chosen frequency, turn every scalar sample into a unit arrow and average the arrows.",
+        "steps": ["Cosine gives each arrow's real coordinate.", "Sine gives its imaginary coordinate.", "Average both; vary frequency to get a family of measurements."],
+        "reason": "The whole family identifies a distribution; mean and variance alone do not.",
+        "example": "Equal samples at negative one and positive one give cosine of frequency, whereas a zero point mass gives one everywhere.",
+        "caution": "Frequency is a measurement setting, not the world model's time index."
+      }
+    },
+    "sigreg-equation-288cbca33e": {
+      "aliases": ["Gaussian characteristic function", "why exp minus omega squared over two", "standard normal fingerprint"],
+      "guide": {
+        "idea": "The standard Gaussian has an exact complex-arrow average at every frequency.",
+        "steps": ["Differentiate its characteristic-function integral in frequency.", "Use Gaussian p prime equals negative x p and integration by parts to obtain phi prime equals negative frequency times phi.", "Solve with phi at zero equal to one."],
+        "reason": "This yields an exact target curve without estimating a density from the batch.",
+        "caution": "The target defines what distribution to match; an identical-looking Gaussian window separately weights frequencies."
+      }
+    },
+    "sigreg-equation-85a6ad5125": {
+      "aliases": ["empirical characteristic function", "finite batch complex average", "C omega S omega"],
+      "guide": {
+        "idea": "Replace the population arrow average by the average over B observed projections.",
+        "steps": ["Project each embedding to one scalar.", "Compute cosine and sine of its phase at one frequency.", "Average cosines into C and sines into S."],
+        "reason": "This is directly differentiable and needs no histogram or density estimate.",
+        "caution": "Average arrows before squaring the discrepancy; squaring individual errors first makes a different loss."
+      }
+    },
+    "sigreg-equation-ad8d0bb0e0": {
+      "aliases": ["SIGReg integral", "frequency window versus target", "weighted characteristic function discrepancy"],
+      "guide": {
+        "idea": "Combine frequency-specific mismatches into one nonnegative discrepancy.",
+        "steps": ["Subtract the Gaussian target from the empirical characteristic function.", "Square the complex magnitude so real and imaginary errors count.", "Weight frequencies and integrate."],
+        "reason": "One frequency can miss a mismatch; many frequencies give a richer comparison.",
+        "caution": "The target says what to match; the window says which frequencies count most."
+      }
+    },
+    "sigreg-equation-d78765b4c7": {
+      "aliases": ["finite batch sampling floor", "null scale SIGReg", "why Gaussian batch has nonzero statistic"],
+      "guide": {
+        "idea": "Correctly distributed independent samples still fluctuate around the population fingerprint.",
+        "steps": ["Subtract the population complex mean from each unit arrow.", "Expand the squared batch average into pairs.", "Independence removes cross-sample terms; B diagonal terms remain and division by B squared leaves a one-over-B error."],
+        "reason": "A nonzero finite-batch discrepancy can be normal even under the target distribution.",
+        "caution": "The expectation assumes fresh independent draws. Optimized finite embeddings are not such a sample, and multiplying the statistic by B changes its null-scale behavior."
+      }
+    },
+    "sigreg-equation-b8470a9337": {
+      "aliases": ["finite SIGReg objective", "SIGReg quadrature", "batch factor directions frequency weights", "trapezoid weights"],
+      "guide": {
+        "idea": "Approximate the ideal integral with sampled directions and frequency nodes for training.",
+        "steps": ["Project B embeddings along M unit directions.", "Compare average cosine and sine with the Gaussian target at each frequency node.", "Square errors, weight and sum nodes, average directions, and multiply by B."],
+        "reason": "B sets statistic scale, one over M averages directions, alpha integrates the symmetric grid, and the window downweights high frequencies.",
+        "caution": "Cutoff and grid density create distinct errors. Pinned code uses 17 nodes over zero through three; the ideal integrates all frequencies."
+      }
+    },
+    "sigreg-equation-76ea4f9030": {
+      "aliases": ["SIGReg gradient", "derivative of characteristic function penalty", "why collapse gradient zero"],
+      "guide": {
+        "idea": "Differentiate real and imaginary errors separately, then combine by the chain rule.",
+        "steps": ["One sample's cosine derivative is negative frequency times sine divided by B; sine's derivative is frequency times cosine divided by B.", "Each squared error contributes twice its current error times that derivative.", "The outer B cancels the mean's one over B."],
+        "reason": "The result can backpropagate through projections to the encoder.",
+        "caution": "At the exact zero cloud the first derivative vanishes despite a positive penalty; nearby nonzero spread can still lower it."
+      }
+    },
+    "planning-equation-e2e18badaa": {
+      "aliases": ["rollout error accumulation", "one step versus rollout accuracy", "Lipschitz prediction error recurrence"],
+      "guide": {
+        "idea": "Today's model error becomes part of tomorrow's input error in an imagined rollout.",
+        "steps": ["Insert and subtract the model prediction at the true state.", "Bound sensitivity to input error by L times current error.", "Bound one-step model error at the true state by epsilon."],
+        "reason": "Small teacher-forced error does not ensure small multi-step planning error.",
+        "caution": "The bound needs these assumptions on every state reached by either rollout; a planner may leave that region."
+      }
+    }
+  }
+}

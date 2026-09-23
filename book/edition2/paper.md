@@ -46,7 +46,23 @@ There is no target detachment in this training path. Gradients flow through the 
 
 ## Equations 2, 3, and 6: regularize a distribution at each time
 
-Equation 6 defines projected samples $h^{(m)}=\encoded{Z}u^{(m)}$ for unit directions. Equation 2 averages the univariate discrepancy over directions. Equation 3 adds that result to prediction with coefficient $\lambda$. All the mathematics of the characteristic function, Gaussian target, quadrature, and gradient was derived in the SIGReg chapter.
+The paper places Equation 6 in Appendix A, but we need its projection before reading Equations 2 and 3. For each unit direction $u^{(m)}$, multiply the embedding tensor along its feature axis. This leaves one scalar for each example at each time position:
+
+$$\encoded{h^{(m)}}:=\encoded{Z}\,\auxone{u^{(m)}},\qquad \auxone{u^{(m)}}\in\mathbb S^{d-1}.\tag{6}$$
+
+Here $\mathbb S^{d-1}$ is the unit sphere: each direction has length one. The paper uses $Z$ for a time × batch × feature tensor and writes this feature-axis contraction compactly. At a fixed time, the resulting $h^{(m)}$ is a batch of scalar projections, the input to the univariate statistic $\mathcal T$ derived in the SIGReg chapter.
+
+Equation 2 averages that statistic over $M$ sampled directions:
+
+$$\objective{\operatorname{SIGReg}}(\encoded{Z}):=\frac{1}{M}\sum_{m=1}^{M}\objective{\mathcal T}\!\left(\encoded{h^{(m)}}\right).\tag{2}$$
+
+This is an average of *distributional comparisons*, not an average of the projected values themselves. A single direction can miss a non-Gaussian arrangement; checking many directions makes the constraint broader. The mathematical statement that **all** directions identify a joint distribution is stronger than any finite implementation.
+
+Equation 3 joins the two pressures that train the same encoder: predict the next representation and keep the batch of representations from collapsing:
+
+$$\objective{\mathcal L_{\mathrm{LeWM}}}:=\objective{\mathcal L_{\mathrm{pred}}}+\lambda\,\objective{\operatorname{SIGReg}}(\encoded{Z}).\tag{3}$$
+
+The coefficient $\lambda$ sets their relative scale. These are the paper's compact equations; the concrete tensor reductions and numerical quadrature still have to be supplied by an implementation. The characteristic function, Gaussian target, quadrature, and gradients behind $\mathcal T$ were derived in the SIGReg chapter.
 
 The tensor entering the pinned regularizer has shape time × batch × feature. Direction sampling creates a feature × projection matrix. After projection and frequency multiplication, the phase tensor has time × batch × projection × frequency axes. The code averages the batch axis before squaring the real and imaginary discrepancies, integrates frequencies, multiplies by batch size, then averages directions and time.
 
@@ -78,7 +94,17 @@ A faithful reproduction should save the resolved configuration, dependency versi
 
 ## Equations 4 and 5: plan in the learned coordinates
 
-Equation 4 defines terminal squared latent distance to the encoded goal. Equation 5 seeks an action sequence minimizing that cost. The paper’s abbreviated indices write a horizon endpoint and action sequence without spelling out every initial-state offset. The planning chapter’s convention—$H$ actions produce an endpoint at $t+H$—removes that ambiguity for implementation.
+Equation 4 compares the final predicted embedding with the embedding of a goal image:
+
+$$\objective{C}(\predicted{\hat z_H}):=\|\predicted{\hat z_H}-\encoded{z_g}\|_2^2,\qquad \encoded{z_g}=\operatorname{enc}_{\theta}(\observed{o_g}).\tag{4}$$
+
+The goal image is encoded once. Each candidate action sequence makes the fixed world model produce a different $\hat z_H$, and the squared distance assigns that candidate a cost. This cost is useful only if proximity in the learned embedding is a useful guide to physical goal achievement.
+
+Equation 5 names the action sequence with the smallest terminal cost:
+
+$$\action{a^*_{1:H}}=\arg\min_{\action{a_{1:H}}}\objective{C}(\predicted{\hat z_H}).\tag{5}$$
+
+The minimization is over actions, while the encoder and predictor parameters stay fixed. The paper's abbreviated indices use a horizon endpoint without spelling out every initial-state offset. In our planning chapter, $H$ actions beginning at time $t$ produce an endpoint at $t+H$; that is an explicit implementation convention rather than a silent change to the paper's notation. CEM searches for a good candidate sequence, not a certified global minimizer.
 
 Appendix B describes CEM with Gaussian candidate sequences, elite selection, and mean/variance refitting. Appendix D gives 300 candidates and 30 elites, with up to 30 iterations for PushT and 10 for other environments. The general appendix description of 30 iterations is therefore not the full environment-specific prescription.
 

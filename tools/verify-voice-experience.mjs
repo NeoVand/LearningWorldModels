@@ -199,6 +199,14 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 900 });
 
+  await page.locator("#voice-settings-button").click();
+  assert.equal(await page.locator("#voice-model-choices [role=radio]").count(), 4);
+  assert.equal(await page.locator("#voice-model-choices [aria-checked=true]").textContent().then((value) => value.includes("GPT-6 Sol")), true);
+  await page.getByRole("radio", { name: /GPT-6 Luna/ }).click();
+  assert.equal(await page.evaluate(() => JSON.parse(sessionStorage.getItem("world-voice-settings")).model), "gpt-6-luna");
+  await page.getByRole("radio", { name: /GPT-6 Sol/ }).click();
+  await page.locator("[data-close-settings]").click();
+
   const fakeEleven = "qa-eleven-session-only";
   const fakeOpenAI = "qa-openai-session-only";
   await page.locator("#voice-settings-button").click();
@@ -268,6 +276,32 @@ try {
   assert.equal(toolResults.choice.state.controls.find((control) => control.key === "mode")?.value, "BatchNorm");
   assert.deepEqual(toolResults.choice.state.controls.find((control) => control.key === "mode")?.options, ["LayerNorm", "BatchNorm", "Stored statistics"]);
   assert.match(toolResults.invalidListen.error, /Unknown/);
+
+  const paperFocus = await page.evaluate(async () => {
+    getSelection()?.removeAllRanges();
+    const api = window.__courseVoice;
+    const focused = await api.performTool("focus_course_topic", { query: "Explain LeWorldModel paper Equation 4" });
+    const node = api.bound.get(focused.entry?.id);
+    const rect = node?.getBoundingClientRect();
+    const absent = await api.performTool("focus_course_topic", { query: "Explain paper Equation 77" });
+    return {
+      id: focused.entry?.id,
+      kind: focused.entry?.kind,
+      guide: focused.entry?.teachingGuide?.idea,
+      highlighted: node?.classList.contains("voice-pointed"),
+      visible: rect && rect.top >= 0 && rect.top < innerHeight && rect.bottom > 0,
+      header: document.querySelector("#assistant-transport-focus")?.textContent,
+      absent,
+    };
+  });
+  assert.equal(paperFocus.id, "paper-equation-19aecf226e");
+  assert.equal(paperFocus.kind, "equation");
+  assert.match(paperFocus.guide, /candidate plan/);
+  assert.equal(paperFocus.highlighted, true);
+  assert.equal(paperFocus.visible, true);
+  assert.match(paperFocus.header, /Equation 4/);
+  assert.equal(paperFocus.absent.ok, false, "an unknown equation must not silently highlight a different one");
+  await page.screenshot({ path: path.join(shots, "paper-equation-focus.png") });
 
   // Intercept synthesis and inspect its request. No test key reaches a provider.
   const syntheticAudio = fakeWav();

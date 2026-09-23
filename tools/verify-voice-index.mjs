@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { chapters } from "../book/edition2/curriculum.mjs";
+import { findEquationForQuery, searchCourseIndex } from "../book/voice/query.mjs";
 import { buildVoiceIndex } from "./build-voice-index.mjs";
 
 const index = buildVoiceIndex();
@@ -70,6 +71,32 @@ assert.match(
   index.items.find((item) => item.kind === "widget" && item.figureId === "O1")
     .speech,
   /camera panel/,
+);
+for (const number of [2, 3, 4, 5, 6]) {
+  const item = findEquationForQuery(index, `LeWorldModel equation ${number}`);
+  assert.equal(item?.chapterId, "paper", `paper Equation ${number} is missing`);
+  assert.equal(item?.display, true, `paper Equation ${number} must be visible`);
+  assert.equal(item?.speechSource, "reviewed");
+  assert.ok(item?.teachingGuide?.steps?.length >= 3);
+  assert.ok(item?.equationContext?.setup);
+  assert.ok(item?.equationContext?.nextStep);
+  assert.equal(findEquationForQuery(index, `Equation ${number}`)?.id, item.id);
+}
+assert.equal(findEquationForQuery(index, "Equation 42"), null);
+assert.deepEqual(searchCourseIndex(index, "Equation 42"), []);
+for (const [query, expected] of [
+  ["why does a Gaussian batch have nonzero SIGReg score", "sigreg-equation-d78765b4c7"],
+  ["derive the Gaussian characteristic function", "sigreg-equation-288cbca33e"],
+  ["why can the SIGReg gradient vanish at exact collapse", "sigreg-equation-76ea4f9030"],
+]) {
+  assert.equal(searchCourseIndex(index, query, { limit: 1 })[0]?.id, expected);
+  assert.equal(findEquationForQuery(index, query)?.id, expected);
+}
+assert.equal(
+  findEquationForQuery(index, "this equation", {
+    focusId: "paper-equation-cf1682b537",
+  })?.id,
+  "paper-equation-cf1682b537",
 );
 
 if (process.argv.includes("--dom")) {

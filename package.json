@@ -16,7 +16,7 @@
     "verify:layout": "node tools/verify-figure-layout.mjs",
     "verify:editorial": "node tools/verify-editorial.mjs",
     "verify:camera": "node tools/verify-camera.mjs && node tools/verify-camera-visual.mjs",
-    "verify:voice": "node tools/verify-voice-index.mjs --dom && node tools/verify-voice-experience.mjs"
+    "verify:voice": "node tools/verify-voice-index.mjs --dom && node tools/verify-live-model-switch.mjs && node tools/verify-voice-experience.mjs"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "4.3.2",

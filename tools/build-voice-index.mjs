@@ -36,6 +36,9 @@ const reviewedEquations = fs.existsSync(
 )
   ? JSON.parse(read("book/voice/equation-speech.json")).items
   : {};
+const equationGuides = JSON.parse(
+  read("book/voice/equation-guides.json"),
+).items;
 
 function decodeHtml(text) {
   return String(text)
@@ -204,6 +207,10 @@ export function buildVoiceIndex() {
     if (kind === "equation" && reviewedEquations[id]) {
       item.speech = reviewedEquations[id];
       item.speechSource = "reviewed";
+    }
+    if (equationGuides[id]) {
+      item.searchAliases = equationGuides[id].aliases;
+      item.teachingGuide = equationGuides[id].guide;
     }
     items.push(item);
     counts[kind] = (counts[kind] ?? 0) + 1;
@@ -781,6 +788,39 @@ export function buildVoiceIndex() {
     items,
     counts,
   };
+  const byId = new Map(items.map((item) => [item.id, item]));
+  for (const [id] of Object.entries(equationGuides))
+    if (!byId.has(id))
+      throw new Error(`Equation guide references a missing source item: ${id}`);
+  // The explanation says what an equation means. Adjacent source passages
+  // supply its setup and next inference, so a tutor can follow the argument
+  // without guessing which nearby formula a question refers to.
+  for (const item of items) {
+    if (item.kind !== "equation" && item.kind !== "widgetEquation") continue;
+    const owner = sections.find((entry) => entry.id === item.sectionId);
+    const position = owner?.itemIds.indexOf(item.id) ?? -1;
+    if (position < 0) continue;
+    const neighbors = owner.itemIds.map((id) => byId.get(id));
+    const usable = (candidate) =>
+      candidate &&
+      (candidate.kind === "paragraph" || candidate.kind === "list") &&
+      candidate.detailsTitle === item.detailsTitle;
+    const before = neighbors.slice(0, position).reverse().find(usable);
+    const after = neighbors.slice(position + 1).find(usable);
+    const short = (candidate) => {
+      const speech = candidate?.speech ?? "";
+      return speech.length <= 650
+        ? speech
+        : speech.slice(0, 650).replace(/\s+\S*$/, "").trim();
+    };
+    item.equationContext = {
+      section: owner.title,
+      setup: short(before),
+      nextStep: short(after),
+      setupId: before?.id,
+      nextStepId: after?.id,
+    };
+  }
   index.sourceHash = createHash("sha256")
     .update(JSON.stringify(index))
     .digest("hex");

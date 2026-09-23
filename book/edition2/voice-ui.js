@@ -1,7 +1,7 @@
 import { icon } from "../../tools/icons.mjs";
 import { NarrationPlayer, listElevenLabsVoices, clearNarrationCache } from "./voice-narration.js";
-import { LiveCourseAssistant } from "./live-assistant.js";
-import { attachVoiceIndex } from "./voice-index-runtime.js";
+import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, LiveCourseAssistant } from "./live-assistant.js";
+import { attachVoiceIndex, findEquationForQuery, searchCourseIndex } from "./voice-index-runtime.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -14,10 +14,11 @@ const chapterById = new Map(index.chapters.map((chapter) => [chapter.id, chapter
 const bound = attachVoiceIndex(index, document);
 const playback = index.items.filter((item) => item.playback !== false && bound.get(item.id));
 const DEFAULT_VOICE = { id: "hpp4J3VqNfWAUOO0d1Us", name: "Bella" };
-const memory = { openai: "", elevenlabs: "", voice: DEFAULT_VOICE, remember: false };
+const memory = { openai: "", elevenlabs: "", voice: DEFAULT_VOICE, model: DEFAULT_BACKEND_MODEL, remember: false };
 try {
   Object.assign(memory, JSON.parse(sessionStorage.getItem("world-voice-settings") || localStorage.getItem("world-voice-settings") || "{}"));
 } catch {}
+if (!BACKEND_MODELS.some(({ id }) => id === memory.model)) memory.model = DEFAULT_BACKEND_MODEL;
 const settingsStore = () => {
   const saved = JSON.stringify(memory);
   sessionStorage.setItem("world-voice-settings", saved);
@@ -25,8 +26,9 @@ const settingsStore = () => {
   else localStorage.removeItem("world-voice-settings");
 };
 
-// The controls are an unobtrusive extension of the existing reader header.
+// The reading controls live in the reader header, alongside the page controls.
 const printButton = $("#print");
+const readerHeader = $("header");
 const settingsButton = document.createElement("button");
 settingsButton.id = "voice-settings-button";
 settingsButton.type = "button";
@@ -50,7 +52,7 @@ settingsButton.before(assistantButton);
 const settings = document.createElement("dialog");
 settings.id = "voice-settings";
 settings.setAttribute("aria-labelledby", "voice-settings-title");
-settings.innerHTML = `<div class="voice-modal-head"><div><span class="voice-eyebrow">YOUR LISTENING SPACE</span><h2 id="voice-settings-title">Voices &amp; keys</h2></div><button type="button" class="voice-icon-button" data-close-settings aria-label="Close settings">${icon("close")}</button></div><p class="voice-modal-intro">Listen with ElevenLabs. Discuss the course with GPT-Live 1. Your keys go directly from this browser to their providers; the course never includes a shared key.</p><div class="voice-key-grid"><label>ElevenLabs API key<input id="voice-eleven-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your ElevenLabs key"></label><label>OpenAI API key<input id="voice-openai-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your OpenAI key"></label></div><div class="voice-key-actions"><label class="voice-check"><input id="voice-remember" type="checkbox"><span>Remember keys on this device</span></label><button type="button" id="voice-check-keys">Check connections</button><button type="button" id="voice-clear-keys">Clear keys</button></div><p id="voice-connection-status" class="voice-small" role="status">Keys are kept for this tab unless you choose to remember them.</p><div class="voice-voice-heading"><div><span class="voice-eyebrow">NARRATOR</span><h3>Choose a voice</h3></div><button type="button" id="voice-load-voices">Browse your voices</button></div><input id="voice-search" type="search" placeholder="Find a voice" aria-label="Find a voice" hidden><div id="voice-choices" class="voice-choices" role="group" aria-label="Narrator voices"></div><div class="voice-modal-foot"><button type="button" id="voice-clear-cache">Clear saved audio</button><span>Generated audio is cached on this device to avoid repeated synthesis.</span></div>`;
+settings.innerHTML = `<div class="voice-modal-head"><div><span class="voice-eyebrow">YOUR LISTENING SPACE</span><h2 id="voice-settings-title">Listening &amp; learning</h2></div><button type="button" class="voice-icon-button" data-close-settings aria-label="Close settings">${icon("close")}</button></div><p class="voice-modal-intro">ElevenLabs narrates the course. GPT-Live 1 handles your conversation, with a separate model to reason about the book. Your keys go directly from this browser to their providers.</p><div class="voice-key-grid"><label>ElevenLabs API key<input id="voice-eleven-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your ElevenLabs key"></label><label>OpenAI API key<input id="voice-openai-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your OpenAI key"></label></div><div class="voice-key-actions"><label class="voice-check"><input id="voice-remember" type="checkbox"><span>Remember keys on this device</span></label><button type="button" id="voice-check-keys">Check connections</button><button type="button" id="voice-clear-keys">Clear keys</button></div><p id="voice-connection-status" class="voice-small" role="status">Keys are kept for this tab unless you choose to remember them.</p><div class="voice-model-settings"><div class="voice-model-heading"><span class="voice-eyebrow">ASSISTANT</span><h3>Choose a teaching model</h3><p>GPT-Live 1 remains the voice; this model works through your questions and locates course material.</p></div><div id="voice-model-choices" class="voice-model-choices" role="radiogroup" aria-label="Teaching model"></div><p id="voice-model-status" class="voice-small" role="status"></p><p class="voice-billing-note">Narration mutes the assistant’s microphone and sound without sending it the recording. Muting or pausing leaves the Live session open and may still accrue time charges; End closes it.</p></div><div class="voice-voice-heading"><div><span class="voice-eyebrow">NARRATOR</span><h3>Choose a voice</h3></div><button type="button" id="voice-load-voices">Browse your voices</button></div><input id="voice-search" type="search" placeholder="Find a voice" aria-label="Find a voice" hidden><div id="voice-choices" class="voice-choices" role="group" aria-label="Narrator voices"></div><div class="voice-modal-foot"><button type="button" id="voice-clear-cache">Clear saved audio</button><span>Generated audio is cached on this device to avoid repeated synthesis.</span></div>`;
 document.body.append(settings);
 
 const player = document.createElement("section");
@@ -58,8 +60,19 @@ player.id = "course-player";
 player.className = "voice-player";
 player.hidden = true;
 player.setAttribute("aria-label", "Course narration");
-player.innerHTML = `<div class="voice-player-main"><span class="voice-player-mark">${icon("headphones")}</span><div class="voice-player-copy"><span id="voice-player-kicker">NOW LISTENING</span><strong id="voice-player-title">Course narration</strong><span id="voice-player-caption" aria-live="off"></span></div><div class="voice-player-actions"><button type="button" data-voice-action="previous" aria-label="Previous passage">${icon("previous")}</button><button type="button" data-voice-action="toggle" aria-label="Pause narration">${icon("pause")}</button><button type="button" data-voice-action="next" aria-label="Next passage">${icon("next")}</button><button type="button" data-voice-action="stop" aria-label="Stop narration">${icon("close")}</button></div></div><div class="voice-player-bottom"><input id="voice-seek" type="range" min="0" max="1000" value="0" aria-label="Narration position"><span id="voice-time">0:00 / 0:00</span><button type="button" id="voice-follow" aria-pressed="true">Follow</button></div>`;
-document.body.append(player);
+player.innerHTML = `<span class="voice-player-mark" aria-hidden="true">${icon("headphones")}</span><button type="button" id="voice-player-jump" class="voice-player-copy" aria-label="Show narrated passage"><span id="voice-player-kicker">LISTENING</span><strong id="voice-player-title">Course narration</strong></button><input id="voice-seek" type="range" min="0" max="1000" value="0" aria-label="Narration position"><span id="voice-time">0:00 / 0:00</span><div class="voice-player-actions"><button type="button" data-voice-action="previous" aria-label="Previous passage">${icon("previous")}</button><button type="button" data-voice-action="toggle" aria-label="Pause narration">${icon("pause")}</button><button type="button" data-voice-action="next" aria-label="Next passage">${icon("next")}</button><button type="button" data-voice-action="stop" aria-label="Stop narration">${icon("stop")}</button></div><button type="button" id="voice-follow" aria-pressed="true" aria-label="Follow narration on the page">Follow</button>`;
+const assistantTransport = document.createElement("div");
+assistantTransport.id = "assistant-transport";
+assistantTransport.className = "assistant-transport";
+assistantTransport.hidden = true;
+assistantTransport.setAttribute("aria-label", "Assistant controls");
+assistantTransport.innerHTML = `<span class="assistant-transport-dot" aria-hidden="true"></span><button type="button" id="assistant-transport-open" class="assistant-transport-open" aria-label="Open assistant conversation"><strong id="assistant-transport-focus">Assistant</strong><span id="assistant-transport-state">Listening</span></button><button type="button" id="assistant-transport-mic" aria-label="Mute microphone" title="Mute microphone">${icon("mic")}</button><button type="button" id="assistant-transport-audio" aria-label="Mute assistant sound" title="Mute assistant sound">${icon("volume")}</button><button type="button" id="assistant-transport-hold" aria-label="Pause assistant" title="Pause assistant">${icon("pause")}</button><button type="button" id="assistant-transport-end" aria-label="End assistant conversation" title="End assistant conversation">${icon("stop")}</button>`;
+const voiceRail = document.createElement("div");
+voiceRail.id = "course-voice-rail";
+voiceRail.className = "voice-rail";
+voiceRail.hidden = true;
+voiceRail.append(player, assistantTransport);
+readerHeader.insertBefore(voiceRail, $(".header-right"));
 
 const assistantPanel = document.createElement("aside");
 assistantPanel.id = "course-assistant";
@@ -81,12 +94,100 @@ let selected = null;
 let currentElement = null;
 let narratorOwnedByAssistant = false;
 let assistantAudioBeforeNarration = null;
+let assistantHeld = false;
+let assistantBeforeHold = null;
 let lastContext = "";
 let contextTimer = 0;
 let availableVoices = [DEFAULT_VOICE];
 let pendingAction = null;
 let lastCaption = { role: "", at: 0, endMs: 0 };
 let speakingTimer = 0;
+let assistantState = "closed";
+
+function syncVoiceRail() {
+  const active = !["closed", "disconnected", "error"].includes(assistantState);
+  assistantTransport.hidden = !active;
+  voiceRail.hidden = player.hidden && !active;
+  listenButton.setAttribute("aria-pressed", String(!player.hidden));
+}
+
+function assistantPreferences() {
+  if (assistantHeld) return assistantBeforeHold || { input: true, output: true };
+  return narratorOwnedByAssistant
+    ? assistantAudioBeforeNarration || { input: false, output: false }
+    : { input: assistant?.muted || false, output: assistant?.outputMuted || false };
+}
+
+function syncAssistantControls() {
+  const { input, output } = assistantPreferences();
+  const mic = $("#assistant-transport-mic");
+  const audio = $("#assistant-transport-audio");
+  const hold = $("#assistant-transport-hold");
+  mic.disabled = audio.disabled = assistantHeld;
+  mic.innerHTML = icon(input ? "micOff" : "mic");
+  mic.setAttribute("aria-pressed", String(input));
+  mic.setAttribute("aria-label", input ? "Unmute microphone" : "Mute microphone");
+  mic.title = mic.getAttribute("aria-label");
+  audio.innerHTML = icon(output ? "volumeOff" : "volume");
+  audio.setAttribute("aria-pressed", String(output));
+  audio.setAttribute("aria-label", output ? "Unmute assistant sound" : "Mute assistant sound");
+  audio.title = audio.getAttribute("aria-label");
+  hold.innerHTML = icon(assistantHeld ? "play" : "pause");
+  hold.setAttribute("aria-pressed", String(assistantHeld));
+  hold.setAttribute("aria-label", assistantHeld ? "Resume assistant" : "Pause assistant");
+  hold.title = hold.getAttribute("aria-label");
+  const panelMute = $("#assistant-mute");
+  panelMute.setAttribute("aria-pressed", String(input));
+  $("#assistant-mute span").textContent = input ? "Unmute mic" : "Mute mic";
+  $("#assistant-transport-state").textContent = assistantHeld
+    ? "Paused"
+    : narratorOwnedByAssistant
+    ? "Paused for narration"
+    : assistantState === "connecting" ? "Connecting"
+    : assistantState === "closing" ? "Ending"
+    : input && output ? "Paused"
+    : input ? "Mic muted"
+    : output ? "Audio paused"
+    : "Listening";
+}
+
+function setAssistantMicMuted(muted) {
+  if (!assistant || assistantHeld) return;
+  if (narratorOwnedByAssistant) assistantAudioBeforeNarration.input = muted;
+  else assistant.setMuted(muted);
+  syncAssistantControls();
+}
+
+function setAssistantOutputMuted(muted) {
+  if (!assistant || assistantHeld) return;
+  if (narratorOwnedByAssistant) assistantAudioBeforeNarration.output = muted;
+  else assistant.setOutputMuted(muted);
+  syncAssistantControls();
+}
+
+function setAssistantHeld(held) {
+  if (!assistant || held === assistantHeld) return;
+  if (held) {
+    assistantBeforeHold = narratorOwnedByAssistant
+      ? { ...assistantAudioBeforeNarration }
+      : { input: assistant.muted, output: assistant.outputMuted };
+    assistantHeld = true;
+    if (narratorOwnedByAssistant) assistantAudioBeforeNarration = { input: true, output: true };
+    assistant.setMuted(true);
+    assistant.setOutputMuted(true);
+  } else {
+    const saved = assistantBeforeHold || { input: false, output: false };
+    assistantHeld = false;
+    if (narratorOwnedByAssistant) assistantAudioBeforeNarration = saved;
+    else {
+      assistant.setMuted(saved.input);
+      assistant.setOutputMuted(saved.output);
+    }
+    assistantBeforeHold = null;
+  }
+  syncAssistantControls();
+  if (!assistantHeld) updateContext();
+}
 
 function quietAssistantForNarration() {
   if (!assistant?.isConnected) return;
@@ -96,6 +197,7 @@ function quietAssistantForNarration() {
   assistant.setMuted(true);
   assistant.setOutputMuted(true);
   narratorOwnedByAssistant = true;
+  syncAssistantControls();
 }
 
 function returnAudioToAssistant() {
@@ -104,6 +206,7 @@ function returnAudioToAssistant() {
   assistant?.setOutputMuted(assistantAudioBeforeNarration?.output || false);
   assistantAudioBeforeNarration = null;
   narratorOwnedByAssistant = false;
+  syncAssistantControls();
 }
 
 const narrator = new NarrationPlayer({
@@ -113,12 +216,16 @@ const narrator = new NarrationPlayer({
     if (state === "loading" || state === "playing") quietAssistantForNarration();
     player.hidden = state === "stopped" || state === "finished";
     player.dataset.state = state;
+    syncVoiceRail();
     const toggle = $('[data-voice-action="toggle"]', player);
     toggle.innerHTML = icon(state === "playing" ? "pause" : "play");
     toggle.setAttribute("aria-label", state === "playing" ? "Pause narration" : "Resume narration");
     $("#voice-player-kicker").textContent = state === "loading" ? "PREPARING AUDIO" : state === "error" ? "AUDIO UNAVAILABLE" : state === "paused" ? "PAUSED" : "NOW LISTENING";
-    if (error) $("#voice-player-caption").textContent = error;
-    if (state === "paused") returnAudioToAssistant();
+    if (error) $("#voice-player-title").textContent = error;
+    if (state === "paused") {
+      returnAudioToAssistant();
+      updateContext();
+    }
     if (state === "stopped" || state === "finished" || state === "error") {
       currentElement?.classList.remove("voice-current");
       currentElement = null;
@@ -132,16 +239,14 @@ const narrator = new NarrationPlayer({
     const enclosingDetails = currentElement?.closest("details");
     if (enclosingDetails) enclosingDetails.open = true;
     if (narrator.follow) currentElement?.scrollIntoView({ behavior: "smooth", block: "center" });
-    $("#voice-player-title").textContent = item.title || item.text?.slice(0, 76) || "Selected passage";
+    $("#voice-player-title").textContent = item.title || sectionById.get(item.sectionId)?.title || chapterById.get(item.chapterId)?.title || "Selected passage";
     $("#voice-player-kicker").textContent = `${place + 1} OF ${total} · COURSE AUDIO`;
-    $("#voice-player-caption").textContent = item.speech || item.text || "";
   },
-  onProgress: ({ time, duration, speech, character }) => {
-    $("#voice-seek").value = duration ? String(Math.round((time / duration) * 1000)) : "0";
+  onProgress: ({ time, duration }) => {
+    const progress = duration ? Math.round((time / duration) * 1000) : 0;
+    $("#voice-seek").value = String(progress);
+    $("#voice-seek").style.setProperty("--voice-progress", `${progress / 10}%`);
     $("#voice-time").textContent = `${clock(time)} / ${clock(duration)}`;
-    const from = Math.max(0, speech.lastIndexOf(" ", Math.max(0, character - 38)) + 1);
-    const to = Math.min(speech.length, speech.indexOf(" ", character + 80) < 0 ? speech.length : speech.indexOf(" ", character + 80));
-    $("#voice-player-caption").textContent = speech.slice(from, to);
   },
 });
 
@@ -247,20 +352,28 @@ function widgetState(id) {
 }
 
 function currentContext() {
-  const item = itemInView();
-  const section = item && sectionById.get(item.sectionId);
-  const chapter = item && chapterById.get(item.chapterId);
+  const visibleItem = itemInView();
   const selection = selectedItem();
-  const visibleWidget = item?.kind === "widget" ? item : index.items.find((entry) => {
+  const visibleWidget = visibleItem?.kind === "widget" ? visibleItem : index.items.find((entry) => {
     if (entry.kind !== "widget") return false;
     const rect = bound.get(entry.id)?.getBoundingClientRect();
     return rect && rect.top < innerHeight * 0.65 && rect.bottom > 100;
   });
   const widget = visibleWidget ? widgetState(visibleWidget.id) : null;
+  const narrated = narrator.current && itemById.get(narrator.current.id);
+  const pointedRect = pointed?.getBoundingClientRect();
+  const pointedItem = pointedRect && pointedRect.bottom > 0 && pointedRect.top < innerHeight ? itemForElement(pointed) : null;
+  const reference = selection?.item || narrated || pointedItem || visibleItem;
+  const section = reference && sectionById.get(reference.sectionId);
+  const chapter = reference && chapterById.get(reference.chapterId);
   return {
     chapter: chapter ? { id: chapter.id, title: chapter.title, summary: chapter.summary } : null,
     section: section ? { id: section.id, title: section.title, summary: section.summary } : null,
-    focus: item ? { id: item.id, kind: item.kind, text: item.text?.slice(0, 650), speech: item.speech?.slice(0, 550) } : null,
+    focus: reference ? { id: reference.id, kind: reference.kind, title: displayTitle(reference), text: reference.text?.slice(0, 650), speech: reference.speech?.slice(0, 550) } : null,
+    referenceId: reference?.id || null,
+    referenceReason: selection?.item ? "selection" : narrated ? "current narration" : pointedItem ? "highlighted by assistant" : "visible passage",
+    narrated: narrated ? { id: narrated.id, title: displayTitle(narrated), state: player.dataset.state, time: Math.round(narrator.audio.currentTime || 0) } : null,
+    highlighted: pointedItem ? { id: pointedItem.id, title: displayTitle(pointedItem) } : null,
     selection: selection?.text?.slice(0, 500) || "",
     widget,
   };
@@ -268,8 +381,11 @@ function currentContext() {
 
 function updateContext() {
   const context = currentContext();
-  $("#assistant-context").textContent = context.section && context.section.title !== context.chapter?.title ? `${context.chapter?.title || "Course"} · ${context.section.title}` : context.chapter?.title || "The course";
+  $("#assistant-context").textContent = context.highlighted ? `Explaining · ${context.highlighted.title}` : context.section && context.section.title !== context.chapter?.title ? `${context.chapter?.title || "Course"} · ${context.section.title}` : context.chapter?.title || "The course";
   if (!assistant) return;
+  // The assistant sees the narration position in get_page_context and after
+  // Pause. Streaming every advancing passage into Live would waste context.
+  if (assistantHeld || player.dataset.state === "loading" || player.dataset.state === "playing") return;
   const short = JSON.stringify(context);
   if (short !== lastContext) {
     lastContext = short;
@@ -278,33 +394,57 @@ function updateContext() {
 }
 
 function searchCourse(query, limit = 6) {
-  const terms = String(query || "").toLowerCase().split(/\W+/).filter((term) => term.length > 2).slice(0, 8);
-  if (!terms.length) return [];
-  const passageMatches = index.items.map((item) => {
-    const title = (item.title || "").toLowerCase();
-    const text = (item.text || "").toLowerCase();
-    const speech = (item.speech || "").toLowerCase();
-    const score = terms.reduce((sum, term) => sum + (title.includes(term) ? 5 : 0) + (text.includes(term) ? 2 : 0) + (speech.includes(term) ? 1 : 0), 0);
-    return { item, score };
-  }).filter(({ score }) => score > 0).map(({ item, score }) => ({
-    score,
-    result: { id: item.id, kind: item.kind, title: item.title || sectionById.get(item.sectionId)?.title, excerpt: (item.text || item.speech || "").slice(0, 420), sectionId: item.sectionId },
+  const context = currentContext();
+  return searchCourseIndex(index, query, {
+    focusId: context.referenceId,
+    sectionId: context.section?.id,
+    chapterId: undefined,
+    limit: Math.min(10, Math.max(1, Number(limit) || 6)),
+  }).map((item) => ({
+    id: item.id,
+    kind: item.kind,
+    title: displayTitle(item),
+    excerpt: (item.teachingGuide?.idea || item.speech || item.text || "").slice(0, 420),
+    sectionId: item.sectionId,
+    relevance: item.relevance,
   }));
-  const noteMatches = tutorNotes.map((note) => {
-    const title = note.topic.toLowerCase();
-    const keywords = note.keywords.join(" ").toLowerCase();
-    const explanation = note.explanation.toLowerCase();
-    const score = terms.reduce((sum, term) => sum + (title.includes(term) ? 6 : 0) + (keywords.includes(term) ? 4 : 0) + (explanation.includes(term) ? 1 : 0), 0);
-    return { score, result: { id: `note:${note.id}`, kind: "tutorNote", title: note.topic, excerpt: note.explanation.slice(0, 420), chapterId: note.chapterId } };
-  }).filter(({ score }) => score > 0);
-  return [...passageMatches, ...noteMatches].sort((a, b) => b.score - a.score).slice(0, Math.min(10, Math.max(1, Number(limit) || 6))).map(({ result }) => result);
+}
+
+function displayTitle(item) {
+  if (!item) return "Course passage";
+  const sectionTitle = sectionById.get(item.sectionId)?.title || chapterById.get(item.chapterId)?.title || "Course passage";
+  const numbered = item.kind === "equation" && item.text?.match(/\\tag\{(\d+)\}/)?.[1];
+  if (numbered) return `Equation ${numbered} · ${sectionTitle}`;
+  if (item.kind === "equation" || item.kind === "widgetEquation") return `Equation · ${sectionTitle}`;
+  return item.title || sectionTitle;
+}
+
+function courseEntry(item) {
+  const section = sectionById.get(item.sectionId);
+  const chapter = chapterById.get(item.chapterId);
+  return {
+    id: item.id,
+    kind: item.kind,
+    title: displayTitle(item),
+    chapter: chapter?.title,
+    section: section?.title,
+    formula: ["equation", "widgetEquation"].includes(item.kind) ? item.text?.slice(0, 1400) : undefined,
+    text: item.kind === "equation" ? undefined : item.text?.slice(0, 1500),
+    spokenExplanation: item.speech?.slice(0, 2400),
+    teachingGuide: item.teachingGuide,
+    equationContext: item.equationContext,
+    agentNote: item.agentNote?.slice(0, 900),
+    widgetState: item.kind === "widget" ? widgetState(item.id) : undefined,
+  };
 }
 
 function resolveTarget(id) {
   const item = itemById.get(id);
   if (item) return { node: bound.get(id), item };
   if (sectionById.has(id) || chapterById.has(id)) return { node: document.getElementById(id), item: null };
-  if (noteById.has(id)) return { node: document.getElementById(noteById.get(id).chapterId), item: null };
+  // Tutor notes are hidden context, not page targets. A note's chapter root is
+  // not the passage the learner asked the assistant to show.
+  if (noteById.has(id)) return { node: null, item: null };
   if (/^[A-Z]\d+$/.test(String(id))) return { node: document.getElementById(`visual-${id}`), item: index.items.find((entry) => entry.locator?.selector === `#visual-${id}`) };
   return { node: null, item: null };
 }
@@ -313,20 +453,65 @@ let pointed = null;
 function pointTo(node) {
   pointed?.classList.remove("voice-pointed");
   pointed = node;
+  const details = node.closest("details");
+  if (details) details.open = true;
   node.classList.add("voice-pointed");
-  node.scrollIntoView({ behavior: "smooth", block: "center" });
-  setTimeout(() => { if (pointed === node) { node.classList.remove("voice-pointed"); pointed = null; } }, 9000);
+  node.scrollIntoView({ behavior: "instant", block: "center" });
+  const item = itemForElement(node);
+  $("#assistant-transport-focus").textContent = item ? displayTitle(item) : "Course passage";
+  updateContext();
+}
+
+function focusEntry(id) {
+  const { node, item } = resolveTarget(id);
+  if (!node || !item) return { ok: false, error: "No visible course entry has that ID." };
+  pointTo(node);
+  return { ok: true, visible: true, entry: courseEntry(item) };
+}
+
+function focusTopic(query) {
+  const context = currentContext();
+  const options = { focusId: context.referenceId, sectionId: context.section?.id, chapterId: context.chapter?.id };
+  const words = String(query || "");
+  const equationRequest = /\b(?:equation|eq\.?|formula|derive|derivation|gradient)\b/i.test(words);
+  const equation = equationRequest ? findEquationForQuery(index, words, options) : null;
+  if (/\b(?:equation|eq\.?)\s*\d+\b/i.test(words) && !equation)
+    return { ok: false, error: "That numbered equation is not in the course; I will not point to a different formula." };
+  const ranked = searchCourseIndex(index, words, { ...options, chapterId: undefined, limit: 4 });
+  const target = equation || ranked[0];
+  if (!target || (!equation && target.relevance < 2)) return { ok: false, error: "I could not locate a reliable passage for that question. Try a more specific topic or ask about the current selection." };
+  const focused = focusEntry(target.id);
+  if (!focused.ok) return focused;
+  return {
+    ...focused,
+    alternatives: ranked.filter((item) => item.id !== target.id).slice(0, 2).map((item) => ({ id: item.id, title: displayTitle(item), kind: item.kind })),
+    teachingNotes: relatedTeachingNotes(words, target.chapterId),
+  };
+}
+
+function relatedTeachingNotes(query, chapterId) {
+  const terms = String(query || "").toLowerCase().match(/[a-z0-9]{3,}/g) || [];
+  return tutorNotes.map((note) => {
+    const title = `${note.topic} ${note.keywords.join(" ")}`.toLowerCase();
+    const matches = terms.filter((term) => title.includes(term)).length;
+    return { note, score: matches * 3 + (matches && note.chapterId === chapterId ? 2 : 0) };
+  }).filter(({ score }) => score >= 5)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map(({ note }) => ({ topic: note.topic, explanation: note.explanation, teachingMove: note.teachingMove, source: note.source }));
 }
 
 async function performTool(name, args) {
   if (name === "get_page_context") return currentContext();
+  if (name === "focus_course_topic") return focusTopic(args.query);
+  if (name === "focus_course_entry") return focusEntry(args.id);
   if (name === "search_course") return { results: searchCourse(args.query, args.limit) };
   if (name === "get_course_entry") {
     const item = itemById.get(args.id);
     const note = noteById.get(args.id);
     const section = sectionById.get(args.id);
     const chapter = chapterById.get(args.id);
-    if (item) return { ...item, widgetState: item.kind === "widget" ? widgetState(item.id) : undefined, section: sectionById.get(item.sectionId)?.summary };
+    if (item) return courseEntry(item);
     if (note) return { id: args.id, kind: "tutorNote", ...note };
     if (section || chapter) return section || chapter;
     return { error: "Unknown course entry" };
@@ -334,8 +519,7 @@ async function performTool(name, args) {
   if (name === "navigate_to" || name === "highlight_entry") {
     const { node, item } = resolveTarget(args.id);
     if (!node) return { error: "Unknown course target" };
-    if (name === "highlight_entry") pointTo(node);
-    else node.scrollIntoView({ behavior: "smooth", block: "start" });
+    pointTo(node);
     return { ok: true, id: args.id, title: item?.title || node.textContent?.trim().slice(0, 90) };
   }
   if (name === "set_widget_control") {
@@ -374,7 +558,7 @@ function caption({ speaker, delta, typed, startMs, endMs }) {
   if (log.children.length === 1 && log.firstElementChild?.textContent === "Start a conversation, or type a question below.") log.replaceChildren();
   const last = log.lastElementChild;
   const sameUtterance = !typed && last?.dataset.role === role && last.dataset.partial === "true" && Date.now() - lastCaption.at < 1800 && (startMs == null || !lastCaption.endMs || startMs >= lastCaption.endMs - 300);
-  if (sameUtterance) last.textContent += text;
+  if (sameUtterance) last.textContent += /[.!?]$/.test(last.textContent) && /^[A-Z]/.test(text) ? ` ${text}` : text;
   else {
     const p = document.createElement("p");
     p.dataset.role = role;
@@ -387,30 +571,36 @@ function caption({ speaker, delta, typed, startMs, endMs }) {
   log.scrollTop = log.scrollHeight;
 }
 
-async function startAssistant() {
+async function startAssistant({ muted = false } = {}) {
   assistantPanel.hidden = false;
   if (assistant && ["closed", "error"].includes(assistant.state)) assistant = null;
   if (assistant) return;
   if (!memory.openai) {
-    pendingAction = { provider: "openai", run: () => startAssistant() };
+    pendingAction = { provider: "openai", run: () => startAssistant({ muted }) };
     settings.showModal();
     $("#voice-openai-key").focus();
     return;
   }
   if (narrator.current) narrator.pause();
   $("#assistant-status").textContent = "Connecting to GPT-Live 1…";
+  assistantHeld = false;
+  assistantBeforeHold = null;
   assistant = new LiveCourseAssistant({
     apiKey: memory.openai,
+    backendModel: memory.model,
     context: JSON.stringify(currentContext()),
     onStatus: (event) => {
       const state = typeof event === "string" ? event : event.state || event.type || "connected";
       const labels = { connecting: "Connecting to GPT-Live 1…", connected: event.muted ? "Ready · microphone muted" : "Ready · microphone on", closing: "Ending conversation…", closed: "Conversation ended", error: "Connection ended" };
       $("#assistant-status").textContent = typeof event === "string" ? event : event.message || labels[state] || state;
+      assistantState = state;
       const active = !["closed", "disconnected", "error"].includes(state);
       $("#assistant-start").hidden = active;
       $("#assistant-mute").hidden = !active;
       $("#assistant-end").hidden = !active;
       assistantButton.setAttribute("aria-pressed", String(active));
+      syncVoiceRail();
+      syncAssistantControls();
     },
     onTranscript: (event) => {
       caption(event);
@@ -426,8 +616,9 @@ async function startAssistant() {
     onTool: performTool,
     onError: (error) => { $("#assistant-status").textContent = error?.message || String(error); },
   });
+  if (muted) assistant.setMuted(true);
   try { await assistant.connect(); updateContext(); }
-  catch (error) { $("#assistant-status").textContent = error?.message || String(error); assistant?.disconnect(); assistant = null; }
+  catch (error) { $("#assistant-status").textContent = error?.message || String(error); assistant?.disconnect(); assistant = null; assistantState = "error"; syncVoiceRail(); }
 }
 
 async function explain(item, text = "") {
@@ -441,8 +632,14 @@ async function explain(item, text = "") {
   }
   await startAssistant();
   if (!assistant) return;
-  const focus = item ? `Course entry ${item.id}: ${item.text || item.speech || ""}` : JSON.stringify(currentContext());
-  assistant.sendText(`Teach me this carefully. ${text ? `I selected: ${text.slice(0, 900)}. ` : ""}${focus.slice(0, 1400)}`);
+  if (narrator.current && !narrator.audio.paused) narrator.pause();
+  if (assistantHeld) setAssistantHeld(false);
+  if (item) focusEntry(item.id);
+  updateContext();
+  const selectedPhrase = item?.kind === "equation" ? "" : text ? ` I selected: ${text.slice(0, 350)}.` : "";
+  assistant.sendText(item
+    ? `Teach the highlighted ${item.kind} (${item.id}). Explain what it is for, why its steps follow, and give a small example. Do not just read its symbols.${selectedPhrase}`
+    : `Teach the current passage carefully.${selectedPhrase}`);
 }
 
 function renderVoices() {
@@ -464,10 +661,45 @@ function renderVoices() {
   }));
 }
 
+function renderModels() {
+  const target = $("#voice-model-choices");
+  target.replaceChildren(...BACKEND_MODELS.map((model) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "voice-model-choice";
+    button.setAttribute("role", "radio");
+    button.setAttribute("aria-checked", String(memory.model === model.id));
+    const name = document.createElement("strong");
+    name.textContent = model.name;
+    const description = document.createElement("small");
+    description.textContent = model.description;
+    button.append(name, description);
+    button.onclick = async () => {
+      if (model.id === memory.model || target.dataset.pending === "true") return;
+      target.dataset.pending = "true";
+      const status = $("#voice-model-status");
+      status.textContent = assistant?.isConnected ? `Switching to ${model.name}…` : "";
+      try {
+        if (assistant) await assistant.setBackendModel(model.id);
+        memory.model = model.id;
+        settingsStore();
+        status.textContent = assistant?.isConnected ? `${model.name} is ready for this conversation.` : `${model.name} will be used when you start the assistant.`;
+      } catch (error) {
+        status.textContent = error?.message || "The model could not be changed.";
+      } finally {
+        delete target.dataset.pending;
+        renderModels();
+      }
+    };
+    return button;
+  }));
+}
+
 settingsButton.onclick = () => {
   $("#voice-eleven-key").value = memory.elevenlabs;
   $("#voice-openai-key").value = memory.openai;
   $("#voice-remember").checked = memory.remember;
+  renderModels();
   renderVoices();
   settings.showModal();
 };
@@ -489,7 +721,7 @@ $("#voice-clear-keys").onclick = () => {
   $("#voice-openai-key").value = $("#voice-eleven-key").value = "";
   $("#voice-remember").checked = false;
   $("#voice-connection-status").textContent = "Keys cleared from this browser.";
-  assistant?.disconnect(); assistant = null; narrator.stop();
+  endAssistant(); narrator.stop();
 };
 $("#voice-check-keys").onclick = async () => {
   const status = $("#voice-connection-status");
@@ -517,17 +749,50 @@ $("#voice-load-voices").onclick = async () => {
 $("#voice-search").oninput = renderVoices;
 $("#voice-clear-cache").onclick = async () => { await clearNarrationCache(); $("#voice-connection-status").textContent = "Saved narration audio cleared."; };
 
-listenButton.onclick = () => listen(itemInView(), "", true);
-assistantButton.onclick = () => { assistantPanel.hidden = !assistantPanel.hidden; if (!assistantPanel.hidden) updateContext(); };
+listenButton.onclick = () => {
+  if (narrator.current) {
+    if (narrator.audio.paused) quietAssistantForNarration();
+    narrator.toggle();
+  } else listen(itemInView(), "", true);
+};
+assistantButton.onclick = () => {
+  assistantPanel.hidden = !assistantPanel.hidden;
+  if (!assistantPanel.hidden) {
+    if (narrator.current && !narrator.audio.paused) narrator.pause();
+    updateContext();
+  }
+};
+$("#assistant-transport-open").onclick = () => {
+  assistantPanel.hidden = false;
+  if (narrator.current && !narrator.audio.paused) narrator.pause();
+  updateContext();
+};
 $("#assistant-close").onclick = () => { assistantPanel.hidden = true; };
 $("#assistant-start").onclick = startAssistant;
-$("#assistant-mute").onclick = () => {
-  const muted = $("#assistant-mute").getAttribute("aria-pressed") !== "true";
-  assistant?.setMuted(muted);
-  $("#assistant-mute").setAttribute("aria-pressed", String(muted));
-  $("#assistant-mute span").textContent = muted ? "Unmute mic" : "Mute mic";
-};
-$("#assistant-end").onclick = () => { assistant?.disconnect(); assistant = null; $("#assistant-status").textContent = "Conversation ended."; $("#assistant-start").hidden = false; $("#assistant-mute").hidden = $("#assistant-end").hidden = true; assistantButton.setAttribute("aria-pressed", "false"); };
+$("#assistant-mute").onclick = () => setAssistantMicMuted(!assistantPreferences().input);
+$("#assistant-transport-mic").onclick = () => setAssistantMicMuted(!assistantPreferences().input);
+$("#assistant-transport-audio").onclick = () => setAssistantOutputMuted(!assistantPreferences().output);
+$("#assistant-transport-hold").onclick = () => setAssistantHeld(!assistantHeld);
+function endAssistant() {
+  assistant?.disconnect();
+  assistant = null;
+  assistantState = "closed";
+  narratorOwnedByAssistant = false;
+  assistantAudioBeforeNarration = null;
+  assistantHeld = false;
+  assistantBeforeHold = null;
+  $("#assistant-status").textContent = "Conversation ended.";
+  $("#assistant-start").hidden = false;
+  $("#assistant-mute").hidden = $("#assistant-end").hidden = true;
+  assistantButton.setAttribute("aria-pressed", "false");
+  pointed?.classList.remove("voice-pointed");
+  pointed = null;
+  $("#assistant-transport-focus").textContent = "Assistant";
+  syncVoiceRail();
+  syncAssistantControls();
+}
+$("#assistant-end").onclick = endAssistant;
+$("#assistant-transport-end").onclick = endAssistant;
 $("#assistant-form").onsubmit = async (event) => {
   event.preventDefault();
   const input = $("#assistant-input");
@@ -539,8 +804,14 @@ $("#assistant-form").onsubmit = async (event) => {
     $("#voice-openai-key").focus();
     return;
   }
-  if (!assistant) await startAssistant();
-  if (assistant) { input.value = ""; assistant.sendText(text); }
+  if (!assistant) await startAssistant({ muted: true });
+  if (assistant) {
+    if (narrator.current && !narrator.audio.paused) narrator.pause();
+    if (assistantHeld) setAssistantHeld(false);
+    updateContext();
+    input.value = "";
+    assistant.sendText(text);
+  }
 };
 
 $$('[data-voice-action]', player).forEach((button) => button.onclick = () => {
@@ -552,6 +823,11 @@ $$('[data-voice-action]', player).forEach((button) => button.onclick = () => {
   else narrator[action]();
 });
 $("#voice-seek").oninput = (event) => narrator.seek(Number(event.target.value) / 1000);
+$("#voice-player-jump").onclick = () => {
+  if (!currentElement) return;
+  currentElement.scrollIntoView({ behavior: "smooth", block: "center" });
+  pointTo(currentElement);
+};
 $("#voice-follow").onclick = () => {
   narrator.follow = !narrator.follow;
   $("#voice-follow").setAttribute("aria-pressed", String(narrator.follow));

@@ -22,6 +22,7 @@ import Next from "@hugeicons/core-free-icons/NextIcon";
 import Previous from "@hugeicons/core-free-icons/PreviousIcon";
 import Stop from "@hugeicons/core-free-icons/StopIcon";
 import Volume from "@hugeicons/core-free-icons/VolumeUpIcon";
+import VolumeOff from "@hugeicons/core-free-icons/VolumeOffIcon";
 const icons = {
   play: Play,
   pause: Pause,
@@ -47,6 +48,7 @@ const icons = {
   previous: Previous,
   stop: Stop,
   volume: Volume,
+  volumeOff: VolumeOff,
 };
 export function icon(name) {
   const nodes = icons[name];

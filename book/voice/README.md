@@ -15,10 +15,17 @@ that the continuous player should not repeat after reading its parent.
 
 Figures have exact IDs such as `visual-O1` and selectors such as `#visual-O1`.
 Equations retain their source LaTeX for matching KaTeX annotations and have
-natural-language `speech`. All 128 display equations have an editorially
+natural-language `speech`. All 133 display equations have an editorially
 reviewed explanation: a short authored set is bundled with the semantic reader
 and the rest live in `equation-speech.json`, keyed by stable item ID. All 93
 teaching figures have authored explanations in `widget-narration.json`.
+The paper reading chapter visibly typesets numbered Equations 2–6. `equation-guides.json` adds step-by-step
+teaching notes and search aliases to the central SIGReg, planning, and paper
+formulas. Every indexed equation also links to the adjacent source passages
+through `equationContext`, including their exact entry IDs. These fields help
+the assistant show the relevant formula and explain its role rather than read
+its symbols aloud. `findEquationForQuery` resolves a bare paper equation
+number to its visible formula and returns `null` for an unknown number.
 Inline equations are spoken within their parent paragraph during continuous
 listening; individually selected inline expressions also have a contextual
 fallback marked `speechSource: "heuristic"`. A future editorial pass can replace
@@ -34,7 +41,7 @@ The browser import `book/edition2/voice-index-runtime.js` exports:
   sets `data-voice-id` on that element, and returns `Map<itemId, Element>`.
 - `closestVoiceItem(element)`: returns the nearest `data-voice-id` for the
   selection or click target.
-- `searchCourseIndex`, `findPassage`, and `contextFor`: local retrieval of
+- `searchCourseIndex`, `findEquationForQuery`, `findPassage`, and `contextFor`: local retrieval of
   chapter/section/figure context for the conversational assistant.
 
 Rebuild with `node tools/build-voice-index.mjs`. Check source coverage and
