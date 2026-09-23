@@ -4,12 +4,14 @@
 const sameText = (a, b) =>
   String(a)
     .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .toLowerCase()
     .replace(/[\p{P}\p{S}]/gu, " ")
     .replace(/\s+/g, " ")
     .trim() ===
   String(b)
     .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .toLowerCase()
     .replace(/[\p{P}\p{S}]/gu, " ")
     .replace(/\s+/g, " ")
@@ -18,6 +20,7 @@ const sameText = (a, b) =>
 function words(text) {
   return String(text)
     .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .toLowerCase()
     .replace(/[\p{P}\p{S}]/gu, " ")
     .split(/\s+/)
@@ -68,7 +71,7 @@ export function attachVoiceIndex(index, scope = document) {
     ]),
   );
   const tag = (item, element) => {
-    if (!element) return false;
+    if (!element || element.closest("article") !== articles.get(item.chapterId) || element.closest("nav, header, footer")) return false;
     byId.set(item.id, element);
     element.dataset.voiceId = item.id;
     return true;
@@ -77,7 +80,7 @@ export function attachVoiceIndex(index, scope = document) {
     const article = articles.get(item.chapterId);
     if (!article) return null;
     if (item.locator?.selector) {
-      const matches = scope.querySelectorAll(item.locator.selector);
+      const matches = [...scope.querySelectorAll(item.locator.selector)].filter((node) => node.closest("article") === article);
       return matches[(item.locator.index ?? 1) - 1] ?? null;
     }
     if (item.kind === "table") {
@@ -221,7 +224,7 @@ export function resolveBoundVoiceItem(index, bound, id, scope = document) {
   const item = index.items.find((entry) => entry.id === id);
   if (!item) return null;
   const cached = bound.get(id);
-  if (cached?.isConnected) return cached;
+  if (cached?.isConnected && cached.closest("main article")?.id === item.chapterId && !cached.closest("nav, header, footer")) return cached;
   if (item.kind !== "widgetEquation" || !item.locator?.figureId || !item.latex)
     return null;
 

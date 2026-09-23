@@ -1,3 +1,4 @@
+import { navigationTopics } from "./navigation-topics.mjs";
 const preparedCache = new WeakMap();
 const stopWords = new Set([
   "a", "an", "and", "are", "at", "can", "does", "for", "from", "how", "i",
@@ -10,13 +11,14 @@ const stopWords = new Set([
   "topic", "definition", "defined", "equation", "formula", "figure",
   "section", "chapter", "diagram", "paragraph", "widget", "lesson",
   // Deictic words need the current on-screen selection, not a global search.
-  "current", "here", "now", "one", "something", "stuff", "that", "there",
+  "main", "teaching", "passage", "relevant", "material", "discuss", "discusses", "introduction", "could", "would", "want", "need", "just", "into", "then", "yet", "only", "current", "here", "now", "one", "something", "stuff", "that", "there",
   "these", "thing", "those",
 ]);
 
 const normalize = (text) =>
   String(text ?? "")
     .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .toLowerCase()
     .replace(/[\p{P}\p{S}]/gu, " ")
     .replace(/\s+/g, " ")
@@ -25,7 +27,7 @@ const normalize = (text) =>
 function termsOf(text) {
   return [...new Set(normalize(text)
     .split(" ")
-    .filter((term) => (term.length > 2 || /^\d+$/.test(term)) && !stopWords.has(term))
+    .filter((term) => (term.length > 2 || /^[pz]$/.test(term) || /^\d+$/.test(term)) && !stopWords.has(term))
     .map((term) => term.length > 4 && term.endsWith("s") ? term.slice(0, -1) : term))];
 }
 
@@ -99,6 +101,13 @@ function score(query, terms, record, options) {
   return points;
 }
 
+export function isTeachingDestination(item, query = "") {
+  if (!item || item.kind === "reference") return false;
+  if (item.chapterId === "reference" && !/\b(?:glossary|bibliography|reference|notation table)\b/i.test(query)) return false;
+  if (["list", "tableRow"].includes(item.kind) && !/\b(?:list|table|glossary|reference|bibliography)\b/i.test(query)) return false;
+  return true;
+}
+
 const introductionRequest = /\b(?:what is|what are|define|definition|introduc\w*|first|find|where|locate|show|scroll)\b/;
 
 // Choose an actual teaching passage when the reader asks where a concept is
@@ -112,6 +121,14 @@ export function locateCourseTopic(index, query, options = {}) {
   }
   const terms = termsOf(query);
   if (!terms.length) return null;
+  const editorial = navigationTopics.find(([, aliases]) => aliases.some((alias) => {
+    const key = termsOf(alias);
+    return key.length === terms.length && terms.every((term) => key.includes(term));
+  }));
+  if (editorial) {
+    const target = preparedFor(index).byId.get(editorial[0]);
+    if (target && (!options.chapterId || target.chapterId === options.chapterId)) return { ...target, relevance: 100 };
+  }
   const concept = terms.join(" ");
   const mathematicalTarget = /\b(?:derive|derivation|formula|gradient|calculation|proof)\b/.test(normalized);
   const introductory = introductionRequest.test(normalized) && !mathematicalTarget;
@@ -119,12 +136,15 @@ export function locateCourseTopic(index, query, options = {}) {
   const chapterOrder = new Map(index.chapters.map((chapter, position) => [chapter.id, position]));
   const candidates = records
     .filter(({ item }) =>
+      isTeachingDestination(item, query) &&
       (!options.chapterId || item.chapterId === options.chapterId) &&
       (!options.kinds || options.kinds.includes(item.kind)))
     .map((record) => {
       const item = record.item;
       let relevance = score(normalized, terms, record, options);
-      if (relevance <= 0) return { item, relevance: 0 };
+      const fields = [record.titleTerms, record.sectionTerms, ...record.aliasTerms, record.textTerms, record.guideTerms, record.contextTerms];
+      const coverage = terms.filter((term) => fields.some((field) => field.has(term))).length / terms.length;
+      if (relevance <= 0 || coverage < 0.65) return { item, relevance: 0 };
       if (introductory) {
         if (item.kind === "paragraph") {
           const lead = record.text.slice(0, 230);
@@ -146,7 +166,7 @@ export function locateCourseTopic(index, query, options = {}) {
     .sort((a, b) => b.relevance - a.relevance ||
       (chapterOrder.get(a.item.chapterId) ?? 0) - (chapterOrder.get(b.item.chapterId) ?? 0) ||
       a.item.sourceLine - b.item.sourceLine);
-  return candidates[0] && candidates[0].relevance >= 2
+  return candidates[0] && candidates[0].relevance >= 5
     ? { ...candidates[0].item, relevance: candidates[0].relevance }
     : null;
 }
@@ -209,9 +229,16 @@ export function findEquationForQuery(index, query, options = {}) {
   const matches = searchCourseIndex(index, query, {
     ...options,
     kinds: ["equation", "widgetEquation"],
-    limit: 1,
+    limit: 8,
   });
-  return matches[0]?.relevance >= 8 ? matches[0] : null;
+  const terms = termsOf(query);
+  const target = matches.find((item) => {
+    if (!isTeachingDestination(item, query)) return false;
+    const record = preparedFor(index).records.find((entry) => entry.item.id === item.id);
+    const fields = [record.titleTerms, record.sectionTerms, ...record.aliasTerms, record.textTerms, record.guideTerms, record.contextTerms];
+    return terms.length && terms.filter((term) => fields.some((field) => field.has(term))).length / terms.length >= 0.65;
+  });
+  return target?.relevance >= 8 ? target : null;
 }
 
 export function findPassage(index, selectedText, chapterId) {

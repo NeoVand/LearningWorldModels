@@ -1,7 +1,9 @@
+import { NavigationController } from "../voice/navigation-controller.mjs";
+import { paintVoiceMark, clearVoiceMark } from "../voice/focus-paint.mjs";
 import { icon } from "../../tools/icons.mjs";
 import { NarrationPlayer, listElevenLabsVoices, clearNarrationCache } from "./voice-narration.js";
 import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, LiveCourseAssistant } from "./live-assistant.js";
-import { attachVoiceIndex, findEquationForQuery, locateCourseTopic, resolveBoundVoiceItem, searchCourseIndex } from "./voice-index-runtime.js";
+import { attachVoiceIndex, isTeachingDestination, findEquationForQuery, locateCourseTopic, resolveBoundVoiceItem, searchCourseIndex } from "./voice-index-runtime.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -103,8 +105,7 @@ let pendingAction = null;
 let lastCaption = { role: "", at: 0, endMs: 0 };
 let speakingTimer = 0;
 let assistantState = "closed";
-let spokenLookup = { text: "", lastAt: 0, endMs: 0, focusedId: "", timer: 0 };
-let navigationLock = null;
+const navigation = new NavigationController();
 
 function syncVoiceRail() {
   const active = !["closed", "disconnected", "error"].includes(assistantState);
@@ -170,6 +171,7 @@ function setAssistantOutputMuted(muted) {
 function setAssistantHeld(held) {
   if (!assistant || held === assistantHeld) return;
   if (held) {
+    navigation.cancel("assistant paused");
     assistantBeforeHold = narratorOwnedByAssistant
       ? { ...assistantAudioBeforeNarration }
       : { input: assistant.muted, output: assistant.outputMuted };
@@ -229,15 +231,18 @@ const narrator = new NarrationPlayer({
       updateContext();
     }
     if (state === "stopped" || state === "finished" || state === "error") {
-      currentElement?.classList.remove("voice-current");
+      clearVoiceMark("reading");
+    currentElement?.classList.remove("voice-current");
       currentElement = null;
       returnAudioToAssistant();
     }
   },
   onItem: (item, place, total) => {
+    clearVoiceMark("reading");
     currentElement?.classList.remove("voice-current");
     currentElement = bound.get(item.id) || null;
     currentElement?.classList.add("voice-current");
+    paintVoiceMark(currentElement, "reading", displayTitle(item));
     const enclosingDetails = currentElement?.closest("details");
     if (enclosingDetails) enclosingDetails.open = true;
     if (narrator.follow) currentElement?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -288,6 +293,7 @@ function showSelectionMenu() {
   if (!selected) { selectionMenu.hidden = true; return; }
   if (pointed) {
     pointed.classList.remove("voice-pointed");
+    clearVoiceMark("focus");
     pointed = null;
     focusedEquationObserver?.disconnect();
     focusedEquationObserver = null;
@@ -310,6 +316,12 @@ async function listen(item, selectionText = "", continuous = false) {
     $("#voice-eleven-key").focus();
     return;
   }
+  navigation.cancel("narration owns the page");
+  pointed?.classList.remove("voice-pointed");
+  pointed = null;
+  clearVoiceMark("focus");
+  focusedEquationObserver?.disconnect();
+  focusedEquationObserver = null;
   quietAssistantForNarration();
   const source = item || itemInView();
   const math = source?.kind === "equation" || source?.kind === "widgetEquation";
@@ -410,8 +422,8 @@ function searchCourse(query, limit = 6) {
     focusId: context.referenceId,
     sectionId: context.section?.id,
     chapterId: undefined,
-    limit: Math.min(10, Math.max(1, Number(limit) || 6)),
-  }).map((item) => ({
+    limit: 40,
+  }).filter((item) => isTeachingDestination(item, query)).slice(0, Math.min(10, Math.max(1, Number(limit) || 6))).map((item) => ({
     id: item.id,
     kind: item.kind,
     title: displayTitle(item),
@@ -478,7 +490,8 @@ function resolveTarget(id) {
 let pointed = null;
 let focusedEquationObserver = null;
 function pointTo(node) {
-  if (!node?.isConnected) return false;
+  if (!node?.isConnected || !node.closest("main article") || node.closest("nav, header, footer")) return false;
+  if (document.documentElement.dataset.contents === "open") $("#close-contents")?.click();
   if (innerWidth <= 640 && !assistantPanel.hidden) assistantPanel.hidden = true;
   focusedEquationObserver?.disconnect();
   focusedEquationObserver = null;
@@ -488,8 +501,10 @@ function pointTo(node) {
   getSelection()?.removeAllRanges();
   selectionMenu.hidden = true;
   node.classList.add("voice-pointed");
-  node.scrollIntoView({ behavior: "instant", block: "center", inline: "nearest" });
   const item = itemForElement(node);
+  paintVoiceMark(node, "focus", displayTitle(item));
+  const block = node.getBoundingClientRect().height > innerHeight * .7 ? "start" : "center";
+  node.scrollIntoView({ behavior: "instant", block, inline: "nearest" });
   $("#assistant-transport-focus").textContent = item ? displayTitle(item) : "Course passage";
   if (item?.kind === "widgetEquation" && item.locator?.figureId) {
     const figure = document.getElementById(`visual-${item.locator.figureId}`);
@@ -500,6 +515,7 @@ function pointTo(node) {
         if (replacement.node?.isConnected) {
           pointed = replacement.node;
           pointed.classList.add("voice-pointed");
+          paintVoiceMark(pointed, "focus", displayTitle(replacement.item));
           $("#assistant-transport-focus").textContent = displayTitle(replacement.item);
         } else {
           pointed = null;
@@ -519,7 +535,7 @@ function isActuallyVisible(node) {
   const style = getComputedStyle(node);
   const rect = node.getBoundingClientRect();
   if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0 || rect.width < 2 || rect.height < 2) return false;
-  const top = Math.max(rect.top, 0);
+  const top = Math.max(rect.top, document.querySelector("header")?.getBoundingClientRect().bottom || 0);
   const bottom = Math.min(rect.bottom, innerHeight);
   const left = Math.max(rect.left, 0);
   const right = Math.min(rect.right, innerWidth);
@@ -532,16 +548,19 @@ function isActuallyVisible(node) {
   });
 }
 
-async function verifyPointTo(node) {
-  if (!pointTo(node)) return false;
+async function verifyPointTo(node, stillActive = () => true) {
+  if (!stillActive() || !pointTo(node)) return false;
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  if (!stillActive()) return false;
   if (isActuallyVisible(node)) { updateContext(); return true; }
   // Some browsers defer a scroll when a disclosure has just opened. Retry
   // once after layout, and never tell the tutor that an unseen node is shown.
   node.scrollIntoView({ behavior: "instant", block: "center", inline: "nearest" });
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  if (!stillActive()) return false;
   if (isActuallyVisible(node)) { updateContext(); return true; }
   node.classList.remove("voice-pointed");
+  clearVoiceMark("focus");
   if (pointed === node) pointed = null;
   focusedEquationObserver?.disconnect();
   focusedEquationObserver = null;
@@ -550,10 +569,14 @@ async function verifyPointTo(node) {
   return false;
 }
 
-async function focusEntry(id) {
+async function focusEntry(id, requestId = navigation.begin("reader")) {
+  return navigation.focus(requestId, id, (stillActive) => applyFocusEntry(id, stillActive), () => { const target = resolveTarget(id); return target.exact && isActuallyVisible(target.node); });
+}
+
+async function applyFocusEntry(id, stillActive) {
   const { node, item, exact, requested } = resolveTarget(id);
-  if (!node || !item) return { ok: false, error: "No visible course entry has that ID." };
-  if (!await verifyPointTo(node)) return { ok: false, visible: false, error: "The course could not bring that passage into view." };
+  if (!node) return { ok: false, error: "Unknown course target: no visible entry has that ID." };
+  if (!await verifyPointTo(node, stillActive)) return { ok: false, visible: false, error: "The course could not bring that passage into view." };
   if (!exact) return {
     ok: false,
     visible: true,
@@ -562,10 +585,10 @@ async function focusEntry(id) {
     requestedId: requested.id,
     closestVisibleEntry: courseEntry(item),
   };
-  return { ok: true, visible: true, entry: courseEntry(item) };
+  return { ok: true, visible: true, entry: item ? courseEntry(item) : { id, title: node.textContent.trim().slice(0, 120) } };
 }
 
-async function focusTopic(query) {
+async function focusTopic(query, requestId = navigation.begin("reader")) {
   const context = currentContext();
   const options = { focusId: context.referenceId, sectionId: context.section?.id, chapterId: context.chapter?.id };
   const words = lookupPhrase(query);
@@ -576,7 +599,7 @@ async function focusTopic(query) {
   const ranked = searchCourseIndex(index, words, { ...options, chapterId: undefined, limit: 4 });
   const target = equation || locateCourseTopic(index, words, { ...options, chapterId: undefined });
   if (!target || (!equation && target.relevance < 2)) return { ok: false, error: "I could not locate a reliable passage for that question. Try a more specific topic or ask about the current selection." };
-  const focused = await focusEntry(target.id);
+  const focused = await focusEntry(target.id, requestId);
   if (!focused.ok) return focused;
   return {
     ...focused,
@@ -602,63 +625,14 @@ function isLocationOnly(text) {
       /\bwhere\b.*\b(?:in the (?:book|course)|introduce|section|chapter)\b/i.test(text));
 }
 
-function isExplicitFocusRequest(text) {
-  return /\b(?:find|locate|show|scroll|jump|open|highlight|point|explain|teach|derive|define|where|what is|what are|why|how|talk about|tell me about|take me|go to)\b/i.test(text);
-}
-
-async function groundLearnerRequest(text) {
-  if (locationIsNegated(text)) {
-    navigationLock = { id: "__no_navigation__", at: Date.now() };
-    return null;
-  }
+async function groundLearnerRequest(text, requestId) {
+  if (locationIsNegated(text)) return null;
   const context = currentContext();
-  const options = { focusId: context.referenceId, sectionId: context.section?.id, chapterId: context.chapter?.id };
-  const target = locateCourseTopic(index, lookupPhrase(text), { ...options, chapterId: undefined });
-  if (target) {
-    const result = await focusTopic(lookupPhrase(text));
-    navigationLock = result?.ok ? { id: result.entry.id, at: Date.now() } : null;
-    return result;
-  }
+  // Resolve pointing language from the frozen visible selection before searching.
   if (/\b(?:this|here|current)\b/i.test(text) && context.referenceId &&
-      /\b(?:find|show|scroll|point|highlight|explain|teach|equation|figure|widget|passage)\b/i.test(text)) {
-    const result = await focusEntry(context.referenceId);
-    navigationLock = result?.ok ? { id: result.entry.id, at: Date.now() } : null;
-    return result;
-  }
-  navigationLock = null;
-  return null;
-}
-
-function queueSpokenFocus({ delta, startMs, endMs }) {
-  if (!delta || assistantHeld || assistant?.muted) return;
-  const now = Date.now();
-  if (now - spokenLookup.lastAt > 1800 ||
-      (Number.isFinite(startMs) && spokenLookup.endMs && startMs < spokenLookup.endMs - 350)) {
-    clearTimeout(spokenLookup.timer);
-    spokenLookup = { text: "", lastAt: 0, endMs: 0, focusedId: "", timer: 0 };
-  }
-  spokenLookup.text += delta;
-  spokenLookup.lastAt = now;
-  spokenLookup.endMs = Number(endMs) || spokenLookup.endMs;
-  clearTimeout(spokenLookup.timer);
-  spokenLookup.timer = setTimeout(async () => {
-    const words = spokenLookup.text.trim();
-    if (!words) return;
-    if (locationIsNegated(words)) {
-      navigationLock = { id: "__no_navigation__", at: Date.now() };
-      return;
-    }
-    if (!isExplicitFocusRequest(words)) return;
-    const context = currentContext();
-    const target = locateCourseTopic(index, lookupPhrase(words), { focusId: context.referenceId, sectionId: context.section?.id, chapterId: undefined });
-    if (!target || target.id === spokenLookup.focusedId) return;
-    const result = await focusTopic(lookupPhrase(words));
-    if (result.ok) {
-      spokenLookup.focusedId = result.entry.id;
-      navigationLock = { id: result.entry.id, at: Date.now() };
-      assistant?.sendContext(JSON.stringify(currentContext()).slice(0, 2200), { urgent: true });
-    }
-  }, 260);
+      /\b(?:equation|formula|figure|widget|passage|paragraph|table)\b/i.test(text))
+    return focusEntry(context.referenceId, requestId);
+  return focusTopic(lookupPhrase(text), requestId);
 }
 
 function relatedTeachingNotes(query, chapterId) {
@@ -673,17 +647,15 @@ function relatedTeachingNotes(query, chapterId) {
     .map(({ note }) => ({ topic: note.topic, explanation: note.explanation, teachingMove: note.teachingMove, source: note.source }));
 }
 
-async function performTool(name, args) {
-  if (name === "get_page_context") return currentContext();
-  if (name === "focus_course_topic") {
-    const target = locateCourseTopic(index, lookupPhrase(args.query), { chapterId: undefined });
-    if (navigationLock && target?.id !== navigationLock.id) return { ok: false, error: "A newer learner request superseded this navigation. Use the current page context." };
-    return focusTopic(args.query);
-  }
-  if (name === "focus_course_entry") {
-    if (navigationLock && args.id !== navigationLock.id) return { ok: false, error: "A newer learner request superseded this navigation. Use the current page context." };
-    return focusEntry(args.id);
-  }
+async function performTool(name, args, provenance) {
+  const mutating = ["focus_course_topic", "focus_course_entry", "navigate_to", "highlight_entry", "set_widget_control", "listen_to"].includes(name);
+  // Calls without provenance are explicit local page actions (including QA).
+  // Live always supplies the immutable request token captured by its delegation.
+  const requestId = provenance?.requestId ?? (provenance ? null : mutating ? navigation.begin("reader") : null);
+  if (mutating && !navigation.permits(requestId)) return navigation.rejection(requestId);
+  if (name === "get_page_context") return { ...currentContext(), navigation: navigation.snapshot().active };
+  if (name === "focus_course_topic") return focusTopic(args.query, requestId);
+  if (name === "focus_course_entry") return focusEntry(args.id, requestId);
   if (name === "search_course") return { results: searchCourse(args.query, args.limit) };
   if (name === "get_course_entry") {
     const item = itemById.get(args.id);
@@ -695,18 +667,14 @@ async function performTool(name, args) {
     if (section || chapter) return section || chapter;
     return { error: "Unknown course entry" };
   }
-  if (name === "navigate_to" || name === "highlight_entry") {
-    if (navigationLock && args.id !== navigationLock.id) return { ok: false, error: "A newer learner request superseded this navigation. Use the current page context." };
-    const { node, item, exact, requested } = resolveTarget(args.id);
-    if (!node) return { error: "Unknown course target" };
-    if (!await verifyPointTo(node)) return { ok: false, visible: false, error: "The course could not bring that target into view." };
-    if (!exact) return { ok: false, visible: true, exactEquation: false, error: "The requested equation changed with the widget controls; the live widget is highlighted instead.", requestedId: requested.id, closestVisibleEntry: courseEntry(item) };
-    return { ok: true, visible: true, id: args.id, title: item?.title || node.textContent?.trim().slice(0, 90) };
-  }
+  if (name === "navigate_to" || name === "highlight_entry") return focusEntry(args.id, requestId);
   if (name === "set_widget_control") {
     const visualId = String(args.id || "").replace(/^visual-/, "");
     const root = document.getElementById(`visual-${visualId}`);
     if (!root) return { error: "Unknown widget" };
+    const targetId = itemForElement(root)?.id || root.id;
+    if (navigation.active.targetId && navigation.active.targetId !== targetId)
+      return { ok: false, error: "That widget is outside this request's pinned focus. Ask the reader before changing destinations." };
     const key = String(args.control || "");
     const control = $$('[data-key], [data-action]', root).find((el) => (el.dataset.key || el.dataset.action) === key && (el.dataset.action || el.type === "range" || el.dataset.value === String(args.value)));
     if (!control) return { error: "Unknown control or choice" };
@@ -718,13 +686,15 @@ async function performTool(name, args) {
       control.dispatchEvent(new Event("change", { bubbles: true }));
     } else control.click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    const visible = await verifyPointTo(root);
-    return visible ? { ok: true, visible: true, state: widgetState(visualId) } : { ok: false, visible: false, error: "The control changed, but the widget could not be brought into view.", state: widgetState(visualId) };
+    const focused = await focusEntry(targetId, requestId);
+    return focused.visible ? { ok: true, visible: true, state: widgetState(visualId) } : { ok: false, visible: false, error: "The control changed, but the widget could not be brought into view.", state: widgetState(visualId) };
   }
   if (name === "listen_to") {
     const { node, item } = resolveTarget(args.id);
     if (!node || !item) return { error: "Unknown narratable entry" };
     if (!memory.elevenlabs) return { error: "ElevenLabs key required in settings" };
+    const focused = await focusEntry(item.id, requestId);
+    if (!focused.ok) return focused;
     const result = await listen(item, "", false);
     return result.ok ? { ok: true, id: item.id, speech: item.speech } : result;
   }
@@ -785,7 +755,7 @@ async function startAssistant({ muted = false } = {}) {
     },
     onTranscript: (event) => {
       caption(event);
-      if (event.speaker === "user" && !event.typed) queueSpokenFocus(event);
+      // Captions never navigate. Only a delegated tool can commit a focus.
       if (event.speaker === "assistant") {
         assistantPanel.dataset.speaking = "true";
         clearTimeout(speakingTimer);
@@ -795,6 +765,7 @@ async function startAssistant({ muted = false } = {}) {
     onAudio: (event) => {
       if (event.type === "playback-blocked") $("#assistant-status").textContent = "Select your browser's audio control to hear the assistant.";
     },
+    onRequest: ({ source }) => navigation.begin(source),
     onTool: performTool,
     onError: (error) => { $("#assistant-status").textContent = error?.message || String(error); },
   });
@@ -816,15 +787,15 @@ async function explain(item, text = "") {
   if (!assistant) return;
   if (narrator.current && !narrator.audio.paused) narrator.pause();
   if (assistantHeld) setAssistantHeld(false);
-  if (item) {
-    const focused = await focusEntry(item.id);
-    navigationLock = focused.ok ? { id: focused.entry.id, at: Date.now() } : null;
-  }
+  const requestId = navigation.begin("selection");
+  const focus = item ? await focusEntry(item.id, requestId) : null;
   updateContext();
   const selectedPhrase = item?.kind === "equation" ? "" : text ? ` I selected: ${text.slice(0, 350)}.` : "";
-  assistant.sendText(item
+  assistant.sendText(item && !focus?.ok
+    ? `The selected entry (${item.id}) could not be shown exactly: ${focus?.error || "not visible"}. Read the current page context before teaching; do not claim that the requested equation is highlighted.${selectedPhrase}`
+    : item
     ? `Teach the highlighted ${item.kind} (${item.id}). Explain what it is for, why its steps follow, and give a small example. Do not just read its symbols.${selectedPhrase}`
-    : `Teach the current passage carefully.${selectedPhrase}`);
+    : `Teach the current passage carefully.${selectedPhrase}`, { requestId });
 }
 
 function renderVoices() {
@@ -959,9 +930,8 @@ $("#assistant-transport-mic").onclick = () => setAssistantMicMuted(!assistantPre
 $("#assistant-transport-audio").onclick = () => setAssistantOutputMuted(!assistantPreferences().output);
 $("#assistant-transport-hold").onclick = () => setAssistantHeld(!assistantHeld);
 function endAssistant() {
-  clearTimeout(spokenLookup.timer);
-  spokenLookup = { text: "", lastAt: 0, endMs: 0, focusedId: "", timer: 0 };
-  navigationLock = null;
+  navigation.cancel("session ended");
+  clearVoiceMark("focus");
   assistant?.disconnect();
   assistant = null;
   assistantState = "closed";
@@ -988,10 +958,11 @@ $("#assistant-form").onsubmit = async (event) => {
   const input = $("#assistant-input");
   const text = input.value.trim();
   if (!text) return;
+  const requestId = navigation.begin("typed", { blocked: locationIsNegated(text) });
   // Finding a passage is a page action, not a tutoring turn. Do it locally,
   // show the verified result immediately, and leave Live free for follow-up.
   if (isLocationOnly(text)) {
-    const found = await groundLearnerRequest(text);
+    const found = await groundLearnerRequest(text, requestId);
     if (found?.ok) {
       input.value = "";
       caption({ speaker: "user", delta: text, typed: true });
@@ -999,6 +970,10 @@ $("#assistant-form").onsubmit = async (event) => {
       assistant?.sendContext(JSON.stringify(currentContext()).slice(0, 2200), { urgent: true });
       return;
     }
+    input.value = "";
+    caption({ speaker: "user", delta: text, typed: true });
+    caption({ speaker: "assistant", delta: found?.error || "I couldn’t identify a passage from that description. Try a topic name, section title, or numbered paper equation.", typed: true });
+    return;
   }
   if (!memory.openai) {
     pendingAction = { provider: "openai", run: () => $("#assistant-form").requestSubmit() };
@@ -1010,9 +985,7 @@ $("#assistant-form").onsubmit = async (event) => {
   if (assistant) {
     if (narrator.current && !narrator.audio.paused) narrator.pause();
     if (assistantHeld) setAssistantHeld(false);
-    clearTimeout(spokenLookup.timer);
-    spokenLookup = { text: "", lastAt: 0, endMs: 0, focusedId: "", timer: 0 };
-    const focus = await groundLearnerRequest(text);
+    const focus = await groundLearnerRequest(text, requestId);
     updateContext();
     input.value = "";
     const appNote = focus?.ok
@@ -1020,7 +993,7 @@ $("#assistant-form").onsubmit = async (event) => {
       : focus
         ? `\n\n[Application page action failed: ${focus.error || "the requested passage is not visible"}. Do not claim the page moved or was highlighted. Do not read this bracketed note aloud.]`
         : "";
-    assistant.sendText(text + appNote, { displayText: text });
+    assistant.sendText(text + appNote, { displayText: text, requestId });
   }
 };
 
@@ -1089,4 +1062,14 @@ addEventListener("beforeprint", () => { narrator.pause(); assistant?.setMuted(tr
 updateContext();
 
 // A narrow debug surface for the automated browser verification suite.
-window.__courseVoice = { index, bound, playback, narrator, performTool, currentContext, getAssistant: () => assistant };
+// Reader input cancels pending page motion, not the conversation. Programmatic
+// scroll events do not cancel their own transaction.
+for (const event of ["wheel", "touchmove"]) document.addEventListener(event, () => navigation.cancel("reader scrolled"), { passive: true });
+document.addEventListener("keydown", (event) => {
+  if (["PageDown", "PageUp", "Home", "End", "ArrowDown", "ArrowUp"].includes(event.key) &&
+      !event.target.closest("input,textarea,select,[contenteditable]")) navigation.cancel("reader scrolled");
+});
+document.querySelector("main").addEventListener("pointerdown", (event) => {
+  if (event.isTrusted) navigation.cancel("reader selected content");
+});
+window.__courseVoice = { index, bound, playback, narrator, navigation, performTool, currentContext, getAssistant: () => assistant };

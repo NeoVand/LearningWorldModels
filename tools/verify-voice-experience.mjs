@@ -173,7 +173,7 @@ try {
   assert.match(await page.locator("#assistant-captions").textContent(), /Showing Regularization begins/);
   assert.equal(providerRequests.length, 0, "finding a lesson should not require a live model call");
   assert.equal(await page.locator("#voice-settings").evaluate((dialog) => dialog.open), false);
-  const superseded = await page.evaluate(() => window.__courseVoice.performTool("focus_course_topic", { query: "show me SIGReg" }));
+  const superseded = await page.evaluate(() => window.__courseVoice.performTool("focus_course_topic", { query: "show me SIGReg" }, { requestId: "request-0" }));
   assert.equal(superseded.ok, false, "an older assistant action must not override the newest learner request");
   assert.equal(await page.evaluate(() => window.__courseVoice.currentContext().referenceId), "learning-heading-994404f3bd");
   await page.locator("#assistant-start").click();
