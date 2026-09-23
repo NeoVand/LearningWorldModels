@@ -86,9 +86,17 @@ header #voice-follow[aria-pressed=true]{color:var(--blue)}
 .voice-rail:has(.voice-player:not([hidden])) .assistant-transport-dot{display:none}
 .voice-rail:has(.assistant-transport:not([hidden])):has(.voice-player:not([hidden])) .voice-player-copy{flex-basis:130px}
 .voice-rail :is(button,input):focus-visible{outline:2px solid var(--blue);outline-offset:1px;box-shadow:none}
-.voice-current{box-shadow:inset 3px 0 0 var(--blue);background:color-mix(in srgb,var(--selection) 43%,transparent);border-radius:3px;transition:background .2s,box-shadow .2s}
-.voice-pointed{outline:2px solid var(--blue)!important;outline-offset:6px;border-radius:5px;animation:voice-point 1.4s ease-in-out 2}
-@keyframes voice-point{50%{outline-color:var(--amber);outline-offset:11px}}
+/* A passage should read as marked text, not as a framed card. Keep the tint
+   behind KaTeX and widget content; the two states can coexist while listening. */
+:root{--voice-reading-tint:color-mix(in srgb,var(--teal) 10%,transparent);--voice-focus-tint:color-mix(in srgb,var(--blue) 19%,transparent)}
+:root[data-theme=dark]{--voice-reading-tint:color-mix(in srgb,var(--teal) 15%,transparent);--voice-focus-tint:color-mix(in srgb,var(--blue) 24%,transparent)}
+.voice-current{background-image:linear-gradient(var(--voice-reading-tint),var(--voice-reading-tint));border-radius:3px}
+.voice-pointed{outline:0!important;box-shadow:none!important;background-image:linear-gradient(var(--voice-focus-tint),var(--voice-focus-tint))!important;border-radius:4px}
+.katex.voice-pointed:not(.katex-display>.katex){padding:.08em .14em;margin:-.08em -.14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.katex-display>.katex.voice-pointed:not(:has(.tag)){background-image:none!important}
+.katex-display>.katex.voice-pointed:not(:has(.tag))>.katex-html{width:max-content;max-width:none;margin-inline:auto;padding:.08em .25em;border-radius:4px;background-image:linear-gradient(var(--voice-focus-tint),var(--voice-focus-tint))}
+.voice-pointed:is(.table-wrap,table) :is(th,td),tr.voice-pointed>:is(th,td){background-image:linear-gradient(var(--voice-focus-tint),var(--voice-focus-tint))}
+.voice-pointed:is(.teaching-visual,.lab,.diagram,figure){background-image:linear-gradient(var(--voice-focus-tint),var(--voice-focus-tint))!important}
 .voice-construct{position:relative}
 .teaching-visual.voice-construct>.visual-heading{padding-right:150px}
 .teaching-visual>.voice-construct-actions{position:absolute;right:14px;top:11px;z-index:2}
@@ -154,5 +162,5 @@ header #voice-follow[aria-pressed=true]{color:var(--blue)}
 @media(max-width:380px){.voice-rail:has(.assistant-transport:not([hidden])):has(.voice-player:not([hidden])) .voice-player-copy{display:none}}
 @media(max-width:380px){header .brand{font-size:0}.voice-model-choices{grid-template-columns:1fr}}
 @media(max-width:600px){.voice-table-actions button span{display:inline}}
-@media(prefers-reduced-motion:reduce){.voice-pointed,.voice-assistant-orb{animation:none!important}}
-@media print{#course-listen-button,#course-assistant-button,#voice-settings-button,#voice-settings,#course-voice-rail,#course-assistant,#voice-selection-menu,.voice-construct-actions{display:none!important}.voice-current{box-shadow:none;background:transparent}.voice-pointed{outline:none!important}.teaching-visual.voice-construct>.visual-heading{padding-right:0}}
+@media(prefers-reduced-motion:reduce){.voice-assistant-orb{animation:none!important}}
+@media print{#course-listen-button,#course-assistant-button,#voice-settings-button,#voice-settings,#course-voice-rail,#course-assistant,#voice-selection-menu,.voice-construct-actions{display:none!important}.voice-current,.voice-pointed,.voice-pointed:is(.table-wrap,table) :is(th,td),tr.voice-pointed>:is(th,td),.katex-display>.katex.voice-pointed>.katex-html{background-image:none!important}.voice-pointed{outline:none!important;box-shadow:none!important}.teaching-visual.voice-construct>.visual-heading{padding-right:0}}

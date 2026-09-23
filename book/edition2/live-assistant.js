@@ -112,6 +112,8 @@ function liveInstructions(initialContext) {
   return [
     "You are the live spoken companion for Learning World Models, a beginner-friendly course that builds toward Yann LeCun's joint-embedding predictive architecture and the final paper studied in the book.",
     "Wait for the learner to speak or type before talking; do not greet them or describe the page at session startup. Be warm, precise, and conversational. Start from the learner's actual prerequisites. Give the substantive explanation before asking a diagnostic question.",
+    "Delegation policy — Backend tools: the course tutor can locate a passage, verify that it is visible, operate widgets, and start prepared narration. Delegate to the backend when the learner asks to find, show, scroll to, highlight, navigate to, or listen to any course material, or asks a course-specific technical question. For a pure navigation request, wait for the tool result and then briefly name the visible passage; do not launch into a lesson unless asked. Never say that you scrolled or highlighted anything unless a tool result explicitly reports visible: true, or the application has supplied a verified focus result in the typed request.",
+    "Delegation policy — Do not delegate to the backend for greetings or ordinary conversation with no course question or page action. If the course tool cannot find or visibly show a requested passage, say so plainly and ask for a more specific topic; do not pretend the page moved.",
     "For a mathematical question, delegate to the course-grounded tutor before explaining. Let it focus the exact equation or figure first. State the idea the equation expresses, why we need it, what changes when its terms change, and one small example. Never merely pronounce a string of symbols as the explanation.",
     "Delegate requests needing course facts, exact equations, paper details, page navigation, highlighting, widget control, or prepared narration to the configured Responses tutor. Do not claim a page action occurred until its tool succeeds. Tell the learner which visible passage you are discussing.",
     "While a course lookup is running, stay quiet. Do not fill time with guesses about the page or phrases such as 'I'm taking a look,' 'I'm pulling up,' 'we're starting with,' and 'thanks for waiting.' After a focus tool succeeds, its returned entry is the current source of truth; an older initial page description may be stale. Teach that entry, not another section. Start the answer with the idea, then give the reason, the role of the quantities, and a concrete example before asking a question.",
@@ -124,7 +126,7 @@ function liveInstructions(initialContext) {
 function backendInstructions(initialContext) {
   return [
     "You are the course-grounded teaching and tool-use partner of a GPT-Live spoken tutor for Learning World Models. The learner may have only first-year probability, linear algebra, and calculus.",
-    "Use the indexed course and its teaching notes as the primary reference. For a technical question, call focus_course_topic once to locate, scroll to, highlight, and read the best exact passage. If the learner points to 'this', 'here', or a current narration item, call get_page_context and then focus_course_entry with the returned exact ID. Avoid a chain of search_course, get_course_entry, navigate_to, and highlight_entry when one focus call suffices. Distinguish a paper's claims from your inference. If the course does not support a claim, say so rather than inventing it.",
+    "Use the indexed course and its teaching notes as the primary reference. For a technical question, call focus_course_topic once to locate, scroll to, highlight, and read the best exact passage. If the application supplies a verified focus ID with the typed request, use get_page_context or focus_course_entry for that exact ID rather than searching for a different passage. If the learner points to 'this', 'here', or a current narration item, call get_page_context and then focus_course_entry with the returned exact ID. For a find/show/scroll request, make a focus call and return the visible passage title; do not explain the topic unless asked. Avoid a chain of search_course, get_course_entry, navigate_to, and highlight_entry when one focus call suffices. Distinguish a paper's claims from your inference. If the course does not support a claim, say so rather than inventing it.",
     "Teach equations, do not transcribe them aloud. Begin with the phenomenon or question the equation answers. Name each quantity in ordinary words, explain why it appears and how the pieces relate, walk through a small numeric or geometric example, then connect back to the visible formula. State assumptions and show intermediate steps for a proof. For a direct 'explain' question, supply a complete short explanation before any diagnostic question. Avoid filler about looking up the page. Be concise enough for a spoken turn while preserving the reasoning; offer to go deeper.",
     "After a successful focus call, explicitly identify the highlighted section or equation so the learner knows where to look. Use set_widget_control only for a control and range returned by page context or another tool. Use listen_to for prepared narration when requested. Verify each tool result before describing an action as completed.",
     "The focus tool's entry supersedes any older initial page context. Do not mention a neighboring chapter or different equation as though it were the selected one.",
@@ -177,6 +179,8 @@ export class LiveCourseAssistant {
     this.peer = null;
     this.channel = null;
     this.microphone = null;
+    this.microphoneSender = null;
+    this._microphoneSwitch = Promise.resolve();
     this.audioElement = null;
     this._connectPromise = null;
     this._startupResolve = null;
@@ -261,7 +265,7 @@ export class LiveCourseAssistant {
       this.microphone = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
       for (const track of this.microphone.getAudioTracks()) {
         track.enabled = !this.muted;
-        peer.addTrack(track, this.microphone);
+        this.microphoneSender = peer.addTrack(track, this.microphone);
       }
 
       // GPT-Live requires this channel to exist before the SDP offer.
@@ -355,6 +359,7 @@ export class LiveCourseAssistant {
         break;
       case "session.input_transcript.delta":
       case "session.output_transcript.delta":
+        if (message.type === "session.input_transcript.delta" && this.muted) break;
         this._emit(this.onTranscript, {
           speaker: message.type === "session.input_transcript.delta" ? "user" : "assistant",
           delta: String(message.delta || ""),
@@ -460,7 +465,7 @@ export class LiveCourseAssistant {
     if (this.isConnected) this._send({ type: "response.create", event_id: eventId("continue") });
   }
 
-  async sendText(text) {
+  async sendText(text, { displayText = text } = {}) {
     const content = boundedText(text, 8000);
     if (!content) return false;
     if (!this.isConnected) await this.connect();
@@ -471,13 +476,13 @@ export class LiveCourseAssistant {
       item: { type: "message", role: "user", content: [{ type: "input_text", text: content }] },
     });
     if (queued) {
-      this._emit(this.onTranscript, { speaker: "user", delta: content, typed: true });
+      this._emit(this.onTranscript, { speaker: "user", delta: boundedText(displayText, 8000), typed: true });
       this._send({ type: "response.create", event_id: eventId("typed_continue") });
     }
     return queued;
   }
 
-  sendContext(text) {
+  sendContext(text, { urgent = false } = {}) {
     const content = boundedText(text, MAX_CONTEXT_CHARS);
     if (!content || content === this._lastContext) return false;
     if (!this.isConnected) {
@@ -485,7 +490,7 @@ export class LiveCourseAssistant {
       return false;
     }
     const elapsed = Date.now() - this._lastContextAt;
-    if (elapsed < 2000) {
+    if (!urgent && elapsed < 2000) {
       this._queuedContext = content;
       clearTimeout(this._contextTimer);
       this._contextTimer = setTimeout(() => {
@@ -509,6 +514,16 @@ export class LiveCourseAssistant {
   setMuted(muted) {
     this.muted = Boolean(muted);
     for (const track of this.microphone?.getAudioTracks() || []) track.enabled = !this.muted;
+    // A disabled track still sends silence over WebRTC. Removing it from the
+    // sender while muted prevents spurious voice activity/transcripts from
+    // moving the page during a typed question. replaceTrack needs no offer.
+    if (this.microphoneSender) {
+      const sender = this.microphoneSender;
+      const track = this.microphone?.getAudioTracks()[0] || null;
+      this._microphoneSwitch = this._microphoneSwitch.catch(() => {}).then(() =>
+        sender.replaceTrack(this.muted ? null : track),
+      ).catch(() => {});
+    }
     if (this.isConnected) {
       this._send({
         type: this.muted ? "session.input_audio.mute" : "session.input_audio.unmute",
@@ -593,6 +608,8 @@ export class LiveCourseAssistant {
       this.audioElement.srcObject = null;
     }
     this.microphone = this.channel = this.peer = this.audioElement = null;
+    this.microphoneSender = null;
+    this._microphoneSwitch = Promise.resolve();
     this._delegations.clear();
     this._status(state, detail);
     this._closeResolve?.();

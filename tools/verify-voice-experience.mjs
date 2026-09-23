@@ -162,6 +162,20 @@ try {
   assert.equal(await page.evaluate(() => localStorage.getItem("world-voice-settings")), null);
   await page.locator("[data-close-settings]").click();
   await page.locator("#course-assistant-button").click();
+  await page.locator("#assistant-input").fill("Find regularization in the book. Just take me there.");
+  await page.locator("#assistant-form button[type=submit]").click();
+  await page.waitForFunction(() => window.__courseVoice.bound.get("learning-heading-994404f3bd")?.classList.contains("voice-pointed"));
+  assert.equal(await page.evaluate(() => {
+    const node = window.__courseVoice.bound.get("learning-heading-994404f3bd");
+    const rect = node.getBoundingClientRect();
+    return node.isConnected && rect.top > 0 && rect.bottom < innerHeight && window.__courseVoice.currentContext().referenceId === "learning-heading-994404f3bd";
+  }), true);
+  assert.match(await page.locator("#assistant-captions").textContent(), /Showing Regularization begins/);
+  assert.equal(providerRequests.length, 0, "finding a lesson should not require a live model call");
+  assert.equal(await page.locator("#voice-settings").evaluate((dialog) => dialog.open), false);
+  const superseded = await page.evaluate(() => window.__courseVoice.performTool("focus_course_topic", { query: "show me SIGReg" }));
+  assert.equal(superseded.ok, false, "an older assistant action must not override the newest learner request");
+  assert.equal(await page.evaluate(() => window.__courseVoice.currentContext().referenceId), "learning-heading-994404f3bd");
   await page.locator("#assistant-start").click();
   assert.ok(await page.locator("#voice-settings").evaluate((dialog) => dialog.open));
   assert.equal(await page.evaluate(() => document.activeElement?.id), "voice-openai-key");
@@ -197,6 +211,15 @@ try {
       await page.locator("#assistant-close").click();
     }
   }
+  await page.locator("#course-assistant-button").click();
+  const mobileFocus = await page.evaluate(async () => {
+    const result = await window.__courseVoice.performTool("focus_course_topic", { query: "Find regularization in the book" });
+    const node = window.__courseVoice.bound.get(result.entry?.id);
+    const rect = node?.getBoundingClientRect();
+    return { ok: result.ok, panelHidden: document.querySelector("#course-assistant").hidden, visible: Boolean(rect && rect.top >= 0 && rect.bottom <= innerHeight) };
+  });
+  assert.deepEqual(mobileFocus, { ok: true, panelHidden: true, visible: true }, "mobile navigation should reveal the actual page rather than leave the assistant panel over it");
+  await page.screenshot({ path: path.join(shots, "mobile-focused-passage.png") });
   await page.setViewportSize({ width: 1440, height: 900 });
 
   await page.locator("#voice-settings-button").click();
@@ -260,8 +283,11 @@ try {
     const outsideRange = await performTool("set_widget_control", { id: "O1", control: "time", value: "999999" });
     const valid = await performTool("set_widget_control", { id: "O1", control: "time", value: "20" });
     const choice = await performTool("set_widget_control", { id: "N7", control: "mode", value: "BatchNorm" });
+    const chapterNavigate = await performTool("navigate_to", { id: "learning" });
+    const chapterHeading = document.querySelector("#learning h1");
+    const chapterRect = chapterHeading.getBoundingClientRect();
     const invalidListen = await performTool("listen_to", { id: "__not_a_course_id__" });
-    return { searchCount: search.results.length, entryId: entry.id, targetId: target.id, navigate, highlight, highlighted, unknown, unknownControl, outsideRange, valid, choice, invalidListen };
+    return { searchCount: search.results.length, entryId: entry.id, targetId: target.id, navigate, highlight, highlighted, unknown, unknownControl, outsideRange, valid, choice, chapterNavigate, chapterVisible: chapterRect.top >= 0 && chapterRect.bottom <= innerHeight, invalidListen };
   });
   assert.ok(toolResults.searchCount > 0);
   assert.equal(toolResults.entryId, toolResults.targetId);
@@ -275,6 +301,8 @@ try {
   assert.equal(toolResults.valid.state.controls.find((control) => control.key === "time")?.value, "20");
   assert.equal(toolResults.choice.state.controls.find((control) => control.key === "mode")?.value, "BatchNorm");
   assert.deepEqual(toolResults.choice.state.controls.find((control) => control.key === "mode")?.options, ["LayerNorm", "BatchNorm", "Stored statistics"]);
+  assert.equal(toolResults.chapterNavigate.ok, true);
+  assert.equal(toolResults.chapterVisible, true);
   assert.match(toolResults.invalidListen.error, /Unknown/);
 
   const paperFocus = await page.evaluate(async () => {
@@ -302,6 +330,64 @@ try {
   assert.match(paperFocus.header, /Equation 4/);
   assert.equal(paperFocus.absent.ok, false, "an unknown equation must not silently highlight a different one");
   await page.screenshot({ path: path.join(shots, "paper-equation-focus.png") });
+
+  const navigationRegression = await page.evaluate(async () => {
+    const api = window.__courseVoice;
+    const regularization = await api.performTool("focus_course_topic", { query: "Find regularization in the book" });
+    const embedding = await api.performTool("focus_course_topic", { query: "Where does the book introduce embedding?" });
+    const selectionNode = api.bound.get(api.index.items.find((item) => item.kind === "paragraph" && item.chapterId === "opening").id);
+    const range = document.createRange();
+    range.selectNodeContents(selectionNode);
+    getSelection().removeAllRanges();
+    getSelection().addRange(range);
+    const equation = await api.performTool("focus_course_topic", { query: "Show me LeWorldModel Equation 4" });
+    const contextual = api.currentContext();
+
+    const dynamic = api.index.items.find((item) => item.kind === "widgetEquation" && item.locator?.figureId === "B2");
+    const widget = document.getElementById("visual-B2");
+    const slider = widget.querySelector('input[type="range"]');
+    const oldNode = api.bound.get(dynamic.id);
+    slider.dispatchEvent(new Event("input", { bubbles: true }));
+    const detachedAfterRedraw = !oldNode.isConnected;
+    const rebound = await api.performTool("focus_course_entry", { id: dynamic.id });
+    const reboundNode = api.bound.get(dynamic.id);
+    const reboundRect = reboundNode.getBoundingClientRect();
+    const reboundVisible = reboundNode.isConnected && reboundRect.bottom > 0 && reboundRect.top < innerHeight;
+
+    const liveSlider = widget.querySelector('input[type="range"]');
+    const original = Number(liveSlider.value);
+    liveSlider.value = String(original < Number(liveSlider.max) ? original + Number(liveSlider.step || 1) : original - Number(liveSlider.step || 1));
+    liveSlider.dispatchEvent(new Event("input", { bubbles: true }));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const automaticFallback = widget.classList.contains("voice-pointed") && api.currentContext().referenceId === "visual-B2";
+    const changed = await api.performTool("focus_course_entry", { id: dynamic.id });
+    return {
+      regularizationId: regularization.entry?.id,
+      embeddingId: embedding.entry?.id,
+      equationId: equation.entry?.id,
+      selectionCleared: getSelection().isCollapsed,
+      contextId: contextual.referenceId,
+      detachedAfterRedraw,
+      rebound,
+      reboundVisible,
+      automaticFallback,
+      changed,
+      widgetHighlighted: widget.classList.contains("voice-pointed"),
+    };
+  });
+  assert.equal(navigationRegression.regularizationId, "learning-heading-994404f3bd");
+  assert.equal(navigationRegression.embeddingId, "geometry-paragraph-7923da33e5");
+  assert.equal(navigationRegression.equationId, "paper-equation-19aecf226e");
+  assert.equal(navigationRegression.selectionCleared, true);
+  assert.equal(navigationRegression.contextId, navigationRegression.equationId);
+  assert.equal(navigationRegression.detachedAfterRedraw, true, "the widget must really have redrawn for this test");
+  assert.equal(navigationRegression.rebound.ok, true, "an unchanged live formula should rebind to its new node");
+  assert.equal(navigationRegression.reboundVisible, true);
+  assert.equal(navigationRegression.automaticFallback, true, "a highlighted widget equation must update its focus when the widget redraws");
+  assert.equal(navigationRegression.changed.ok, false, "a changed formula must not masquerade as the original equation");
+  assert.equal(navigationRegression.changed.exactEquation, false);
+  assert.equal(navigationRegression.changed.visible, true);
+  assert.equal(navigationRegression.widgetHighlighted, true);
 
   // Intercept synthesis and inspect its request. No test key reaches a provider.
   const syntheticAudio = fakeWav();

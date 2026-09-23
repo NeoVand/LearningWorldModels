@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { chapters } from "../book/edition2/curriculum.mjs";
-import { findEquationForQuery, searchCourseIndex } from "../book/voice/query.mjs";
+import { findEquationForQuery, locateCourseTopic, searchCourseIndex } from "../book/voice/query.mjs";
 import { buildVoiceIndex } from "./build-voice-index.mjs";
 
 const index = buildVoiceIndex();
@@ -98,6 +98,20 @@ assert.equal(
   })?.id,
   "paper-equation-cf1682b537",
 );
+for (const [query, expected] of [
+  ["Find regularization in the book", "learning-heading-994404f3bd"],
+  ["Where does the book introduce embedding?", "geometry-paragraph-7923da33e5"],
+  ["What is a world model?", "opening-paragraph-0901108862"],
+  ["Show me SIGReg", "sigreg-paragraph-32b2bc9e03"],
+  ["Scroll to SIGReg finite-batch derivation", "sigreg-equation-d78765b4c7"],
+  ["Show me LeWorldModel Equation 4", "paper-equation-19aecf226e"],
+]) {
+  const located = locateCourseTopic(index, query);
+  assert.equal(located?.id, expected, `course topic lookup for “${query}”`);
+  assert.ok(located.relevance >= 2);
+}
+assert.equal(locateCourseTopic(index, "Show me LeWorldModel Equation 42"), null);
+assert.equal(locateCourseTopic(index, "What is this thing?"), null);
 
 if (process.argv.includes("--dom")) {
   const { build } = await import("esbuild");

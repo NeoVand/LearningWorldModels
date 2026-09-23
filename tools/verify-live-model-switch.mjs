@@ -31,4 +31,23 @@ assistant._handleEvent({
 await assert.rejects(rejected, /Model unavailable/);
 assert.equal(assistant.backendModel, "gpt-6-luna", "a rejected update must keep the previous model");
 
+const transcripts = [];
+assistant.onTranscript = (event) => transcripts.push(event);
+const microphoneTrack = { enabled: true };
+const senderTracks = [];
+assistant.microphone = { getAudioTracks: () => [microphoneTrack] };
+assistant.microphoneSender = { replaceTrack: async (track) => { senderTracks.push(track); } };
+assistant.setMuted(true);
+await assistant._microphoneSwitch;
+assistant._handleEvent({ type: "session.input_transcript.delta", delta: "phantom speech" });
+assert.equal(microphoneTrack.enabled, false);
+assert.deepEqual(senderTracks, [null]);
+assert.equal(transcripts.length, 0, "muted input must not trigger navigation from a transcript");
+assistant.setMuted(false);
+await assistant._microphoneSwitch;
+assistant._handleEvent({ type: "session.input_transcript.delta", delta: "find SIGReg" });
+assert.equal(microphoneTrack.enabled, true);
+assert.equal(senderTracks.at(-1), microphoneTrack);
+assert.equal(transcripts.at(-1)?.delta, "find SIGReg");
+
 console.log("GPT-Live backend model selection and update acknowledgment passed.");

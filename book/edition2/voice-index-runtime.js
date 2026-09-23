@@ -1,2 +1,2 @@
-export { attachVoiceIndex, closestVoiceItem } from "../voice/dom-binding.mjs";
-export { searchCourseIndex, findEquationForQuery, findPassage, contextFor } from "../voice/query.mjs";
+export { attachVoiceIndex, closestVoiceItem, resolveBoundVoiceItem } from "../voice/dom-binding.mjs";
+export { searchCourseIndex, findEquationForQuery, findPassage, contextFor, locateCourseTopic } from "../voice/query.mjs";

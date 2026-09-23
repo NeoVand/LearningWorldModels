@@ -212,6 +212,35 @@ export function attachVoiceIndex(index, scope = document) {
   return byId;
 }
 
+// Interactive figures replace their .visual-body markup after a control moves.
+// A previously bound KaTeX node can therefore remain in the map while no
+// longer belonging to the page. Rebind only when the same formula is present
+// unambiguously in the live figure; a changed numeric expression must not be
+// mistaken for the equation captured by the source-derived index.
+export function resolveBoundVoiceItem(index, bound, id, scope = document) {
+  const item = index.items.find((entry) => entry.id === id);
+  if (!item) return null;
+  const cached = bound.get(id);
+  if (cached?.isConnected) return cached;
+  if (item.kind !== "widgetEquation" || !item.locator?.figureId || !item.latex)
+    return null;
+
+  const figure = scope.getElementById?.(`visual-${item.locator.figureId}`)
+    ?? scope.querySelector?.(`#visual-${item.locator.figureId}`);
+  if (!figure?.isConnected) return null;
+  const normalizedLatex = (value) => String(value ?? "").replace(/\s+/g, "");
+  const targetLatex = normalizedLatex(item.latex);
+  const matches = [...figure.querySelectorAll('annotation[encoding="application/x-tex"]')]
+    .filter((annotation) => normalizedLatex(annotation.textContent) === targetLatex);
+  if (matches.length !== 1) return null;
+
+  const node = matches[0].closest(".katex");
+  if (!node?.isConnected) return null;
+  node.dataset.voiceId = id;
+  bound.set(id, node);
+  return node;
+}
+
 export function closestVoiceItem(element) {
   return element?.closest?.("[data-voice-id]")?.dataset.voiceId ?? null;
 }
