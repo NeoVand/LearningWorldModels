@@ -2,7 +2,7 @@ import { NavigationController } from "../voice/navigation-controller.mjs";
 import { paintVoiceMark, clearVoiceMark } from "../voice/focus-paint.mjs";
 import { icon } from "../../tools/icons.mjs";
 import { NarrationPlayer, listElevenLabsVoices, clearNarrationCache } from "./voice-narration.js";
-import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, LiveCourseAssistant } from "./live-assistant.js";
+import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, LiveCourseAssistant, liveModelLabel, probeLiveModel } from "./live-assistant.js";
 import { attachVoiceIndex, isTeachingDestination, findEquationForQuery, locateCourseTopic, resolveBoundVoiceItem, searchCourseIndex } from "./voice-index-runtime.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -54,7 +54,7 @@ settingsButton.before(assistantButton);
 const settings = document.createElement("dialog");
 settings.id = "voice-settings";
 settings.setAttribute("aria-labelledby", "voice-settings-title");
-settings.innerHTML = `<div class="voice-modal-head"><div><span class="voice-eyebrow">YOUR LISTENING SPACE</span><h2 id="voice-settings-title">Listening &amp; learning</h2></div><button type="button" class="voice-icon-button" data-close-settings aria-label="Close settings">${icon("close")}</button></div><p class="voice-modal-intro">ElevenLabs narrates the course. GPT-Live 1 handles your conversation, with a separate model to reason about the book. Your keys go directly from this browser to their providers.</p><div class="voice-key-grid"><label>ElevenLabs API key<input id="voice-eleven-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your ElevenLabs key"></label><label>OpenAI API key<input id="voice-openai-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your OpenAI key"></label></div><div class="voice-key-actions"><label class="voice-check"><input id="voice-remember" type="checkbox"><span>Remember keys on this device</span></label><button type="button" id="voice-check-keys">Check connections</button><button type="button" id="voice-clear-keys">Clear keys</button></div><p id="voice-connection-status" class="voice-small" role="status">Keys are kept for this tab unless you choose to remember them.</p><div class="voice-model-settings"><div class="voice-model-heading"><span class="voice-eyebrow">ASSISTANT</span><h3>Choose a teaching model</h3><p>GPT-Live 1 remains the voice; this model works through your questions and locates course material.</p></div><div id="voice-model-choices" class="voice-model-choices" role="radiogroup" aria-label="Teaching model"></div><p id="voice-model-status" class="voice-small" role="status"></p><p class="voice-billing-note">Narration mutes the assistant’s microphone and sound without sending it the recording. Muting or pausing leaves the Live session open and may still accrue time charges; End closes it.</p></div><div class="voice-voice-heading"><div><span class="voice-eyebrow">NARRATOR</span><h3>Choose a voice</h3></div><button type="button" id="voice-load-voices">Browse your voices</button></div><input id="voice-search" type="search" placeholder="Find a voice" aria-label="Find a voice" hidden><div id="voice-choices" class="voice-choices" role="group" aria-label="Narrator voices"></div><div class="voice-modal-foot"><button type="button" id="voice-clear-cache">Clear saved audio</button><span>Generated audio is cached on this device to avoid repeated synthesis.</span></div>`;
+settings.innerHTML = `<div class="voice-modal-head"><div><span class="voice-eyebrow">YOUR LISTENING SPACE</span><h2 id="voice-settings-title">Listening &amp; learning</h2></div><button type="button" class="voice-icon-button" data-close-settings aria-label="Close settings">${icon("close")}</button></div><p class="voice-modal-intro">ElevenLabs narrates the course. GPT-Live handles your conversation, using GPT-Live 1.1 when your key can access it. A separate model reasons about the book. Your keys go directly from this browser to their providers.</p><div class="voice-key-grid"><label>ElevenLabs API key<input id="voice-eleven-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your ElevenLabs key"></label><label>OpenAI API key<input id="voice-openai-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your OpenAI key"></label></div><div class="voice-key-actions"><label class="voice-check"><input id="voice-remember" type="checkbox"><span>Remember keys on this device</span></label><button type="button" id="voice-check-keys">Check connections</button><button type="button" id="voice-clear-keys">Clear keys</button></div><p id="voice-connection-status" class="voice-small" role="status">Keys are kept for this tab unless you choose to remember them.</p><div class="voice-model-settings"><div class="voice-model-heading"><span class="voice-eyebrow">ASSISTANT</span><h3>Choose a teaching model</h3><p>This model works through your questions and locates course material. The voice model is chosen when the conversation starts.</p></div><div id="voice-model-choices" class="voice-model-choices" role="radiogroup" aria-label="Teaching model"></div><p id="voice-model-status" class="voice-small" role="status"></p><p class="voice-billing-note">Narration mutes the assistant’s microphone and sound without sending it the recording. Muting or pausing leaves the Live session open and may still accrue time charges; End closes it.</p></div><div class="voice-voice-heading"><div><span class="voice-eyebrow">NARRATOR</span><h3>Choose a voice</h3></div><button type="button" id="voice-load-voices">Browse your voices</button></div><input id="voice-search" type="search" placeholder="Find a voice" aria-label="Find a voice" hidden><div id="voice-choices" class="voice-choices" role="group" aria-label="Narrator voices"></div><div class="voice-modal-foot"><button type="button" id="voice-clear-cache">Clear saved audio</button><span>Generated audio is cached on this device to avoid repeated synthesis.</span></div>`;
 document.body.append(settings);
 
 const player = document.createElement("section");
@@ -733,7 +733,7 @@ async function startAssistant({ muted = false } = {}) {
     return;
   }
   if (narrator.current) narrator.pause();
-  $("#assistant-status").textContent = "Connecting to GPT-Live 1…";
+  $("#assistant-status").textContent = "Connecting to GPT-Live…";
   assistantHeld = false;
   assistantBeforeHold = null;
   assistant = new LiveCourseAssistant({
@@ -742,7 +742,8 @@ async function startAssistant({ muted = false } = {}) {
     context: JSON.stringify(currentContext()),
     onStatus: (event) => {
       const state = typeof event === "string" ? event : event.state || event.type || "connected";
-      const labels = { connecting: "Connecting to GPT-Live 1…", connected: event.muted ? "Ready · microphone muted" : "Ready · microphone on", closing: "Ending conversation…", closed: "Conversation ended", error: "Connection ended" };
+      const voice = liveModelLabel(event.liveModel);
+      const labels = { connecting: `Connecting to ${voice}…`, connected: event.muted ? `${voice} · microphone muted` : `${voice} · microphone on`, closing: "Ending conversation…", closed: "Conversation ended", error: "Connection ended" };
       $("#assistant-status").textContent = typeof event === "string" ? event : event.message || labels[state] || state;
       assistantState = state;
       const active = !["closed", "disconnected", "error"].includes(state);
@@ -889,9 +890,9 @@ $("#voice-check-keys").onclick = async () => {
   }
   if (memory.openai) {
     try {
-      const response = await fetch("https://api.openai.com/v1/models/gpt-live-1", { headers: { Authorization: `Bearer ${memory.openai}` } });
-      if (!response.ok) throw new Error(`OpenAI ${response.status}`);
-      results.push("GPT-Live 1 available");
+      const access = await probeLiveModel(memory.openai);
+      if (!access.ok) throw new Error(access.status === 401 || access.status === 403 ? "OpenAI rejected this API key." : `OpenAI ${access.status || "unreachable"}`);
+      results.push(`${liveModelLabel(access.model)} available`);
     } catch (error) { results.push(error.message); }
   }
   status.textContent = results.join(" · ") || "Add at least one key to check a connection.";

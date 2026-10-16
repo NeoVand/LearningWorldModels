@@ -1,6 +1,18 @@
 import assert from "node:assert/strict";
-import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, LiveCourseAssistant } from "../book/edition2/live-assistant.js";
+import { BACKEND_MODELS, DEFAULT_BACKEND_MODEL, FALLBACK_LIVE_MODEL, LiveCourseAssistant, liveModelLabel, probeLiveModel, selectLiveModel } from "../book/edition2/live-assistant.js";
 
+assert.equal(selectLiveModel(["gpt-live-1", "gpt-live-1.1"]), "gpt-live-1.1");
+assert.equal(selectLiveModel(["gpt-live-1"]), FALLBACK_LIVE_MODEL);
+assert.equal(selectLiveModel([]), FALLBACK_LIVE_MODEL);
+assert.equal(liveModelLabel("gpt-live-1.1"), "GPT-Live 1.1");
+const preferred = await probeLiveModel("test-key", { fetch: async (url) => ({ ok: url.endsWith("gpt-live-1.1"), status: url.endsWith("gpt-live-1.1") ? 200 : 404 }) });
+assert.equal(preferred.model, "gpt-live-1.1");
+const current = await probeLiveModel("test-key", {
+  fetch: async (url) => ({ ok: url.endsWith("gpt-live-1") && !url.endsWith("gpt-live-1.1"), status: url.endsWith("/gpt-live-1") ? 200 : 404 }),
+});
+assert.equal(current.model, "gpt-live-1");
+const denied = await probeLiveModel("test-key", { fetch: async () => ({ ok: false, status: 401 }) });
+assert.equal(denied.ok, false);
 assert.equal(DEFAULT_BACKEND_MODEL, "gpt-6-sol");
 assert.deepEqual(BACKEND_MODELS.map(({ id }) => id), ["gpt-6-sol", "gpt-6-luna", "gpt-6-astra", "gpt-5.6-terra"]);
 

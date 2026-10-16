@@ -62,8 +62,11 @@ The trace is capped at 160 events and remains in memory.
 
 ## Provider boundary and limits
 
-The implementation follows [Live delegation](https://developers.openai.com/api/docs/guides/live-delegation)
-and [Live conversation events](https://developers.openai.com/api/docs/guides/live-conversations).
+The implementation follows [Live delegation](https://developers.openai.com/api/docs/guides/live-delegation),
+[Live conversation events](https://developers.openai.com/api/docs/guides/live-conversations), and the
+[Live prompting](https://developers.openai.com/api/docs/guides/live-prompting) headings. The session uses
+GPT-Live 1.1 when that model is visible to the key, and GPT-Live 1 otherwise. A lookup may receive one
+short acknowledgment. The voice model still must not claim a page move until a tool result reports `visible: true`.
 Delivery gaps are not utterance boundaries. Server offsets identify stale work;
 backend completion is not evidence that the learner heard the answer.
 
