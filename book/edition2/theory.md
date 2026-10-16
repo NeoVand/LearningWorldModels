@@ -2,11 +2,13 @@
 
 <p class="lead">Why might Gaussian embeddings help a later learner? We examine linear prediction and local averaging, then trace exactly where the Gaussian distribution enters their error bounds.</p>
 
+This chapter supports one claim: probe geometry under a Gaussian target can have favorable error bounds in specified analyses. It does not support control success, and it does not support semantic correctness of the representation.
+
 ## A probe asks what another learner can recover
 
 A **probe** is a model trained on top of a fixed representation using labels for a downstream task. A linear probe predicts $y$ from $\lat$ using a linear map. A nonlinear probe can recover relationships a linear map cannot express. Their performance depends on the representation, the probe family, the amount of labeled data, and the distribution of evaluation queries.
 
-The [LeJEPA v1 paper](https://arxiv.org/pdf/2511.08544v1) motivates Gaussian geometry by analyzing such downstream learners under constraints on the representation distribution. This is a different question from proving that a particular neural encoder learns physical state or that a planner succeeds. We will derive the main statistical mechanism without upgrading a bound into a universal optimum claim.
+The [LeJEPA v1 paper](https://arxiv.org/pdf/2511.08544v1) motivates Gaussian geometry by analyzing such downstream learners under constraints on the representation distribution. LeWorldModel uses that geometry as one training pressure. The three claims LeWM makes—stable training, accessible probes, and control—share an architecture; only the probe-geometry leg is derived here.
 
 ## Begin with a one-coordinate probe
 
@@ -148,7 +150,14 @@ $$\mathbb E\!\left[(\nabla^2 m+2\nabla m^\top s)^2\right]\leq2B_0^2+8L^2J(p).$$
 
 Multiplying by $(h^2\mu_2/2)^2$ yields the leading integrated squared-bias upper bound used in the kernel argument. With adequate uniform remainder control, the remaining term is $o(h^4)$.
 
-Gaussianity minimizes the density-dependent Fisher term in this bound under the specified covariance constraint. **Minimizing an upper bound does not, by itself, prove minimization of the actual error for every target function.** The Laplacian term, cross terms, query distribution, finite sample size, and how target functions change under a representation transformation all matter. The radial-neighbor argument similarly requires assumptions about target-gradient directions and curvature terms; a same-order remainder cannot be ignored when claiming an exact optimizer.
+Gaussianity minimizes the density-dependent Fisher term in this bound under the specified covariance constraint.
+
+<aside class="claims-box">
+<strong>Allowed claim.</strong> Under the stated covariance, smoothness, and query assumptions, a Gaussian representation minimizes a particular term in a probe-error bound.
+<strong>Forbidden claim.</strong> Minimizing that bound, or matching Gaussian margins, proves that every downstream error is minimized or that a planner will succeed.
+</aside>
+
+The Laplacian term, cross terms, query distribution, finite sample size, and how target functions change under a representation transformation all matter. The radial-neighbor argument similarly requires assumptions about target-gradient directions and curvature terms.
 
 For the empirical kernel estimator, the leading pointwise variance is approximately $R(K)v(q)/(nh^dp(q))$, where $R(K)=\int K^2$ and $v(q)=\operatorname{Var}(Y\mid Z=q)$. The scale follows because about $nh^dp(q)$ examples contribute locally, while squared weights contribute $R(K)$. More explicitly, the residual-weight numerator variance is approximately $nh^dp(q)v(q)R(K)$ before normalization by $(nh^dp(q))^2$ in the unscaled-kernel convention. Dividing gives the stated expression.
 
@@ -158,7 +167,7 @@ Integrating against query density $p(q)$ formally cancels its factor, giving $R(
 
 ## Why a Gaussian marginal can still encode the wrong thing
 
-Imagine observations containing both arm position and an independent background variable. A representation can map the background into a nearly Gaussian coordinate while discarding the arm. Its marginal geometry can look excellent, yet it is useless for the goal. Prediction may or may not reject this shortcut depending on the background’s temporal behavior.
+Imagine observations containing both arm position and an independent background variable. A representation can map the background into a nearly Gaussian coordinate while discarding the arm. Its marginal geometry can look excellent, yet it is useless for the goal. The same shortcut is available to LeWM’s pixel encoder: frame-skip, action blocks, and a Gaussian regularizer do not force the embedding to keep joint angles. Prediction may or may not reject this shortcut depending on the background’s temporal behavior.
 
 Conversely, an environment with only a small discrete set of states cannot be mapped deterministically to an exact continuous full-dimensional Gaussian without additional variation. The attainable representation distributions depend on the input distribution and encoder. The target’s desirable geometry does not prove attainability or semantic alignment.
 
@@ -176,4 +185,10 @@ A defensible statement is narrower: SIGReg encourages a noncollapsed isotropic G
 
 </details>
 
-This is research-level reading: neither dismiss the theory nor let its shorthand outrun its proof. We have already trained the objective; now we can state what its Gaussian motivation does and does not prove. The next chapter replaces the teaching model’s small networks with the transformer components used in the research architecture.
+<details><summary>Optional derivation · why a maximum on the unit sphere exists</summary>
+
+The unit sphere is closed and bounded in finite-dimensional Euclidean space. Enclose a sequence on it in the cube $[-1,1]^d$. Bisect each side and retain a closed subcube containing infinitely many sequence terms. After $n$ stages the retained cube has diameter $2\sqrt d/2^n$, which tends to zero. The selected coordinates form Cauchy sequences and converge by completeness of the real numbers. Continuity of the norm keeps the limit on the unit sphere. Choose a sequence whose quadratic values $u^\top Cu$ approach their supremum; continuity makes the limit attain that supremum. The [calculus chapter](#calculus-10) already recorded the inductive step that turns this maximizer into a full orthogonal eigenbasis.
+
+</details>
+
+We have already trained the objective; this chapter states the one claim its Gaussian motivation supports. The next chapter returns to the research architecture and labels the transformer pieces LeWM actually uses.

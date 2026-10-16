@@ -10,7 +10,9 @@ Imagine watching a ball roll behind a screen. You expect it to reappear on the o
 
 <!-- VISUAL: P1 -->
 
-That comparison supplies a **learning signal**: information that can change the learner’s adjustable parameters. “Unlabeled” is not “without structure.” Time, spatial continuity, different views of the same scene, and the consequences of actions all provide structure. Self-supervised learning constructs an input and a target from that structure. A withheld image patch is a target; the next camera frame is another. The learner is not told an answer by a human annotator, but it still has an objective.
+The screen and the arm ask the same question. Two camera frames of the arm can show one pose while the next positions differ; the screen hides the ball’s middle position, and a single picture hides velocity. In both cases the visible present underdetermines the future.
+
+That comparison supplies a **learning signal**: information that can change the learner’s adjustable parameters. Time, spatial continuity, different views of the same scene, and the consequences of actions all provide structure. Self-supervised learning constructs an input and a target from that structure. A withheld image patch is a target; the next camera frame is another. The learner is not told an answer by a human annotator, but it still has an objective.
 
 A supervised classifier solves a narrower problem: given an observation, predict a supplied label. If all training labels say whether a cup is present, there is little direct incentive to preserve the cup’s velocity or whether it is supported. A predictive learner can encounter pressure to preserve these quantities because they affect what happens next. A prediction objective can also exploit a shortcut such as the identity of the room or the unchanging background.
 
@@ -40,7 +42,7 @@ $$s_{t+1}=F(s_t,\act_t),\qquad \obs_t=O(s_t).$$
 
 These are definitions of a state-transition rule and a sensor rule. They are not claims that every real environment is deterministic. The notation $O$ here names the observation function; it is unrelated to the computational-complexity notation introduced later.
 
-Suppose $s_t=(q_t,v_t)$ records position and velocity, while the camera reveals only position. In a simple unit-time model, $q_{t+1}=q_t+v_t$. The two states $(0,1)$ and $(0,-1)$ produce the same current picture but different next positions. No function of that picture alone can predict both correctly. This is an information problem, not a failure that a larger neural network can necessarily fix.
+Suppose $s_t=(q_t,v_t)$ records position and velocity, while the camera reveals only position. In a simple unit-time model, $q_{t+1}=q_t+v_t$. The two states $(0,1)$ and $(0,-1)$ produce the same current picture but different next positions. No function of that picture alone can predict both correctly. A larger network cannot recover a hidden velocity from one picture.
 
 Two pictures can help. If velocity is constant between frames separated by time $\Delta t$, then $q_t-q_{t-1}=v\Delta t$. Dividing both sides by $\Delta t$ gives $v=(q_t-q_{t-1})/\Delta t$. If acceleration or occlusion matters, more history or a different state estimator may be needed. History helps when the earlier observations contain information about the hidden quantities needed for prediction. Some hidden quantities may remain unobservable even from a long sequence.
 
@@ -68,15 +70,13 @@ LeCun’s broader proposal permits several compatible futures and uses a compati
 
 A perfect description of what can happen does not specify what should happen. The same model can support moving toward a cup, moving away from it, or remaining still. A goal cost tells the planner which consequences to prefer.
 
-This separates learning dynamics from solving a particular task. LeWorldModel learns from observation–action trajectories without reward labels, then uses a goal image at planning time. “Reward-free training” therefore does not mean preference-free behavior. The planner still receives an objective.
-
-It also does not mean action-free data. Knowing which action preceded a transition is essential to the particular action-conditioned learning problem. A video of another agent may support visual prediction without telling us which motor command our own agent should issue. Inferring actions from video is a further research problem.
+This separates learning dynamics from solving a particular task. LeWorldModel learns from observation–action trajectories without reward labels, then uses a goal image at planning time. Reward-free training still uses a planner objective and still requires action-aligned transitions. A video of another agent may support visual prediction without telling us which motor command our own agent should issue.
 
 ## Hierarchies shorten the question
 
 To visit a friend, one might first choose a route across a city, then a street crossing, then individual foot placements. Long-range plans use coarser descriptions and larger time steps. A hierarchical world model would predict at several abstraction levels, allowing high-level subgoals to constrain lower-level action plans.
 
-If each low-level step has $k$ alternatives, enumerating $H$ steps requires $k^H$ sequences: multiply $k$ choices once for every step. A good hierarchy can reduce the effective search by reusing meaningful subplans. That is the motivation; there is no general theorem that an arbitrary learned hierarchy will do so. Bad abstractions can erase the constraints needed to make a high-level plan feasible.
+If each low-level step has $k$ alternatives, enumerating $H$ steps requires $k^H$ sequences: multiply $k$ choices once for every step. For the arm, ten torque choices over ten steps already give ten billion sequences. A useful hierarchy reuses meaningful subplans; a bad one erases the constraints that make a high-level plan feasible.
 
 <figure class="generated-plate" data-art="P4"><img src="assets/generated/infographics/hierarchy-4.png" alt="Nested views connect a route around a block, a street crossing and a foot placement."/><figcaption>A route selects a crossing; the crossing selects shorter movements. The three views illustrate temporal abstraction. The browser laboratory later uses a single planning scale.</figcaption></figure>
 

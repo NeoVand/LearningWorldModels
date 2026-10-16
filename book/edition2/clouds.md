@@ -36,7 +36,7 @@ Subtract the mean from a batch of $B$ vectors to form the centered matrix $X_c$,
 
 $$\operatorname{rank}(X_c)\leq\min(d,B-1).$$
 
-This is a structural limit, not a training defect. With $B=32$ and $d=192$, no single centered batch can have rank 192. This bound concerns the particular batch. The population covariance can have full rank even though each small centered batch is rank-deficient.
+This is a structural limit, not a training defect. With $B=32$ and $d=192$, no single centered batch can have rank 192. In the browser laboratory the latent dimension is eight and a batch has 64 windows, so a centered batch can reach rank 8 and look full-dimensional. That still describes one minibatch of embeddings: another batch, or the population, can occupy fewer directions. A later diagnostic that reports effective rank from one batch can therefore look healthy while the encoder has collapsed directions the batch never saw.
 
 <!-- VISUAL: C2 -->
 
@@ -60,7 +60,7 @@ Verify the last equality by multiplication. Reading it right to left, $Q^\top$ e
 
 Why should two distinct eigenvector directions of a symmetric matrix be perpendicular? If $Cu=\lambda u$ and $Cv=\rho v$, then $u^\top Cv=\rho u^\top v$, but symmetry also gives $u^\top Cv=(Cu)^\top v=\lambda u^\top v$. Thus $(\rho-\lambda)u^\top v=0$. If the eigenvalues differ, the dot product must be zero.
 
-For this two-dimensional example, we have explicitly found all the directions we need. The general statement that a symmetric matrix admits a complete perpendicular set is the spectral theorem. We will [prove the finite-dimensional spectral theorem](#calculus-10) after learning directional derivatives. Until then, the calculations here use the displayed $Q$ that we can check directly.
+For this two-dimensional example, we have explicitly found all the directions we need. The general statement that a symmetric matrix admits a complete perpendicular set is the spectral theorem. The [calculus chapter](#calculus-10) records the inductive step after directional derivatives; the [Gaussian-theory chapter](#theory) records why a maximum on the sphere exists in every finite dimension. Until then, the calculations here use the displayed $Q$ that we can check directly.
 
 The **trace** is the sum of diagonal entries: here $2+2=4$, also $3+1$. For any decomposition with orthogonal $Q$, expansion gives $\operatorname{tr}(Q\Lambda Q^\top)=\sum_j\lambda_j\sum_iQ_{ij}^2=\sum_j\lambda_j$. Each column’s squared entries sum to one. Total variance is unchanged by a perpendicular change of coordinates.
 
@@ -82,9 +82,9 @@ $$\operatorname{Cov}(y)=\Lambda^{-1/2}Q^\top C Q\Lambda^{-1/2}=I.$$
 
 Each equality follows from applying the linear map to both sides of the covariance outer product and using $Q^\top Q=I$. Dividing a principal coordinate by the square root of its variance gives it unit variance. This operation is called whitening. If an eigenvalue is zero, its inverse square root does not exist; one must remove that direction or choose an explicit regularized approximation.
 
-Whitening does not make every distribution Gaussian. Uniform points on a circle of radius $\sqrt2$ in two dimensions have mean zero and covariance $I$: symmetry gives equal coordinate variances, and their sum is the constant squared radius 2. Yet every sample lies exactly on a circle. A two-dimensional Gaussian fills an area and has variable radius. Matching first and second moments cannot distinguish these distributions. This example motivates SIGReg’s richer distributional measurements.
+Whitening does not make every distribution Gaussian. Uniform points on a circle of radius $\sqrt2$ in two dimensions have mean zero and covariance $I$: symmetry gives equal coordinate variances, and their sum is the constant squared radius 2. Yet every sample lies exactly on a circle. Imagine those points as a batch of arm embeddings after a moment-matching regularizer: every first and second moment looks right, and every sample still lives on a one-dimensional curve. A two-dimensional Gaussian fills an area and has variable radius. Matching first and second moments cannot distinguish these distributions. This example motivates SIGReg’s richer distributional measurements.
 
-<div class="lab" id="geometry-lab"><div class="lab-head"><span class="eyebrow">Geometry desk</span><h3>Rotate the measuring direction</h3><p>The illustrative cloud approximates a distribution with covariance eigenvalues 3 and 1. Predict that distribution’s projected variance before turning the direction.</p></div><div class="controls"><label>Direction <input id="geometry-angle" type="range" min="0" max="180" value="45" step="1"/></label></div><canvas id="geometry-canvas" aria-label="An equal-scale sample cloud and its projection direction"></canvas><p id="geometry-readout" class="readout"></p><p class="caption">A deterministic illustrative cloud; no neural network is being trained. Equal horizontal and vertical units preserve the geometry.</p></div>
+<div class="lab" id="geometry-lab"><div class="lab-head"><span class="eyebrow">Geometry desk</span><h3>Rotate the measuring direction</h3><p>The illustrative cloud approximates a distribution with covariance eigenvalues 3 and 1. Predict that distribution’s projected variance before turning the direction.</p></div><div class="controls"><label>Direction <input id="geometry-angle" type="range" min="0" max="180" value="45" step="1"/></label></div><canvas id="geometry-canvas" aria-label="An equal-scale sample cloud and its projection direction"></canvas><p id="geometry-readout" class="readout"></p><p class="caption">A deterministic illustrative cloud; no neural network is being trained. The same covariance geometry will later describe a batch of encoder outputs. Equal horizontal and vertical units preserve the geometry.</p></div>
 
 <!-- VISUAL: C4 -->
 

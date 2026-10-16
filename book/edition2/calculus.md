@@ -2,7 +2,7 @@
 
 <p class="lead">Before we can train a network, we need to trace how changing one number changes another. We begin with a slope and finish with the matrix form of the chain rule.</p>
 
-We already know how to multiply matrices and measure squared distances. This chapter gives those operations sensitivities. Keep a concrete question in mind: if a prediction is too small, which adjustable number should move, and by how much?
+We already know how to multiply matrices and measure squared distances. This chapter gives those operations sensitivities. Keep a concrete question in mind: if the predicted arm-tip coordinate is too small, which adjustable number should move, and by how much?
 
 ## Recover a derivative from a difference
 
@@ -24,7 +24,7 @@ Divide by $h$ and take the limit to obtain $(uv)'=u'v+uv'$. To differentiate $1/
 
 ## Several knobs require partial derivatives
 
-Consider $L(w,b)=(2w+b-5)^2/2$. A **partial derivative** changes one input while holding the others fixed. Write $e=2w+b-5$. If only $w$ changes by $h$, the error becomes $e+2h$, so
+Let the prediction of one arm-tip coordinate be $2w+b$ and the observed tip be $5$, so $L(w,b)=(2w+b-5)^2/2$. A **partial derivative** changes one input while holding the others fixed. Write $e=2w+b-5$. If only $w$ changes by $h$, the error becomes $e+2h$, so
 
 $$\begin{aligned}L(w+h,b)-L(w,b)&=\tfrac12[(e+2h)^2-e^2]\\&=2eh+2h^2.\end{aligned}$$
 
@@ -78,7 +78,7 @@ Why do logarithms turn products into sums? For fixed $a>0$, differentiate $\log(
 
 Let $f:\mathbb R^n\to\mathbb R^m$. Its **Jacobian** $J_f$ has one row for each output and one column for each input:
 
-$$(J_f)_{ij}=\frac{\partial f_i}{\partial x_j},\qquad \Delta f\approx J_f\Delta x.$$
+$$\begin{aligned}(J_f)_{ij}&=\frac{\partial f_i}{\partial x_j},\\ \Delta f&\approx J_f\Delta x.\end{aligned}$$
 
 Take $f(x_1,x_2)=(x_1x_2,x_1+x_2)^\top$. Its Jacobian is
 
@@ -126,7 +126,7 @@ The **Laplacian** is just the trace of this Hessian, $\nabla^2 L=\sum_j\partial_
 
 ## Approximation notation should say what shrinks
 
-Writing $R(h)=O(h^2)$ means there is a fixed finite $C$ such that $|R(h)|\leq C|h|^2$ for sufficiently small $|h|$. Writing $R(h)=o(h^2)$ means $R(h)/h^2\to0$. Thus $3h^2$ is $O(h^2)$ but not $o(h^2)$; $h^3$ is both near zero. Neither notation alone tells us how accurate an approximation is at $h=0.1$.
+Writing $R(h)=O(h^2)$ means there is a fixed finite $C$ such that $|R(h)|\leq C|h|^2$ for sufficiently small $|h|$. This $O$ is order notation. It is not the observation map $O(s)$ from the philosophy chapter. Writing $R(h)=o(h^2)$ means $R(h)/h^2\to0$. Thus $3h^2$ is $O(h^2)$ but not $o(h^2)$; $h^3$ is both near zero. Neither notation alone tells us how accurate an approximation is at $h=0.1$.
 
 For a smooth scalar $f$, Taylor expansion at $x+h$ and $x-h$ gives
 
@@ -136,15 +136,9 @@ Subtract and divide by $2h$. The even terms cancel, leaving the central differen
 
 ## Return to the cloud: why principal directions exist
 
-We promised to justify the general covariance decomposition. The new derivative tools let us do it. Let $C$ be any real symmetric matrix and consider $u^\top Cu$ on unit vectors. We want a direction with the greatest value.
+We promised to justify the general covariance decomposition. In two dimensions the clouds chapter already exhibited the complete pair of perpendicular eigenvectors for a symmetric matrix we can multiply by hand. The same calculation extends. A continuous function on the unit sphere attains a maximum; the maximizer of $u^\top Cu$ is an eigenvector; and the remaining perpendicular subspace is invariant under $C$. Repeating that step yields a full orthogonal set $Q$ with $C=Q\Lambda Q^\top$. For a covariance matrix each $\lambda=u^\top Cu\geq0$.
 
-First, such a direction exists. The unit sphere is closed and bounded in finite-dimensional Euclidean space. To see why a sequence on it has a convergent subsequence, enclose it in the cube $[-1,1]^d$. Bisect each side and retain a closed subcube containing infinitely many sequence terms. Repeat, choosing a later term at every stage. After $n$ stages the retained cube has diameter $2\sqrt d/2^n$, which tends to zero. The selected coordinates form Cauchy sequences and converge by completeness of the real numbers. Continuity of the norm keeps the limit on the unit sphere. Choose a sequence whose quadratic values approach their supremum. Continuity makes the limit’s value equal that supremum. This uses the basic completeness property of real coordinates; it is the finite-dimensional extreme-value argument, not an assumption about the data.
-
-Let $u$ maximize the value and let $v$ be perpendicular to it. To stay on the sphere, move along $u(t)=(u+tv)/\|u+tv\|$. Because $u^\top v=0$, its denominator is $\sqrt{1+t^2\|v\|^2}$, whose derivative at zero is zero. Differentiating $u(t)^\top C u(t)$ at zero gives $2v^\top Cu$. At a maximum this is zero for every such $v$.
-
-Therefore $Cu$ has no component perpendicular to $u$: $Cu=\lambda u$. For any $v$ perpendicular to $u$, symmetry also gives $u^\top Cv=(Cu)^\top v=\lambda u^\top v=0$. Hence $C$ maps that perpendicular subspace into itself.
-
-Repeat the same argument inside that subspace, whose dimension is one smaller. In one dimension the matrix contains one entry, say $c$. Multiplying the unit vector $1$ gives $c$, so this vector is an eigenvector with eigenvalue $c$. By induction, we obtain a full set of perpendicular unit eigenvectors. Placing them in $Q$ gives $CQ=Q\Lambda$, and multiplying by $Q^\top$ yields $C=Q\Lambda Q^\top$. For a covariance matrix, $\lambda=u^\top Cu\geq0$. This completes the proof needed for general whitening and the later Gaussian theory.
+Let $u$ maximize $u^\top Cu$ among unit vectors and let $v$ be perpendicular to it. Move along $u(t)=(u+tv)/\|u+tv\|$. Because $u^\top v=0$, the denominator has derivative zero at $t=0$. Differentiating $u(t)^\top C u(t)$ at zero gives $2v^\top Cu$. At a maximum this vanishes for every such $v$, so $Cu=\lambda u$. Symmetry then maps the perpendicular subspace into itself. That is the inductive step in every dimension. The finite-dimensional argument that the sphere attains its maximum is recorded in the [Gaussian-theory chapter](#theory) when we need general dimension; the later theory uses the decomposition, not the completeness construction.
 
 <!-- VISUAL: D6 -->
 

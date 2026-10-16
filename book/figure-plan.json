@@ -349,8 +349,8 @@
     },
     {
       "id": "B7",
-      "chapter": "probability",
-      "section": "Quantifying finite-sample uncertainty",
+      "chapter": "evaluation",
+      "section": "Linear and nonlinear probes",
       "title": "Repeated experiments and shared seeds",
       "medium": "SVG + simulation",
       "priority": "P2",
@@ -1461,8 +1461,8 @@
     },
     {
       "id": "E8",
-      "chapter": "evaluation",
-      "section": "Expectiles emphasize one side of an error",
+      "chapter": "paper",
+      "section": "Appendix C: what the policy baselines learn instead",
       "title": "An expectile moves when the two sides cost differently",
       "medium": "Interactive SVG",
       "priority": "P1",

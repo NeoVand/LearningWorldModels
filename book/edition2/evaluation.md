@@ -2,13 +2,18 @@
 
 <p class="lead">A representation can look orderly, predict well, expose physical variables, and still fail to control. Evaluation should reveal which link works and which one breaks.</p>
 
+<aside class="claims-box">
+<strong>Claims hygiene for the rest of the book.</strong>
+A probe is not control. Gaussian margins are not a world model. A reported plus-minus interval is not a confidence interval unless the paper defines it. This book has not rerun the 15M-parameter training. Later chapters state what you can reconstruct; they do not relitigate these four points.
+</aside>
+
 ## Three levels of evidence
 
 <figure class="diagram" data-diagram="evidence"></figure>
 
 A probe asks whether a specified quantity can be recovered from the representation. Prediction tests whether the learned transition model works on held-out examples. Control tests the whole chain, including perception, history, dynamics, goal geometry, search, and execution cadence.
 
-LeWM’s TwoRoom results are a useful warning against collapsing these tests into one score. Its probes can recover position well even when its planning success is below some alternatives. That gap could arise from the learned dynamics, the latent metric, or the planner. Good information access narrows the diagnosis but does not finish it.
+LeWM’s TwoRoom results are a useful warning against collapsing these tests into one score. Its probes can recover position well even when its planning success is below some alternatives. Use that gap as a worksheet: if the probe is good and control is bad, test the dynamics, the latent metric, and the planner as three separate hypotheses.
 
 ## Linear and nonlinear probes
 
@@ -23,6 +28,20 @@ $$r=\frac{\sum_i(\hat s_i-\overline{\hat s})(s_i-\bar s)}{\sqrt{\sum_i(\hat s_i-
 It is the cosine between two centered sample vectors, so Cauchy–Schwarz proves $|r|\leq1$. It is undefined when either vector is constant. Predicting $\hat s=10s+100$ gives correlation 1 for nonconstant $s$, despite potentially enormous MSE. Correlation assesses aligned variation, not calibration of scale and offset.
 
 Train, validation, and test splits apply to the probe too. A highly flexible probe can memorize training labels. Comparing linear and nonlinear probes is informative only with held-out performance and controlled capacity and fitting budget.
+
+The training distribution describes examples the learner sees while fitting parameters. The evaluation distribution describes the cases on which we measure performance. A train–test split estimates transfer to fresh data only to the extent that the split represents the desired use.
+
+Overlapping video windows share observations and hidden episode conditions. Randomly splitting windows may place nearly identical transitions on both sides. Splitting entire episodes reduces this leakage. Test transfer to unfamiliar backgrounds, action ranges, and mechanisms by introducing those distribution shifts explicitly at evaluation.
+
+The data-collecting policy also matters. If it never applies a negative torque at a particular pose, a model can fit the dataset without learning that counterfactual. The logged actions determine which consequences the data can teach; testing a missing action requires new coverage.
+
+Suppose a controller succeeds independently on each task with probability $p$. A success indicator is 1 with probability $p$ and 0 otherwise. Its mean is $p$ and variance is $p(1-p)$. The sample success rate over $n$ tasks therefore has variance $p(1-p)/n$. Replacing $p$ by the observed rate gives a rough standard-error estimate, useful away from the endpoints and for sufficiently large independent samples.
+
+For 48 successes out of 50, the rate is $0.96$ and this estimated standard error is about $0.028$. The standard error describes sampling variability. A normal approximation interval multiplies it by a chosen quantile; near a boundary such as 100% success, that approximation behaves poorly. For small experiments, report the count as well as any interval, and specify how tasks and seeds were sampled.
+
+Variation across training seeds is another level of randomness. Testing three trained models on the same 50 tasks produces correlated evidence, not 150 wholly independent draws of a model–task pair.
+
+<!-- VISUAL: B7 -->
 
 <!-- VISUAL: E1 -->
 
@@ -54,21 +73,11 @@ LeWM trains its visualization decoder using image reconstruction after learning 
 
 Therefore a decoded imagined frame reflects both predictor error and decoder error. The browser’s translucent imagined arm uses an analogous separate labeled readout, not a full image decoder. It is a visualization aid; the planner scores latent representations directly.
 
-## Why t-SNE is not a map of physical distance
+## Why Figure 9 is not a map of physical distance
 
-A high-dimensional cloud can be visualized by assigning each point a two-dimensional coordinate. t-SNE chooses those coordinates to approximately preserve selected local-neighborhood probabilities. In the original space, neighbors receive Gaussian-distance weights with a bandwidth adjusted to a chosen neighborhood scale. Symmetrizing and normalizing gives pair probabilities $p_{ij}$. For distinct points, write this construction explicitly:
+t-SNE assigns each high-dimensional point a two-dimensional coordinate so that selected local-neighborhood probabilities stay compatible. The display is optimized using $\operatorname{KL}(P\|Q)$, whose nonnegativity was proved in the SIGReg chapter. That objective asks nearby pairs to remain nearby in the picture. It does not ask all physical distances to remain unchanged.
 
-$$\begin{aligned}&p_{j\mid i}=\frac{e^{-\|z_i-z_j\|^2/(2\sigma_i^2)}}{\sum_{r\ne i}e^{-\|z_i-z_r\|^2/(2\sigma_i^2)}}, \\ &p_{ij}=\frac{p_{j\mid i}+p_{i\mid j}}{2n}.\end{aligned}$$
-
-Here $\sigma_i>0$ controls the neighborhood width around point $i$. Each conditional row sums to one; summing the two conditional terms over ordered distinct pairs gives $n+n$, so $\sum_{i\ne j}p_{ij}=1$. Set diagonal probabilities to zero. In the display, define
-
-$$\begin{aligned}&q_{ij}=\frac{(1+\|y_i-y_j\|^2)^{-1}}{\sum_{r\ne s}(1+\|y_r-y_s\|^2)^{-1}}, \\ &i\ne j.\end{aligned}$$
-
-This also sums to one. Its weights decay more slowly with distance than Gaussian weights. That heavier tail gives the low-dimensional layout more room to separate points while fitting local neighborhoods.
-
-The display is optimized using $\operatorname{KL}(P\|Q)=\sum_{i\ne j}p_{ij}\log(p_{ij}/q_{ij})$. KL nonnegativity was proved in the SIGReg chapter. This objective asks nearby pairs to remain compatible with the display, not all physical distances to remain unchanged. Neighborhood bandwidth is often set through **perplexity**, defined as the exponential of a neighbor distribution’s entropy using matching logarithm bases. A uniform distribution over $k$ neighbors has entropy $\log k$, hence perplexity $k$.
-
-Global separations, cluster sizes, rotations, and empty spaces in the display can be misleading. Figure 9’s organized embedding visualization suggests a qualitative correspondence with varied physical states. Assess topology, recoverable coordinates, and controllability with dedicated probes and prediction/control tests.
+Global separations, cluster sizes, rotations, and empty spaces in the display can be misleading. Figure 9’s organized embedding visualization suggests a qualitative correspondence with varied physical states. Assess topology, recoverable coordinates, and controllability with dedicated probes and prediction or control tests. The figure cannot show that Euclidean latent distance is a useful planning metric.
 
 <!-- VISUAL: E4 -->
 
@@ -92,7 +101,7 @@ LeWorldModel uses a deterministic predictor. Its control results therefore evalu
 
 <!-- VISUAL: E5 -->
 
-## Energy is not automatically probability
+## Energy becomes a probability only after normalization
 
 A probability model assigns nonnegative mass or density with total one. An arbitrary energy need not do this. One possible conversion is the Gibbs construction
 
@@ -122,55 +131,13 @@ The statistic is unchanged by translation and orthogonal rotation, because displ
 
 <!-- VISUAL: E7 -->
 
-## Baselines in Appendix C: what policies learn instead
-
-LeWM compares world-model planning with goal-conditioned behavioral cloning and offline reinforcement-learning baselines. A **policy** $\pi(s,g)$ maps a state description and goal to an action. It can act without searching through a world model at every step.
-
-Behavioral cloning minimizes $\mathbb E\|\pi(s,g)-a\|^2$ on observed state–action–goal tuples. By the conditional-mean derivation, a sufficiently expressive squared-error policy learns an average action for the supplied context. If two valid routes require opposing actions, averaging can be poor. Data coverage and how goals are assigned therefore matter.
-
-A goal-conditioned policy still needs goals during training and evaluation. The representation supplied to the baseline can differ from LeWM’s learned representation; the paper uses DINOv2 features for these policy baselines. This changes both the prior information and computational profile, so the baseline is a complete system comparison rather than a pure loss swap.
-
-## Returns and the Bellman recursion
-
-Let reward $r_t$ express task progress and $\gamma\in[0,1)$ discount later rewards. Define the discounted return $G_t=\sum_{k=0}^\infty\gamma^k r_{t+k}$, assuming bounded rewards so the sum converges. Pulling out the first term gives $G_t=r_t+\gamma G_{t+1}$. This algebraic identity is the source of a Bellman recursion.
-
-A value function $V(s,g)$ estimates expected return from a state and goal under a specified behavior or optimization procedure. An action value $Q(s,a,g)$ additionally conditions on the first action. A temporal-difference target uses an observed reward plus an estimated future value. It is called **bootstrapping** because an estimate helps define the next training target.
-
-The paper’s IQL baseline trains a Q-function by squared regression toward $r+\gamma m_t\bar V(s',g)$, where $m_t$ masks a terminal transition and the bar denotes a target network. This is a chosen offline-learning algorithm. The Bellman identity motivates the target, while approximation, off-policy data, and target-network updates determine the learning behavior.
-
-## Expectiles emphasize one side of an error
-
-Appendix C uses the asymmetric squared loss
-
-$$\begin{aligned}&\ell_\tau(u)=|\tau-\mathbf1\{u<0\}|u^2, \\ &0<\tau<1.\end{aligned}$$
-
-For positive residuals the weight is $\tau$; for negative residuals it is $1-\tau$. An expectile minimizes the expected loss of a residual such as $u=Y-v$. Away from zero, differentiating with respect to $v$ yields the balance equation
-
-$$\begin{aligned}&\tau\,\mathbb E[(Y-v)\mathbf1\{Y\geq v\}]\\&\quad=(1-\tau)\mathbb E[(v-Y)\mathbf1\{Y<v\}].\end{aligned}$$
-
-At $\tau=1/2$, the two sides balance ordinary positive and negative deviations, giving the mean. With larger $\tau$, underestimating high targets costs more and the solution shifts upward. For equally likely targets 0 and 1, a solution between them satisfies $\tau(1-v)=(1-\tau)v$, hence $v=\tau$. An expectile is not a quantile: it balances weighted magnitudes, not just counts.
-
-<!-- VISUAL: E8 -->
-
-GCIQL fits $V$ toward target Q-values with this loss and fits Q with a Bellman squared-error target. GCIVL removes the explicit Q-function and uses an expectile loss directly on $r+\gamma\bar V(s',g)-V(s,g)$. These differences explain the equations in Appendix C without assuming prior reinforcement-learning coursework.
-
-## Advantage-weighted imitation
-
-Define a one-step advantage estimate $A=r+\gamma V(s',g)-V(s,g)$. Positive advantage means the transition looks better than the current state’s value prediction. The baseline policy objective weights imitation errors by $e^{\beta A}$:
-
-$$L_\pi=\mathbb E\left[e^{\beta A(s,a,g)}\|\pi(s,g)-a\|^2\right].$$
-
-This is a chosen weighted-regression objective. Better-looking dataset actions receive more influence without requiring the policy update to query arbitrary new actions in an inaccurate offline value model. A large inverse temperature $\beta$ concentrates the weights strongly and can make fitting sensitive to estimation errors. Practical algorithms often stabilize weights; exact choices belong to the implementation.
-
-To see what weighted regression learns, fix a context and differentiate with respect to a constant predicted action $c$: $2\mathbb E[w(c-a_{\mathrm{data}})]=0$. If $\mathbb E[w]>0$, the optimum is $c=\mathbb E[wa_{\mathrm{data}}]/\mathbb E[w]$. The weights change the conditional average, not the fact that a deterministic squared-error policy averages.
-
-These policy baselines differ from CEM planning. CEM spends computation online to optimize a fresh sequence using a fixed model; the policy spends training computation to make action selection cheap at execution time. The 2022 LeCun proposal explicitly contemplates learning reactive policies from deliberative solutions, so the approaches are not philosophically incompatible.
+The [paper chapter](#paper) reads Appendix C’s policy baselines—behavioral cloning, Bellman targets, expectiles, and advantage-weighted imitation—beside the tables that use them.
 
 ## How to read the ablation tables
 
 An ablation is most informative when everything except the intended factor is held fixed and multiple seeds are used. A decoder-loss ablation changes both the objective and possibly the optimization burden. A larger predictor changes capacity, computation, and optimization difficulty. Reported outcomes identify useful settings within the experiment, not immutable properties of architecture names.
 
-A plus-minus value should be interpreted according to its stated definition. LeWM v1's training-variance table describes variation across three training seeds and a common set of 50 evaluation trajectories, with terminology that does not cleanly specify every statistical convention. Do not manufacture a confidence interval from that typography. Preserve the reported values and explain the limited sampling basis.
+A plus-minus value should be interpreted according to its stated definition. LeWM v1’s training-variance table describes variation across three training seeds and a common set of 50 evaluation trajectories, with terminology that does not cleanly specify every statistical convention. Do not manufacture a confidence interval from that typography. Preserve the reported values and explain the limited sampling basis.
 
 Likewise, the browser’s nine local control trials are a reproducible diagnostic suite, not a broad generalization estimate. Its three distant-goal failures are part of the evidence. Excluding them after seeing the results would change the question being evaluated.
 
@@ -188,4 +155,4 @@ A successful result would support a more specific conclusion about the tested di
 
 </details>
 
-You now have the tools to read every family of evaluation in the final paper. We can now separate useful prediction, recoverable physical information, and successful action. With that practical grounding, the next chapter asks a harder theoretical question: why might Gaussian geometry help a later learner?
+You can now read LeWM §5 with a rubric: a probe, a prediction score, and a control score answer different questions. The next chapter asks a narrower theoretical question: what Gaussian geometry can promise a later probe.

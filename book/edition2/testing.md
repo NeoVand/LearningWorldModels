@@ -2,7 +2,7 @@
 
 <p class="lead">A finite sample never looks exactly like a smooth density. Before turning distribution matching into a training loss, we must understand how much mismatch sampling alone creates.</p>
 
-JEPA needs a constraint on a collection of representations. Covariance is useful but incomplete: the circle example had the same covariance as a standard Gaussian. We now ask how a statistical test can distinguish a distributional mismatch from an ordinary fluctuation. This is a lesson in reasoning from samples, not a prescription to run a hypothesis test at every training update.
+JEPA needs a constraint on a collection of representations. Covariance is useful but incomplete: the circle example had the same covariance as a standard Gaussian. Matched moments miss a ring. We now ask how a statistical test can distinguish a distributional mismatch from an ordinary fluctuation. This is a lesson in reasoning from samples. The next chapter will turn a related discrepancy into the training penalty we differentiate.
 
 ## A null model is a repeatable sampling story
 
@@ -14,7 +14,7 @@ The null is not “the data look roughly bell-shaped.” It is a mathematical di
 
 ## Compare accumulated probability rather than histogram bins
 
-For a scalar variable, the cumulative distribution function is $F(x)=P(X\leq x)$. It records the probability to the left of $x$. For the standard Gaussian it is
+A histogram needs a bin width. Two reasonable widths can disagree about whether a sixteen-point sample looks Gaussian. The cumulative distribution function avoids that choice: it records the probability to the left of $x$. For a scalar variable, $F(x)=P(X\leq x)$. For the standard Gaussian it is
 
 $$\Phi(x)=\int_{-\infty}^{x}\frac{e^{-u^2/2}}{\sqrt{2\pi}}\,du.$$
 
@@ -52,7 +52,7 @@ Why add one? Under the null, the observed experiment and simulated experiments a
 
 ## Run a test, then change the amount of evidence
 
-First predict what happens to ordinary null discrepancies as $n$ grows. Then compare a true standard-Gaussian sample, a Gaussian shifted by 0.4, and equally likely values at $-1$ and $+1$. The two-point population has the correct mean and variance but the wrong shape.
+You just computed $D_2\approx0.3413$ for the two-point sample $\{-1,+1\}$. The desk below simulates the null distribution of $D_n$ for $n=2^k$, then lets you observe a Gaussian, a shifted Gaussian, or that same two-point population. First predict what happens to ordinary null discrepancies as $n$ grows. The two-point population has the correct mean and variance but the wrong shape.
 
 <div class="lab" id="normality-lab">
 <div class="lab-head"><span class="eyebrow">Testing desk</span><h3>A discrepancy needs a reference</h3><p>Each histogram contains 511 simulated standard-Gaussian datasets. The observed sample and power experiment use separate random streams.</p></div>
@@ -68,9 +68,7 @@ Under a fixed alternative, larger samples often make a departure easier to detec
 
 ## Where the simulated Gaussian samples come from
 
-The simulation begins with seeded pseudorandom uniforms. The Gaussian integral taught us that a two-dimensional standard Gaussian has density proportional to $e^{-r^2/2}$ in radius, with area element $r\,dr\,d\alpha$. The angle is uniform, and integrating the radial density gives $P(R\leq r)=1-e^{-r^2/2}$ for $r\geq0$.
-
-For a uniform $U$ in $(0,1)$, set $R=\sqrt{-2\log U}$. Indeed, $P(R\leq r)=P(U\geq e^{-r^2/2})=1-e^{-r^2/2}$. Choose an independent uniform angle $2\pi V$ and return $R\cos(2\pi V)$ as one Gaussian coordinate. This derives the sampler used in the desk from the density rather than assuming a mysterious source of normal numbers. Pseudorandom generation approximates the ideal sampling story; the fixed seeds make this teaching experiment reproducible.
+The desk draws standard Gaussians from seeded uniforms by the polar method already implicit in the [Gaussian integral](#probability): radius $R=\sqrt{-2\log U}$ and an independent angle. The fixed seeds make the teaching experiment reproducible. Neighboring video frames remain correlated, so a batch of embeddings need not obey the independent-draw null used to calibrate the desk.
 
 ## Fitting the null changes the question
 
@@ -96,6 +94,6 @@ A researcher reports $p=0.2$ on a batch of 16 embeddings and says, “There is a
 
 The p-value is a tail probability computed under the null, not a probability assigned to the null. Also, failure to reject does not establish Gaussianity; a small sample may have little power against the departures that matter. If the embeddings were selected through optimization, the calibrated sampling story has changed, and the nominal p-value may no longer have its claimed false-alarm behavior.
 
-A useful report gives the discrepancy, sample size, specified target, sampling procedure, and independent downstream evaluation. The next chapter builds the differentiable discrepancy itself. It will be a training tool whose statistical limitations we can now explain.
+A useful report gives the discrepancy, sample size, specified target, sampling procedure, and independent downstream evaluation. Kolmogorov–Smirnov teaches a calibrated discrepancy. SIGReg is what we differentiate: a smooth, fixed-target measurement whose gradients can change an encoder. The ideas of finite-sample fluctuation and a fully specified target still apply.
 
 </details>

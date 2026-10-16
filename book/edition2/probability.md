@@ -46,9 +46,9 @@ It is an algebraic identity, not a special learning algorithm. If 10 of 100 arm 
 
 <!-- VISUAL: B3 -->
 
-A conditional expectation $m(x)=\mathbb E[Y\mid X=x]$ is the mean appropriate after observing $X=x$. In practice we learn an approximation to that function from examples. If the same image can accompany different velocities, the conditional distribution of the next image can remain broad even in a deterministic simulator.
+A conditional expectation $m(x)=\mathbb E[Y\mid X=x]$ is the mean appropriate after observing $X=x$. In practice we learn an approximation to that function from examples. For the arm, $X$ can be one camera frame and $Y$ the next tip position. If that frame can accompany opposite velocities, the conditional distribution of the next position stays broad even in a deterministic simulator.
 
-For discrete outcomes, that conditional mean is $\sum_y yP(Y=y\mid X=x)$. If, after one sensor reading, the two possible velocities are $-1$ and $+1$ with probabilities $1/4$ and $3/4$, the mean velocity is $(-1)/4+3/4=1/2$. It is an average of compatible possibilities, not necessarily an actual velocity.
+For discrete outcomes, that conditional mean is $\sum_y yP(Y=y\mid X=x)$. If, after one camera frame, the two possible velocities are $-1$ and $+1$ with probabilities $1/4$ and $3/4$, the mean velocity is $(-1)/4+3/4=1/2$. It is an average of compatible possibilities, not necessarily an actual velocity of the arm.
 
 For continuous measurements, the event $X=x$ itself has probability zero, so we cannot divide its event probability into another. Instead use a joint density $p_{X,Y}(x,y)$. Integrate out $y$ to obtain $p_X(x)=\int p_{X,Y}(x,y)\,dy$. Where $p_X(x)>0$, define $p(y\mid x)=p_{X,Y}(x,y)/p_X(x)$ and $m(x)=\int y p(y\mid x)\,dy$. This conditional density integrates to one because its numerator integrates to its denominator. It is also the limit of conditioning on increasingly narrow intervals around $x$ when the densities are continuous there.
 
@@ -107,24 +107,6 @@ We have proved only one direction: independence implies zero covariance. The cou
 A mixture is another useful counterexample. Choose a branch with a coin, then sample a narrow Gaussian around either $-2$ or $+2$. The result has two peaks. Its mean is zero, and its variance can be computed by conditioning, but those two numbers do not make it a Gaussian. The book’s distribution experiment compares mixtures, rings, lines, constants, and Gaussians so these distinctions remain visible.
 
 <!-- VISUAL: B6 -->
-
-## Generalization is a distributional question
-
-The training distribution describes examples the learner sees while fitting parameters. The evaluation distribution describes the cases on which we measure performance. A train–test split estimates transfer to fresh data only to the extent that the split represents the desired use.
-
-Overlapping video windows share observations and hidden episode conditions. Randomly splitting windows may place nearly identical transitions on both sides. Splitting entire episodes reduces this leakage. Test transfer to unfamiliar backgrounds, action ranges, and mechanisms by introducing those distribution shifts explicitly at evaluation.
-
-The data-collecting policy also matters. If it never applies a negative torque at a particular pose, a model can fit the dataset without learning that counterfactual. The logged actions determine which consequences the data can teach; testing a missing action requires new coverage.
-
-## Quantifying finite-sample uncertainty
-
-Suppose a controller succeeds independently on each task with probability $p$. A success indicator is 1 with probability $p$ and 0 otherwise. Its mean is $p$ and variance is $p-p^2=p(1-p)$. The sample success rate over $n$ tasks therefore has variance $p(1-p)/n$. Replacing $p$ by the observed rate gives a rough standard-error estimate, useful away from the endpoints and for sufficiently large independent samples.
-
-For 48 successes out of 50, the rate is $0.96$ and this estimated standard error is about $0.028$. The standard error describes sampling variability. A normal approximation interval multiplies it by a chosen quantile; near a boundary such as 100% success, that approximation behaves poorly. For small experiments, report the count as well as any interval, and specify how tasks and seeds were sampled.
-
-Variation across training seeds is another level of randomness. Testing three trained models on the same 50 tasks produces correlated evidence, not 150 wholly independent draws of a model–task pair. Separate variation from training, task selection, and evaluation randomness when possible. A plus-minus sign in a table is incomplete unless it says whether it denotes standard deviation, standard error, variance, or a confidence interval.
-
-<!-- VISUAL: B7 -->
 
 ## Worked exercises: choose the right average
 

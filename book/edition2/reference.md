@@ -4,6 +4,8 @@
 
 ## The learning route
 
+The minimum path from the objective to CEM is five links: [prediction loss](#jepa) → [SIGReg](#sigreg) → [shapes and reductions](#implementation) → [train and compare](#laboratory) → [sample–score–refit](#planning). The [paper chapter](#paper) then reconstructs those same pieces at LeWM scale.
+
 <!-- LEARNING_ROUTE -->
 
 <!-- VISUAL: X2 -->
@@ -55,7 +57,7 @@ Boldface indicates a vector or structured observation in the main model notation
 | Appendix B; Algorithm 2 | CEM | Planning: likelihood refit derivation and executable reference |
 | Appendix C.1; Eq. 7 | DINO-WM baseline loss | JEPA, lineage, guided paper chapter |
 | Appendix C.2; Eq. 8 | PLDM terms across batch and time | JEPA, implementation, baseline note below |
-| Appendix C.3–C.4 | IQL, IVL, advantage weighting, cloning | Evaluation: returns, expectiles, weighted regression |
+| Appendix C.3–C.4 | IQL, IVL, advantage weighting, cloning | Guided paper chapter: Appendix C reader’s guide |
 | Appendix D | Architecture, preprocessing, visualization decoder, planning cadence | Transformers and guided paper chapter |
 | Appendix E | Datasets and collection policies | Guided paper chapter and data-coverage discussion |
 | Appendix F; Tables 3–4; Figures 11–14 | Goal sampling, probes, perturbation details | Evaluation and controlled-test exercises |
@@ -77,37 +79,23 @@ The v1 appendix prints off-diagonal covariance sums without squares in places. A
 
 **Action conditioning.** Supplying proposed or observed actions to a predictor so its output can depend on them. See [transformers](#transformers) and [implementation](#implementation).
 
-**Ablation.** An experiment changing a selected component to examine its contribution under a specified protocol. See [evaluation](#evaluation).
-
-**Autoregressive rollout.** Feeding earlier predictions back as context for later predictions. See [planning](#planning).
-
-**Backpropagation.** The chain rule organized in reverse through a computation graph. See [the explanation](#calculus).
-
-**Batch.** A collection of examples used in one computation. A sequence axis inside each example is a different axis. See [implementation](#implementation).
-
 **Characteristic function.** The expectation of $e^{i\omega X}$, a bounded frequency measurement of a distribution. See [SIGReg](#sigreg).
 
 **Collapse.** Loss of distinctions across inputs; complete collapse makes all embeddings constant. See [JEPA](#jepa).
 
-**Covariance.** An average outer product of centered deviations; its quadratic form gives directional variance. See [the explanation](#clouds).
-
-**Distribution shift.** A change between the data distributions relevant to learning and use. See [probability](#probability).
-
-**Embedding.** A coordinate representation produced by a map, often learned and often information-losing. See [geometry](#geometry).
+**Distribution shift.** A change between the data distributions relevant to learning and use. See [evaluation](#evaluation).
 
 **Energy.** A scalar compatibility score whose scale need not be physical energy or normalized probability. See [the explanation](#evaluation).
 
 **Entropy and KL.** Defined measures of distributional uncertainty/spread and relative discrepancy, with support and integrability conditions. See [SIGReg](#sigreg).
 
-**Expectile.** A minimizer of asymmetric squared error; distinct from a quantile. See [evaluation](#evaluation).
+**Expectile.** A minimizer of asymmetric squared error; distinct from a quantile. See [the paper chapter](#paper).
 
 **Fisher information.** Here, the expected squared magnitude of a density’s location score. See [theory](#theory).
 
 **Frozen encoder.** An encoder whose parameters remain fixed while another component is trained. See [lineage](#lineage).
 
 **Gaussianity.** A property of a complete distribution, stronger than specified mean and covariance. See [probability](#probability) and [SIGReg](#sigreg).
-
-**Generalization.** Performance on the intended fresh-data distribution, not just agreement on fitted samples. See [probability](#probability).
 
 **Isotropy.** Absence of a preferred direction; distinguish covariance isotropy from full distributional rotational symmetry. See [the explanation](#clouds).
 
@@ -123,17 +111,9 @@ The v1 appendix prints off-diagonal covariance sums without squares in places. A
 
 **Probe.** A fitted readout used to examine information accessible from a fixed representation. See [theory](#theory) and [evaluation](#evaluation).
 
-**Regularization.** An additional preference or constraint shaping learning among possible fits. See [learning](#learning).
-
 **Score.** In the Fisher argument, $\nabla\log p$, not an attention score or control cost. See [theory](#theory).
 
-**Self-supervision.** Constructing learning targets from the structure of observations rather than supplying external labels for every example. See [philosophy](#philosophy).
-
 **Stop-gradient.** An operation whose forward value is unchanged but whose backward derivative is defined as zero. See [JEPA](#jepa).
-
-**Teacher forcing.** Supplying observed context during prediction training, in contrast to feeding back predicted context. See [planning](#planning).
-
-**Whitening.** A linear transformation making covariance the identity when the required inverse exists; it does not establish Gaussianity. See [the explanation](#clouds).
 
 ## Primary sources and provenance
 

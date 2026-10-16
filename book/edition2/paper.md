@@ -62,7 +62,7 @@ Equation 3 joins the two pressures that train the same encoder: predict the next
 
 $$\objective{\mathcal L_{\mathrm{LeWM}}}:=\objective{\mathcal L_{\mathrm{pred}}}+\lambda\,\objective{\operatorname{SIGReg}}(\encoded{Z}).\tag{3}$$
 
-The coefficient $\lambda$ sets their relative scale. These are the paper's compact equations; the concrete tensor reductions and numerical quadrature still have to be supplied by an implementation. The characteristic function, Gaussian target, quadrature, and gradients behind $\mathcal T$ were derived in the SIGReg chapter.
+The coefficient $\lambda$ sets their relative scale. These are the paper’s compact equations; the concrete tensor reductions and numerical quadrature still have to be supplied by an implementation. The characteristic function, Gaussian target, quadrature, and gradients behind $\mathcal T$ were derived in the SIGReg chapter.
 
 The tensor entering the pinned regularizer has shape time × batch × feature. Direction sampling creates a feature × projection matrix. After projection and frequency multiplication, the phase tensor has time × batch × projection × frequency axes. The code averages the batch axis before squaring the real and imaginary discrepancies, integrates frequencies, multiplies by batch size, then averages directions and time.
 
@@ -104,13 +104,31 @@ Equation 5 names the action sequence with the smallest terminal cost:
 
 $$\action{a^*_{1:H}}=\arg\min_{\action{a_{1:H}}}\objective{C}(\predicted{\hat z_H}).\tag{5}$$
 
-The minimization is over actions, while the encoder and predictor parameters stay fixed. The paper's abbreviated indices use a horizon endpoint without spelling out every initial-state offset. In our planning chapter, $H$ actions beginning at time $t$ produce an endpoint at $t+H$; that is an explicit implementation convention rather than a silent change to the paper's notation. CEM searches for a good candidate sequence, not a certified global minimizer.
+The minimization is over actions, while the encoder and predictor parameters stay fixed. The paper’s abbreviated indices use a horizon endpoint without spelling out every initial-state offset. In our planning chapter, $H$ actions beginning at time $t$ produce an endpoint at $t+H$; that is an explicit implementation convention rather than a silent change to the paper’s notation. CEM searches for a good candidate sequence, not a certified global minimizer.
 
 Appendix B describes CEM with Gaussian candidate sequences, elite selection, and mean/variance refitting. Appendix D gives 300 candidates and 30 elites, with up to 30 iterations for PushT and 10 for other environments. The general appendix description of 30 iterations is therefore not the full environment-specific prescription.
 
 The planning horizon is five action blocks of five physical actions. Appendix D and the pinned PushT evaluation configuration specify an execution prefix of five blocks before replanning. This is longer open-loop execution than the browser’s one-action correction loop. A model’s apparent control robustness depends on this cadence as well as its prediction accuracy.
 
 <!-- VISUAL: W2 -->
+
+## Appendix C: what the policy baselines learn instead
+
+LeWM compares world-model planning with goal-conditioned behavioral cloning and offline reinforcement-learning baselines. A **policy** $\pi(s,g)$ maps a state description and goal to an action. It can act without searching through a world model at every step.
+
+Behavioral cloning minimizes $\mathbb E\|\pi(s,g)-a\|^2$ on observed state–action–goal tuples. By the conditional-mean derivation, a sufficiently expressive squared-error policy learns an average action for the supplied context. If two valid routes require opposing actions, averaging can be poor.
+
+A goal-conditioned policy still needs goals during training and evaluation. The paper uses DINOv2 features for these policy baselines, so the comparison is a complete-system comparison rather than a pure loss swap.
+
+Let reward $r_t$ express task progress and $\gamma\in[0,1)$ discount later rewards. The discounted return $G_t=\sum_{k=0}^\infty\gamma^k r_{t+k}$ satisfies $G_t=r_t+\gamma G_{t+1}$. A value function $V(s,g)$ estimates expected return; an action value $Q(s,a,g)$ additionally conditions on the first action. The paper’s IQL baseline trains a Q-function by squared regression toward $r+\gamma m_t\bar V(s',g)$, where $m_t$ masks a terminal transition and the bar denotes a target network.
+
+Appendix C uses the asymmetric squared loss $\ell_\tau(u)=|\tau-\mathbf1\{u<0\}|u^2$. For equally likely targets 0 and 1 a solution between them satisfies $v=\tau$. An expectile balances weighted residual magnitudes.
+
+<!-- VISUAL: E8 -->
+
+GCIQL fits $V$ toward target Q-values with this loss and fits Q with a Bellman squared-error target. GCIVL uses an expectile loss directly on $r+\gamma\bar V(s',g)-V(s,g)$.
+
+Define a one-step advantage $A=r+\gamma V(s',g)-V(s,g)$. The baseline policy objective weights imitation errors by $e^{\beta A}$. Differentiating a constant predicted action $c$ gives the weighted average $c=\mathbb E[w a_{\mathrm{data}}]/\mathbb E[w]$ when $\mathbb E[w]>0$. CEM spends computation online to optimize a fresh sequence using a fixed model; these policies spend training computation to make action selection cheap at execution time.
 
 ## Section 4: read the performance comparisons on their own terms
 
@@ -146,6 +164,10 @@ Appendix H defines straightness using cosine similarity of consecutive latent di
 
 Appendix I contrasts training curves. Smooth curves can support an empirical stability narrative but depend on smoothing, measurement intervals, and the runs shown. They are not by themselves a proof of global optimization stability. The multiple-seed control table provides complementary evidence, still on a limited task and evaluation set.
 
-## Your equation-by-equation checkpoint
+## Closed worksheet
 
-You should now be able to reconstruct all numbered equations in v1: prediction MSE (1), projected-statistic averaging (2), the two-term objective (3), terminal latent cost (4), action optimization (5), unit projections (6), the frozen-feature baseline loss (7), PLDM’s weighted multi-term objective (8), and temporal straightness (9). The SIGReg appendix’s unnumbered characteristic-function formulas follow the [Gaussian fingerprint derivation](#sigreg-3) and [finite objective](#sigreg-7). The evaluation chapter supplied the unnumbered reinforcement-learning baseline equations, probes, and evaluation statistics.
+Do this without looking back. Write Equation 3’s two reductions: which axis is averaged in $\objective{L}_{\mathrm{pred}}$, and which axes are averaged after the batch-size factor in SIGReg. Then reconcile one paper/code mismatch: Appendix A’s unscaled integral and possible interval $[0.2,4]$ versus the pinned code’s factor $B$ and 17 nodes on $[0,3]$.
+
+You can reconstruct the loss, the tensor shapes, the planner loop, and the documented repo deltas. You cannot reconstruct the published 15M-parameter tables from this book: those require the authors’ training run.
+
+The numbered equations in v1 are prediction MSE (1), projected-statistic averaging (2), the two-term objective (3), terminal latent cost (4), action optimization (5), unit projections (6), the frozen-feature baseline loss (7), PLDM’s weighted multi-term objective (8), and temporal straightness (9). The SIGReg appendix’s unnumbered characteristic-function formulas follow the [Gaussian fingerprint derivation](#sigreg-3) and [finite objective](#sigreg-8).

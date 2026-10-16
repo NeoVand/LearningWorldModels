@@ -2,13 +2,19 @@
 
 <p class="lead">A transformer repeatedly lets pieces of a representation exchange information. The mechanism is a learned weighted average, surrounded by ordinary neural-network layers.</p>
 
+This chapter is the return visit that labels LeWM’s encoder, causal predictor, AdaLN, and decoder. The [paper chapter](#paper) records the specification: $224\times224$ images, patch size 14, 256 patches, ViT-Tiny width 192. Three reproduction traps sit in the pinned code and are easy to miss while reading mechanisms.
+
+1. **Evaluation-mode BatchNorm.** Mixing training and evaluation modes can change a goal embedding depending on what other goals share its batch. Use running statistics when probing or planning.
+2. **Goal batching.** A goal encoded in a training batch is coupled to other examples through training-time batch statistics. A lone goal at planning time is not.
+3. **Separate attention and MLP modulation.** The pinned AdaLN uses separate parameters for those branches. The schematic formula in this chapter is not a line-for-line replacement.
+
 ## Patches turn an image into a sequence
 
 Divide an image into nonoverlapping square patches of side $P$. If both image dimensions are divisible by $P$, there are $(H/P)(W/P)$ patches. Flatten each patch into a vector of length $CP^2$, then apply a learned affine map to a vector of width $d$. The resulting vectors are **tokens**: items in a sequence that the network can process together.
 
-For LeWM’s $224\times224$ RGB images and patch size 14, there are $16\times16=256$ patches. Each raw patch has $3\cdot14^2=588$ numbers. A projection maps those 588 numbers into a token width of 192 in the ViT-Tiny encoder described by the paper. Training determines which image information these measurements retain.
+A position embedding is added so the network can distinguish where a token came from. Training determines which image information these measurements retain.
 
-A position embedding is added to each token so the network can distinguish where it came from. Without position information, ordinary self-attention is equivariant to reordering the input tokens: permuting the input simply permutes the output. That symmetry is useful for unordered sets, but image patches have spatial relationships that matter.
+Without position information, ordinary self-attention is equivariant to reordering the input tokens: permuting the input simply permutes the output. That symmetry is useful for unordered sets, but image patches have spatial relationships that matter.
 
 A special learned **CLS token** is prepended. It has no corresponding image patch. Through attention it can collect information from patch tokens. The final CLS representation is used as a summary of the frame. Probe the resulting summary to check which spatial detail training has preserved.
 

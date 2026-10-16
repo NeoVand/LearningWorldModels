@@ -4,13 +4,13 @@
 
 ## From an image to a list of numbers
 
-A grayscale image of height $H$ and width $W$ is an array of $HW$ intensity values. A color image has an additional channel index, often with three entries for red, green, and blue. **Flattening** merely places these numbers in a fixed order. It loses no information if the shape and ordering are known. A $2\times2$ image with rows $(1,0)$ and $(0,1)$ can become the vector $(1,0,0,1)^\top$. The transpose symbol $\top$ tells us to write that list as a column.
+The laboratory camera will later return a $64\times64$ grayscale image: $4096$ intensity values in a fixed order. A color image has an additional channel index, often with three entries for red, green, and blue. **Flattening** merely places these numbers in a fixed order. It loses no information if the shape and ordering are known. To see what an encoder can discard, work with a $2\times2$ crop. Rows $(1,0)$ and $(0,1)$ become the vector $(1,0,0,1)^\top$. Think of those four pixels as a crude camera of the two-link arm: two poses that differ only in how brightness sits within each row will produce the same description. The transpose symbol $\top$ tells us to write that list as a column.
 
 Write the observation column as $\obs$, with entries $o_1,o_2,o_3,o_4$. An encoder is a function $f$ that maps this long vector to a shorter description, which we call $\lat$. As a deliberately simple example, define
 
 $$f(\obs)=\begin{pmatrix}o_1+o_2\\o_3+o_4\end{pmatrix}.$$
 
-This encoder retains total intensity in each row. It cannot tell $(1,0,0,1)$ from $(0,1,1,0)$ because both become $(1,1)$. A reader can now answer precisely what the encoder loses: the left–right arrangement within each row. Saying it produces a two-dimensional “embedding” adds no guarantee of usefulness.
+This encoder retains total intensity in each row. It cannot tell $(1,0,0,1)$ from $(0,1,1,0)$ because both become $(1,1)$. Two arm images that differ only by that within-row arrangement collide. Saying the map produces a two-dimensional “embedding” adds no guarantee that later prediction can tell those poses apart.
 
 In deep learning, an embedding is a learned coordinate representation. An encoder may intentionally give several inputs the same coordinates; in mathematics, an injective embedding instead keeps distinct inputs distinct. The issue is whether inputs requiring different predictions or actions remain distinguishable.
 
@@ -20,7 +20,7 @@ In deep learning, an embedding is a learned coordinate representation. An encode
 
 The row-sum encoder is multiplication by
 
-$$W=\begin{pmatrix}1&1&0&0\\0&0&1&1\end{pmatrix},\qquad \lat=W\obs.$$
+$$\begin{aligned}W&=\begin{pmatrix}1&1&0&0\\0&0&1&1\end{pmatrix},\\ \lat&=W\obs.\end{aligned}$$
 
 For the first row, calculate $1o_1+1o_2+0o_3+0o_4=o_1+o_2$. The second row selects the other two pixels. The compact rule is $(W\obs)_i=\sum_j W_{ij}o_j$: $W_{ij}$ is the entry in row $i$, column $j$, and $\sum_j$ means add one term for every input coordinate $j$. Each row chooses a weighted measurement of the input. Matrix multiplication composes these measurements: if $y=A\lat$ and $\lat=W\obs$, then $y=(AW)\obs$. To verify this, expand $y_i=\sum_k A_{ik}\sum_j W_{kj}o_j$, exchange the finite sums, and collect the coefficient $\sum_k A_{ik}W_{kj}$ multiplying $o_j$. That coefficient is exactly $(AW)_{ij}$.
 
@@ -58,7 +58,7 @@ Complete the square instead of guessing the closest point:
 
 $$\|x-cu\|^2=(c-u^\top x)^2+\|x\|^2-(u^\top x)^2.$$
 
-Only the first term changes with $c$. A square cannot be negative and is zero precisely at $c=u^\top x$. This proves the minimizing value without needing calculus. The projection vector is $(u^\top x)u$, while the projected scalar is $u^\top x$. SIGReg uses the scalar, one value per example and direction.
+Only the first term changes with $c$. A square cannot be negative and is zero precisely at $c=u^\top x$. This proves the minimizing value without needing calculus. The projection vector is $(u^\top x)u$, while the projected scalar is $u^\top x$. Later we will project a whole batch of embeddings this way, one scalar per example and direction.
 
 For $x=(3,4)$ and $u=(1,1)/\sqrt2$, the scalar projection is $7/\sqrt2$. A direction can reveal a relation between coordinates that neither coordinate alone reveals. We will reuse this diagonal measurement when comparing clouds of learned representations.
 
@@ -70,7 +70,7 @@ The same expansion proves the Cauchy–Schwarz inequality. The minimum of $\|x-c
 
 ## Rank measures available directions
 
-A linear map’s **rank** is the number of independent output directions it can produce. Its **null space** is the set of input changes it maps to zero. For the row-sum encoder, the change $(1,-1,0,0)$ lies in the null space. Moving brightness from one pixel to the other leaves the representation unchanged.
+A linear map’s **rank** is the number of independent output directions it can produce. Its **null space** is the set of input changes it maps to zero. For the row-sum encoder, the change $(1,-1,0,0)$ lies in the null space. Moving brightness from one pixel to the other leaves the representation unchanged. Two arm crops that differ only by that swap are invisible to this code. Checking that the representation has two coordinates does not tell us they remain distinguishable.
 
 If all learned embeddings lie on one line, they may vary substantially in magnitude while using only one direction. That is dimensional collapse. If all are identical, even that one degree of variation disappears. Checking the average norm alone would miss both a constant nonzero cloud and many lower-dimensional failures.
 

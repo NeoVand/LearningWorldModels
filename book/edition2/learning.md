@@ -8,7 +8,7 @@ Recall the two-parameter predictor from the calculus chapter, now with a general
 
 The derivative asks how a small parameter change affects the loss. Applying the chain rule,
 
-$$\frac{\partial\ell}{\partial w}=(\hat y-y)x,\qquad \frac{\partial\ell}{\partial b}=\hat y-y.$$
+$$\begin{aligned}\frac{\partial\ell}{\partial w}&=(\hat y-y)x,\\ \frac{\partial\ell}{\partial b}&=\hat y-y.\end{aligned}$$
 
 For $x=2,y=5,w=1,b=0$, the prediction is 2 and the error is $-3$. The derivatives are $-6$ and $-3$. A gradient-descent update with step size $\eta=0.1$ gives $w'=1.6,b'=0.3$, prediction 3.5, and loss 1.125 instead of 4.5. The negative sign in $\theta' = \theta-\eta\nabla\ell$ means moving against the direction of increasing loss.
 
@@ -20,11 +20,7 @@ For the scalar quadratic $\ell(w)=\tfrac12 c(w-w_*)^2$ with $c>0$, the update er
 
 A layer first forms $r=Wx+b$, then applies an activation coordinatewise: $h_j=\sigma(r_j)$. ReLU is $\sigma(r)=\max(0,r)$. Its derivative is 1 for positive input and 0 for negative input; at zero an implementation chooses a convention. A smooth alternative is $\tanh r=(e^r-e^{-r})/(e^r+e^{-r})$, whose quotient-rule derivative simplifies to $1-\tanh^2r$.
 
-The browser model uses **GELU**, a smooth gate. Let $p(u)=e^{-u^2/2}/\sqrt{2\pi}$ be the standard-Gaussian density and let $\Phi(x)=\int_{-\infty}^x p(u)\,du$ be the probability that a standard-Gaussian variable is at most $x$. Then define
-
-$$\operatorname{GELU}(x)=x\Phi(x).$$
-
-For a large positive input, $\Phi(x)$ is near one, so the input mostly passes through. For a large negative input it is near zero, so the input is strongly attenuated. At zero, symmetry gives $\Phi(0)=1/2$. By the fundamental theorem of calculus, $\Phi'(x)=p(x)$; the product rule therefore gives $\operatorname{GELU}'(x)=\Phi(x)+xp(x)$, including slope $1/2$ at zero. A probability function defines the gate; it does not imply that the network’s features are probabilities or Gaussian samples.
+The browser model uses **GELU**, a smooth gate $\operatorname{GELU}(x)=x\Phi(x)$, where $\Phi$ is the standard-Gaussian cumulative. Large positive inputs mostly pass through; large negative inputs are strongly attenuated. The derivative and the integral definition of $\Phi$ are recorded in the [implementation chapter](#implementation) when we count the laboratory network. A probability function defines the gate; it does not imply that the network’s features are probabilities or Gaussian samples.
 
 Without an activation, two layers give $W_2(W_1x+b_1)+b_2=(W_2W_1)x+(W_2b_1+b_2)$, still one affine map. Nonlinearity is what allows stacked layers to represent relations beyond a single affine transformation. “Expressive” does not mean a particular training run will find the desired function.
 
@@ -74,9 +70,15 @@ $$\begin{aligned}&\hat m_k=\frac{m_k}{1-\beta_1^k}, \\ &\hat v_k=\frac{v_k}{1-\b
 
 All operations in the last fraction are coordinatewise. A coordinate with consistently large gradients gets a larger denominator. The positive $\epsilon$ avoids division by zero and affects very small-gradient behavior. These recurrences define an optimization algorithm; they do not prove convergence for every network. The browser model uses Adam. A saved checkpoint needs the moment arrays and update count as well as weights if we want to resume the same optimization trajectory.
 
-**Work through two optimizer steps.** Use scalar gradients $g_1=2$, $g_2=-1$, $\beta_1=0.9$, and $\beta_2=0.99$. After the first step, $m_1=0.2$ and $v_1=0.04$. Bias correction gives $\hat m_1=2$ and $\hat v_1=4$, so the update is approximately $-\eta$ when $\epsilon$ is small.
+**Work through two optimizer steps.** Use scalar gradients $g_1=2$, $g_2=-1$, $\beta_1=0.9$, and $\beta_2=0.99$. Compute $m_1$, $v_1$, the bias-corrected values, and the first update direction before opening the solution. Then repeat for the second step.
+
+<details class="derivation"><summary>Check the two Adam steps</summary>
+
+After the first step, $m_1=0.2$ and $v_1=0.04$. Bias correction gives $\hat m_1=2$ and $\hat v_1=4$, so the update is approximately $-\eta$ when $\epsilon$ is small.
 
 At the second step, $m_2=0.9(0.2)+0.1(-1)=0.08$ and $v_2=0.99(0.04)+0.01(1)=0.0496$. The corrected values are approximately $0.4211$ and $2.4925$. The update still points in the negative direction, despite the current negative gradient, because the moving average remembers the previous positive gradient. Momentum is a preference for accumulated direction; it can help or delay a necessary reversal.
+
+</details>
 
 <!-- VISUAL: N5 -->
 
@@ -120,7 +122,7 @@ There are other regularization mechanisms. **Data augmentation** changes inputs 
 
 Normalization transforms activations using a mean and scale. Batch Normalization computes statistics across a batch for each feature; Layer Normalization computes statistics across features within each example. A normalized value takes the form $(x-\mu)/\sqrt{v+\epsilon}$, usually followed by a learned affine scale and shift.
 
-The denominator rescales fluctuations, and $\epsilon>0$ prevents division by zero. Which axis is used changes the geometry. A per-example normalization can constrain every vector’s length while a Gaussian target requires fluctuating lengths. This will explain why LeWM places a projector after the encoder’s final Layer Normalization. A normalization layer may influence regularization or optimization, but its name does not imply it supplies all needed anti-collapse constraints.
+The denominator rescales fluctuations, and $\epsilon>0$ prevents division by zero. Which axis is used changes the geometry. A per-example normalization can constrain every vector’s length while a Gaussian target requires fluctuating lengths. If every arm embedding is forced onto a sphere, a regularizer that wants Gaussian radii has nothing left to work with. This will explain why LeWM places a projector after the encoder’s final Layer Normalization.
 
 <!-- VISUAL: N7 -->
 
@@ -146,6 +148,4 @@ With step size 0.01 the new parameters are 1.94, −0.06, 2.96, −0.02. The new
 
 </details>
 
-Try to explain the roles separately: the model computes predictions, the loss expresses what is preferred, and the optimizer chooses parameter updates.
-
-The basic machinery is now in place. We can understand a neural-network objective, derive its parameter sensitivities, and state which choices are statistical preferences or numerical algorithms. The [JEPA chapter](#jepa) asks which objective prevents a predictive representation from erasing the world.
+Prediction loss, batch geometry, and a regularizer are three different jobs. The model computes predictions, the loss says which errors matter, and the optimizer chooses updates. The [JEPA chapter](#jepa) asks how those jobs combine when the target itself is learned.

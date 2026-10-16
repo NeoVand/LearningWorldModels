@@ -11,6 +11,10 @@ Keep one small example in mind: two samples at $-1$ and $+1$. Their mean is zero
 
 In this chapter, muted analytical colors distinguish projection directions $\uvec$, frequency $\freq$, the characteristic function $\cf$, and its Gaussian reference $\target$. These measurement tools have their own local legend; frequency and projection direction are not motor actions.
 
+<figure class="generated-plate" data-art="S8"><img src="assets/generated/infographics/sigreg-1.png" alt="Six stages of SIGReg: embeddings, projection, unit phasors, average, Gaussian comparison and integration."/><figcaption>An overview of the calculation. The comparison inset shows magnitudes; the loss uses the full complex difference, including phase. The equations and computed examples beside this plate supply the exact measurement and gradient.</figcaption></figure>
+
+<!-- VISUAL: S8 -->
+
 ## A Gaussian target is a choice with consequences
 
 <figure class="diagram" data-diagram="families"></figure>
@@ -19,7 +23,7 @@ The cloud chapter established the Gaussian density and rotational symmetry. Stan
 
 Another useful fact is that, among densities with mean zero and identity covariance, the standard Gaussian maximizes differential entropy. Entropy is a measure of distributional spread with a precise definition; it is not synonymous with meaning, information about a task, or model quality.
 
-<details><summary>Required derivation if using the entropy argument · define the quantities and prove the claim</summary>
+<details><summary>Optional derivation · entropy and KL under moment constraints</summary>
 
 For discrete probabilities, define the surprise of an outcome of probability $p_i>0$ as $-\log p_i$. Certain outcomes have surprise zero; rarer outcomes have larger surprise, and independent outcomes have additive surprise because logarithms turn products into sums. Their expected surprise is **entropy**, $H=-\sum_i p_i\log p_i$, with $0\log0$ interpreted by its limit, zero. A fair coin has entropy $-2(1/2)\log(1/2)=\log2$; a certain outcome has entropy zero. This definition describes uncertainty in outcomes, not their usefulness to a task.
 
@@ -37,7 +41,7 @@ This statement concerns densities satisfying the moment constraints. A finite em
 
 </details>
 
-We have only a batch of embeddings. We would like a distributional measurement that can be computed directly from those samples, differentiated with respect to them, and compared with an exactly known Gaussian target. Characteristic functions supply such measurements.
+The operational reason for this target is simpler than the entropy argument: we need a fixed standardized reference whose characteristic function we can write in closed form. Characteristic functions supply measurements we can compute from a batch, differentiate, and compare with that exact target.
 
 ## From a point on a circle to a distributional fingerprint
 
@@ -127,6 +131,14 @@ The window makes high frequencies contribute less and makes the integral finite.
 
 Notice that the target and the window have the same formula in this recipe but different jobs. The target says what distribution we want; the window says how strongly we weight frequencies. Changing the window changes the discrepancy, even if the target remains unchanged.
 
+## Run the statistic before assembling the finite sum
+
+The desk below uses a frequency grid and sampled directions. Predict which cloud will look Gaussian in covariance and still score poorly, then change the cloud, the batch size, and the grid.
+
+<div id="sigreg-lab" class="lab"><h3>Same moments, different distributions</h3><p class="instruction">Start with a Gaussian, then choose a ring or two crossing lines. Compare their covariance with their characteristic-function discrepancy. Finally choose a point mass and inspect the zero-scale case.</p><div class="controls"><label>Cloud <select aria-label="Embedding cloud"><option value="gaussian">Gaussian</option><option value="ring">Ring · radius √2</option><option value="lines">Two crossing lines</option><option value="thin">Almost rank one</option><option value="shift">Shifted Gaussian</option><option value="zero">Point mass at zero</option></select></label><label>Scale <input type="range" min="0" max="2" step="0.01" value="1" aria-label="Embedding scale"/></label></div><div class="controls"><label>Batch <select data-batch aria-label="Batch size"><option>32</option><option selected>128</option><option>512</option></select></label><label>Directions <select data-directions aria-label="Number of directions"><option>1</option><option>8</option><option selected>32</option><option>128</option></select></label><label>Grid nodes <select data-knots aria-label="Frequency grid nodes"><option>3</option><option>5</option><option selected>17</option><option>65</option></select></label></div><div class="panels"><div><canvas class="square" data-plot="cloud" width="360" height="360" aria-label="Embedding samples plotted with equal axis scales"></canvas><div class="plot-label">Embedding plane · fixed scale</div></div><div><canvas class="square" data-plot="spectrum" width="360" height="360" aria-label="Characteristic-function discrepancy on the first coordinate"></canvas><div class="plot-label">One projection shown; the score averages M</div></div></div><output></output><button data-gradient>Check the analytic gradient</button><p data-check class="lab-note"></p><p class="lab-note">Samples and directions are seeded. Population moments can match even though finite-sample moments fluctuate. The plot clips points outside the displayed range; the statistic still uses every point. The closed form integrates all frequencies; the finite grid only integrates from −3 to 3. The next section writes the finite sum this desk is computing.</p></div>
+
+Do not rank two clouds solely by one finite draw. A Gaussian sample can score worse than an especially evenly arranged nonrandom point set. Repeat with different seeds in code, inspect held-out directions, and distinguish the question “does this finite collection match these measurements?” from “what distribution produces new embeddings?”
+
 ## Samples fluctuate even when the target is correct
 
 Suppose the batch consists of independent draws from a fixed distribution. At a fixed frequency, write $Y_b=e^{i\freq X_b}$ and $\mu=\mathbb E[Y_b]=\cf_X(\freq)$. The empirical mean is unbiased because expectation distributes over a finite sum.
@@ -167,9 +179,9 @@ $$\begin{aligned}\mathbb E[e^{i\freq\uvec^\top Z}]&=\prod_{j=1}^d\mathbb E[e^{i\
 
 Thus every unit projection is standard Gaussian. The converse is also true: if every unit projection of a random vector is standard Gaussian, then the vector is standard multivariate Gaussian. The reason is that every multivariate frequency vector can be written as a scalar times a unit direction, and characteristic functions uniquely determine distributions.
 
-That last uniqueness statement is doing real work. The proof below supplies the bridge instead of treating a theorem’s name as an explanation.
+That last uniqueness statement is doing real work. The optional proof below supplies the bridge; the main path needs only the statement and the finite-sample warning that follows.
 
-<details><summary>Required proof · characteristic-function uniqueness and the projection argument</summary>
+<details><summary>Optional proof · characteristic-function uniqueness and the projection argument</summary>
 
 Let $X$ be a random vector. Define its multivariate characteristic function as $\cf_X(v)=\mathbb E[e^{iv^\top X}]$. If two distributions have the same characteristic function, add an independent Gaussian noise vector $\epsilon G$ to each, with $\epsilon>0$. The resulting distributions have smooth densities because each original point has been replaced by a Gaussian bump.
 
@@ -289,15 +301,17 @@ Every summand in the leading coefficient is nonnegative, and some are positive f
 
 <!-- VISUAL: S7 -->
 
-## Run the statistic and challenge it
+## One numerical trace, then the same loop in code
 
-<div id="sigreg-lab" class="lab"><h3>Same moments, different distributions</h3><p class="instruction">Start with a Gaussian, then choose a ring or two crossing lines. Compare their covariance with their characteristic-function discrepancy. Finally choose a point mass and inspect the zero-scale case.</p><div class="controls"><label>Cloud <select aria-label="Embedding cloud"><option value="gaussian">Gaussian</option><option value="ring">Ring · radius √2</option><option value="lines">Two crossing lines</option><option value="thin">Almost rank one</option><option value="shift">Shifted Gaussian</option><option value="zero">Point mass at zero</option></select></label><label>Scale <input type="range" min="0" max="2" step="0.01" value="1" aria-label="Embedding scale"/></label></div><div class="controls"><label>Batch <select data-batch aria-label="Batch size"><option>32</option><option selected>128</option><option>512</option></select></label><label>Directions <select data-directions aria-label="Number of directions"><option>1</option><option>8</option><option selected>32</option><option>128</option></select></label><label>Grid nodes <select data-knots aria-label="Frequency grid nodes"><option>3</option><option>5</option><option selected>17</option><option>65</option></select></label></div><div class="panels"><div><canvas class="square" data-plot="cloud" width="360" height="360" aria-label="Embedding samples plotted with equal axis scales"></canvas><div class="plot-label">Embedding plane · fixed scale</div></div><div><canvas class="square" data-plot="spectrum" width="360" height="360" aria-label="Characteristic-function discrepancy on the first coordinate"></canvas><div class="plot-label">One projection shown; the score averages M</div></div></div><output></output><button data-gradient>Check the analytic gradient</button><p data-check class="lab-note"></p><p class="lab-note">Samples and directions are seeded. Population moments can match even though finite-sample moments fluctuate. The plot clips points outside the displayed range; the statistic still uses every point. The closed form integrates all frequencies; the finite grid only integrates from −3 to 3.</p></div>
+Take $\Z=[(-1,0),(1,0)]$ and direction $(1,0)$. The projected samples are $-1$ and $1$. For an intentionally coarse demonstration, choose nodes $0,1,2$, so $A=2$, $K=3$, and $\Delta=1$. The symmetry-aware trapezoid coefficients are $1,2,1$.
 
-Do not rank two clouds solely by one finite draw. A Gaussian sample can score worse than an especially evenly arranged nonrandom point set. Repeat with different seeds in code, inspect held-out directions, and distinguish the question “does this finite collection match these measurements?” from “what distribution produces new embeddings?”
+At zero frequency, both sample arrows are one; the target is one, so the error is zero. At frequency one, the sine mean is zero and the cosine mean is $\cos1\approx0.540302$. The target is $e^{-1/2}\approx0.606531$. The squared difference is approximately $0.004386$.
 
-## Read the implementation as mathematics
+At frequency two, the cosine mean is $\cos2\approx-0.416147$ and the target is $e^{-2}\approx0.135335$. The squared difference is approximately $0.304133$. The weighted, unscaled sum is approximately $2(0.606531)(0.004386)+(0.135335)(0.304133)\approx0.04648$. Multiplying by $B=2$ gives about $0.09296$.
 
-The following Python reference is included directly from the tested source file. It implements one time position. The browser uses the same quadrature and reduction convention with tensor operations and automatic differentiation.
+This trace is the book’s canonical finite-sum example. Three nodes were chosen so that every operation fits on a page. The implementation chapter cites these numbers rather than introducing a second batch.
+
+The following Python reference is the same loop. It implements one time position. The browser uses the same quadrature and reduction convention with tensor operations and automatic differentiation.
 
 <!-- CODE: book/edition2/sigreg_reference.py -->
 
@@ -306,18 +320,6 @@ Read the shapes as a sequence of questions. The matrix product asks, “where do
 The gradient routine contains no mysterious optimization step. Its sine and cosine terms are the analytic derivative we just derived. Multiplication by the transposed direction matrix sends the projected gradients back into embedding coordinates.
 
 Projection costs order $BdM$ scalar multiply-add work, while evaluating frequencies costs order $BMK$. Materializing every phase uses order $BMK$ memory. Directions or frequencies can be processed in chunks to reduce peak memory. Calling the method simply “linear” without specifying which of $B,d,M,K$ is fixed hides these tradeoffs.
-
-<details><summary>A numerical trace · two points, one direction, three nodes</summary>
-
-Take $\Z=[(-1,0),(1,0)]$ and direction $(1,0)$. The projected samples are $-1$ and $1$. For an intentionally coarse demonstration, choose nodes $0,1,2$, so $A=2$, $K=3$, and $\Delta=1$. The symmetry-aware trapezoid coefficients are $1,2,1$.
-
-At zero frequency, both sample arrows are one; the target is one, so the error is zero. At frequency one, the sine mean is zero and the cosine mean is $\cos1\approx0.540302$. The target is $e^{-1/2}\approx0.606531$. The squared difference is approximately $0.004386$.
-
-At frequency two, the cosine mean is $\cos2\approx-0.416147$ and the target is $e^{-2}\approx0.135335$. The squared difference is approximately $0.304133$. The weighted, unscaled sum is approximately $2(0.606531)(0.004386)+(0.135335)(0.304133)\approx0.04648$. Multiplying by $B=2$ gives about $0.09296$.
-
-This trace is not an accurate approximation to the full integral; three nodes were chosen so that every operation fits on a page. The distinction between a correct finite-sum implementation and an accurate integral approximation matters.
-
-</details>
 
 ## Batch axes and sample size
 
@@ -365,14 +367,16 @@ For a small perturbation $\epsilon$, a central finite difference estimates a par
 
 </details>
 
+<details><summary>Exercise 6 · A model has unit coordinate standard deviations and pairwise zero covariance, but its samples lie on a ring. What has failed?</summary>
+
+Second-moment collapse has not occurred. The cloud is still not Gaussian. The desk’s ring option and the pairwise closed form both detect that difference along enough directions. The laboratory’s prediction-only run is a different failure: complete collapse, the loophole with the regularizer removed.
+
+</details>
+
 ## Return to the world model
 
-We began with a loophole: an encoder can make agreement trivial by removing distinctions. We constructed a second preference that compares distributional measurements of its outputs with a known, noncollapsed reference. That preference has a computational form, gradients, finite-sample fluctuations, approximation errors, and limitations.
+We began with a loophole: an encoder can make agreement trivial by removing distinctions. Symmetric prediction can agree by saying nothing; matched moments miss a ring; a differentiable fixed-target discrepancy is what we optimize. The laboratory’s prediction-only run will be that loophole with the regularizer removed.
 
-The [implementation chapter](#implementation) combines it with a predictor in executable code, and the laboratory then trains both networks. The decisive question becomes empirical: do the resulting representations support prediction and control on observations not used for the update? A neat cloud is one diagnostic. A useful learned model must survive further tests.
+The [implementation chapter](#implementation) combines the statistic with a predictor. The decisive question becomes empirical: do the resulting representations support prediction and control on observations not used for the update?
 
 **Sources and correspondence.** SIGReg is introduced in [LeJEPA v1](https://arxiv.org/pdf/2511.08544v1). This chapter’s implementation convention follows the [pinned LeWorldModel code](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/module.py), with its 17 nodes on $[0,3]$, Gaussian window, and batch multiplier. The requested endpoint is [LeWorldModel v1](https://arxiv.org/pdf/2603.19312v1). Reza Bayat’s [SIGReg tutorial](https://rezabyt.github.io/blogposts/sigreg-tutorial.html) informed the requested pedagogical depth; the prose, derivations, experiments, and diagrams here are independently developed and checked. The downstream-risk theorem makes additional assumptions about probes and function classes; the geometric and entropy arguments here do not substitute for that theorem.
-
-<figure class="generated-plate" data-art="S8"><img src="assets/generated/infographics/sigreg-1.png" alt="Six stages of SIGReg: embeddings, projection, unit phasors, average, Gaussian comparison and integration."/><figcaption>An overview of the calculation. The comparison inset shows magnitudes; the loss uses the full complex difference, including phase. The equations and computed examples beside this plate supply the exact measurement and gradient.</figcaption></figure>
-
-<!-- VISUAL: S8 -->

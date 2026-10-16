@@ -4,37 +4,15 @@
 
 ## The assignment
 
+Part A is the browser experiment. Part B is a LeWorldModel v1 reconstruction with no worked answers on this page. Keep a record of your predictions before running anything.
+
+## Part A · the browser experiment
+
 Build a small action-conditioned visual world model. Use observations and actions for representation learning, reserve physical state labels for evaluation, and train both encoder and predictor. Compare a prediction-only objective with prediction plus SIGReg. Evaluate on held-out episodes, then use the learned predictor inside a goal-image planner.
 
-The laboratory is one complete executable realization of this assignment. The following sequence is a worked solution and an investigation guide. Keep a record of your predictions before running it; a surprising result is more informative when you can say which expectation it contradicted.
+The [implementation chapter](#implementation) already stated the information boundary, the shapes $B\times3\times8$, and the two reductions. Confirm that preflight, then do the four steps below. Print keeps the worked answers; attempt each step before opening them.
 
-## 1 · Specify the information boundary
-
-List every quantity available at each stage: data collection, model training, probe fitting, planning, and final evaluation. Decide whether the planner sees physical state or only camera history and the goal image.
-
-<details class="derivation"><summary>Worked solution · the boundary used here</summary>
-
-The simulator has joint angles and velocities because it must generate motion. Model training receives three camera frames and two action vectors per window; the prediction targets are learned frame embeddings. A separate readout uses state labels to draw imagined poses. Candidate scoring uses only the learned latent rollout, the encoded goal, and declared action costs. After an action executes, simulator state supplies physical error for evaluation.
-
-This separation allows a meaningful claim about learning control from pixels in the teaching setting. If the planner used true joint-angle distance to score every imagined candidate, that would be a different experiment with privileged planning information.
-
-</details>
-
-<!-- VISUAL: K1 -->
-
-## 2 · Derive the objective and its shapes
-
-Write the total objective without leaving “mean” ambiguous. State which samples share an encoder, which branch receives gradients, and which axis defines the distribution regularized by SIGReg.
-
-<details class="derivation"><summary>Worked solution · one window predicts one future</summary>
-
-For the browser MLP, embeddings have shape $B\times3\times8$. Concatenating the first two embeddings and two two-dimensional actions gives $B\times20$ predictor inputs. The output has shape $B\times8$, matching the third embedding. Prediction loss averages $B\cdot8$ squared coordinate errors. SIGReg operates separately on each $B\times8$ time slice and then averages the three results. All shared encoder uses receive gradients.
-
-The directions have shape $8\times32$ and unit-length columns. Multiplying an embedding slice gives $B\times32$ projected samples. Multiplying by 17 frequency values gives $B\times32\times17$ phases. Average cosines and sines across $B$, subtract the Gaussian real target, square and add, integrate frequency with the specified weights, multiply by $B$, then average directions. The coefficient is meaningful only with exactly those reductions.
-
-</details>
-
-## 3 · Prove why prediction alone has a loophole
+### A1 · Prove why prediction alone has a loophole
 
 Construct a parameterized function pair achieving perfect prediction agreement without distinguishing observations. Then explain why a weight penalty alone may not eliminate it.
 
@@ -44,21 +22,9 @@ Choose $f(\observed{o})=0$ for all inputs and a predictor returning zero. Every 
 
 </details>
 
-## 4 · Check the implementation before training
+<!-- VISUAL: K1 -->
 
-Check attention’s causal mask on a tiny array, compare analytic and finite-difference gradients of the reference learner, and test CEM on the two-action quadratic whose optimum we solved by hand.
-
-<details class="derivation"><summary>Worked solution · what a passing check establishes</summary>
-
-For attention, each row must sum to one over allowed positions, future weights must be zero, and changing a future token must not affect earlier outputs in the standalone causal-attention function. For the learner, hold directions and data fixed, perturb every parameter coordinate in a small configuration, and compare the central difference with the analytic gradient. This catches omitted target gradients and wrong reductions.
-
-For CEM, use the known scalar dynamics only in this numerical unit check. Compare the best sampled action sequence with $\action{a}_0=\action{a}_1=1/(2+\rho)$. The discrepancy should shrink with adequate sampling, but a finite stochastic search need not hit the exact optimum. This verifies basic planner arithmetic; it does not establish that a learned dynamics model is accurate.
-
-The book’s reference checks execute these tests. The packaged browser model additionally has recorded real-training and control checks. These are different levels of verification and are reported separately.
-
-</details>
-
-## 5 · Run a matched learning experiment
+### A2 · Run a matched learning experiment
 
 Use the same initialization seed, data corpus, batch sequence, and update count for the two objectives. Before running, predict the relative MSE, embedding spread, and physical usefulness of the outcomes.
 
@@ -66,52 +32,58 @@ Use the same initialization seed, data corpus, batch sequence, and update count 
 
 In the recorded seed-17 experiment after 5,000 updates, the regularized model had mean embedding standard deviation about 0.903 and prediction/persistence ratio about 0.116. The matched prediction-only model’s spread was approximately $3.84\times10^{-5}$. Its extremely small MSE accompanied near-complete collapse.
 
-That comparison supports the regularizer in this architecture and training setting. Broader claims require comparisons across architectures and coefficients. Repeat with declared seeds and retain all outcomes. A different device backend can introduce numerical variation even with the same nominal seed.
+That comparison supports the regularizer in this architecture and training setting. Repeat with declared seeds and retain all outcomes.
 
 </details>
 
-## 6 · Test what the predictor actually uses
+### A3 · Test what the predictor actually uses
 
 Evaluate correct action alignment, shuffled actions, and removed history. Then select the same local goals and control budget for each trained seed. Keep the distant goal as a stress test.
 
 <details class="derivation"><summary>Worked solution · turn failures into diagnoses</summary>
 
-If action shuffling leaves prediction unchanged, investigate whether actions have enough variation, whether indexing is correct, and whether persistence already explains the data. If removing history has little effect, the task may not require it at that frame spacing, or the model may have failed to use it. An error increase under an intervention shows sensitivity in the tested distribution, not accurate behavior under all counterfactual actions.
+If action shuffling leaves prediction unchanged, investigate whether actions have enough variation, whether indexing is correct, and whether persistence already explains the data. If removing history has little effect, the task may not require it at that frame spacing, or the model may have failed to use it.
 
-The recorded three-seed suite reached all nine local goals at least once, but only seven were within tolerance at the final observation. All three distant-goal trials failed. The difference between arrival and final occupancy exposes the hold-control problem. The stress failures expose the limits of coverage, latent geometry, planning, or prediction beyond the local suite; further controlled experiments are needed to separate those causes.
-
-</details>
-
-## 7 · Explain the research model from memory
-
-Without looking at the paper, sketch its training graph and planning graph. Label observations, actions, representations, predictions, and losses. Mark which weights are shared and which quantities change during planning.
-
-<details class="derivation"><summary>Worked solution · the two graphs have different adjustable variables</summary>
-
-The training graph has frame encoder branches with shared parameters, an action-conditioned causal predictor, next-embedding MSE, and step-wise SIGReg. Both target and context encoder paths receive gradients; no EMA teacher or training stop-gradient is used. The paper’s image encoder is a ViT and its predictor is a transformer, unlike the smaller MLP laboratory.
-
-The planning graph encodes a current context and goal, rolls proposed action blocks through the fixed learned predictor, computes terminal latent distance, and uses CEM to refine actions. Parameters remain fixed. The optimized prefix executes in the environment, then a new observation supplies context for another plan. The paper’s execution cadence must be taken from its appendix/configuration, not assumed to match the browser demonstration.
+The recorded three-seed suite reached all nine local goals at least once, but only seven were within tolerance at the final observation. All three distant-goal trials failed. The difference between arrival and final occupancy exposes the hold-control problem.
 
 </details>
 
-## 8 · Write a claim that survives its own evidence
+### A4 · Write a three-sentence claim for the browser run
 
-Write three sentences: what you built, what you measured, and what remains unestablished. Include a failure in the second sentence.
+Write what you built, what you measured, and what remains unestablished. Include a failure in the second sentence.
 
 <details class="derivation"><summary>A worked scientific conclusion</summary>
 
 We trained a small visual encoder and action-conditioned predictor jointly with prediction MSE and step-wise SIGReg, then used the fixed learned predictor to score candidate controls toward goal images. In a recorded three-seed local diagnostic suite, all nine local goals were reached at least once, seven remained within tolerance at the final observation, and all three distant-goal trials failed. These measurements support local learned-model control in the tested setup, while leaving broad transfer, robust long-horizon planning, calibrated uncertainty, and reproduction of LeWM’s published benchmarks unestablished.
 
-Each sentence has a different job. The first specifies the system. The second reports evidence with its scope and failures. The third marks the boundary. This is more informative than calling the model a general physical intelligence or dismissing it because it is small.
-
 </details>
+
+## Part B · reconstruct LeWorldModel v1
+
+No solutions follow. Draw from memory.
+
+### B1 · Two graphs
+
+Sketch the training graph and the planning graph. Label observations, actions, representations, predictions, and losses. Mark which weights are shared and which quantities change during planning. Include the ViT encoder, the three-frame context, action blocks, and step-wise SIGReg.
+
+### B2 · One axis table
+
+Compare the browser MLP with LeWM v1 on one page: image size, latent width, context, $\lambda$, SIGReg directions and nodes, planner candidates, execution prefix. Use the paper chapter’s configuration table, not a guess.
+
+### B3 · Equation 3 and one mismatch
+
+Write Equation 3’s reductions. Explain why $\lambda=0.09$ is not portable without an axis check, using the batch-size factor or the quadrature interval.
+
+### B4 · Two three-sentence claims
+
+Write the three-sentence claim twice: once for the browser run, once for the paper’s published tables. The first sentence specifies the system. The second reports evidence with its scope and a failure. The third marks the boundary.
 
 <!-- VISUAL: K2 -->
 
 ## Investigations after the capstone
 
-Change one question at a time. Reduce action coverage while keeping the validation protocol fixed. Change frame spacing and ask whether more history helps. Rotate the latent representation and transform the predictor consistently, checking which metrics remain invariant. Compare fixed and freshly sampled SIGReg directions. Add an appearance shift and test whether the encoder preserves pose distinctions. Increase the planning horizon and separate lower imagined cost from better physical outcomes.
+Change one question at a time. Reduce action coverage while keeping the validation protocol fixed (Appendix E’s collection policies). Change frame spacing and ask whether more history helps. Rotate the latent representation and transform the predictor consistently, checking which metrics remain invariant (Appendix H). Compare fixed and freshly sampled SIGReg directions (Appendix A). Add an appearance shift and test whether the encoder preserves pose distinctions (Appendix F). Increase the planning horizon and separate lower imagined cost from better physical outcomes (Appendix D).
 
-For each investigation, first state the expected mechanism. Then specify the controlled variables, measurement, and failure criterion. Record the result even when it contradicts the expectation. A useful research notebook preserves the questions that failed as carefully as those that succeeded.
+For each investigation, first state the expected mechanism. Then specify the controlled variables, measurement, and failure criterion. Record the result even when it contradicts the expectation.
 
-The larger LeCun program remains open: learn richer abstractions, preserve memory, represent uncertain futures, and plan across time scales. LeWorldModel offers a compact experiment within that program. You now have the mathematical and practical tools to understand that experiment, reproduce its central learning principle at small scale, and ask a more precise next question.
+The larger LeCun program remains open: learn richer abstractions, preserve memory, represent uncertain futures, and plan across time scales. LeWorldModel offers a compact experiment within that program. You now have the tools to reconstruct that experiment at small scale and to read v1 as an argument.

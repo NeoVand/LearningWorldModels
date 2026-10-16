@@ -2,21 +2,27 @@
 
 <p class="lead">A small prediction error can mean “I have learned the dynamics.” It can also mean “I have stopped distinguishing anything.” Here you can watch the difference develop.</p>
 
-This laboratory trains a visual encoder and an action-conditioned predictor from random weights. It adapts the numerical core developed for Jaxverse. The camera sees 64 × 64 grayscale pixels. The encoder produces eight coordinates. The model has 545,680 adjustable parameters. No pretrained representation is downloaded.
+This laboratory trains a visual encoder and an action-conditioned predictor from random weights. The camera sees 64 × 64 grayscale pixels. The encoder produces eight coordinates. The model has 545,680 adjustable parameters. No pretrained representation is downloaded. The numerical core is the same family of encoder, residual predictor, SIGReg, and planner used in the earlier Jaxverse experiments.
 
 The physical environment is a simulated two-link mechanism. The simulator supplies camera frames and the outcomes of actions. During model training, its joint angles and velocities are not targets. The learning signals are next-embedding prediction and SIGReg. Labels are used only for explicitly described evaluation and for a separate visualization readout.
 
 ## Before you press train
 
-We generate 256 training episodes with 64 transitions each: 16,384 transitions. Twelve separate episodes are reserved for validation. A batch contains 64 windows, each with three images and two actions. Splitting by episode helps prevent neighboring frames from the same trajectory appearing on both sides of the evaluation boundary.
+We generate 256 training episodes with 64 transitions each: 16,384 transitions. Twelve separate episodes are reserved for validation. A batch contains 64 windows, each with three images and two actions. Embeddings have shape $B\times3\times8$. Splitting by episode helps prevent neighboring frames from the same trajectory appearing on both sides of the evaluation boundary.
 
 The predictor receives the previous and current embeddings and their aligned actions. It outputs a correction to the current embedding. This **residual** parameterization begins near the persistence baseline: predict that nothing changes. Learning must improve on that baseline on held-out observations.
+
+For three sequence positions, batch size $B$, and embedding dimension $d$, the objective is
+
+$$\begin{aligned}\loss&=\frac{1}{Bd}\sum_{b=1}^B\sum_{j=1}^d(\pred_{b,j}-\lat_{b,\mathrm{next},j})^2\\&\quad+\lambda\frac{1}{3}\sum_{t=1}^3\reg(\Z_t),\\&\quad \lambda=0.01.\end{aligned}$$
+
+The coefficient is specific to these reductions. The laboratory’s prediction-only comparison is this objective with $\lambda=0$: the collapse loophole with the regularizer removed.
 
 The browser chooses WebGPU when available and otherwise a supported CPU backend. The first update includes compilation. Actual speed depends on the device. A worker keeps the reading interface responsive. The complete numerical runtime is embedded in this HTML; preparing the laboratory generates data locally.
 
 <div id="world-lab" class="lab">
 <h3>Learning from camera images</h3>
-<p class="instruction">First inspect the untrained model. Then train, pause after at least 5,000 updates, evaluate, and run the matched prediction-only comparison.</p>
+<p class="instruction">Before training, write down the untrained spread. Then train, pause after at least 5,000 updates, evaluate, run the matched prediction-only comparison, and only then try control. Predict: untrained spread is large and unstructured; prediction-only spread collapses; shuffled actions raise held-out error if the predictor uses the action.</p>
 <div class="controls"><label>Seed <input type="number" id="world-seed" value="17" min="1" max="99999"/></label><button class="primary" id="world-init">Reset model</button><label>Updates <select id="world-budget"><option value="0" selected>Until paused</option><option value="500">500</option><option value="2000">2,000</option><option value="5000">5,000</option></select></label><button id="world-train" disabled>Train</button><button id="world-stop" disabled>Pause</button></div>
 <div id="world-status" class="state" role="status">Random weights initialize as this laboratory comes into view. Camera images are already live.</div>
 <div class="metric-grid"><div class="metric"><strong id="world-step">0</strong><span>updates completed</span></div><div class="metric"><strong id="world-ratio">—</strong><span>prediction / persistence</span></div><div class="metric"><strong id="world-spread">—</strong><span>mean embedding standard deviation</span></div></div>
@@ -55,7 +61,7 @@ The planner receives two camera images, the previous action, and a goal image. I
 <dialog id="world-camera-dialog" aria-labelledby="world-camera-dialog-title" aria-describedby="world-camera-dialog-note"><div class="camera-dialog-head"><div><h4 id="world-camera-dialog-title">Inspect camera pixels</h4><p id="world-camera-dialog-note">The same sensor pixels, enlarged for inspection.</p></div><button id="world-camera-dialog-close" type="button">Close</button></div><div id="world-camera-dialog-frames" class="camera-dialog-frames"></div></dialog>
 <div class="control-comparison"><svg id="world-control-plot" class="control-instrument" viewBox="0 0 720 360" role="img" aria-label="Actual arm, goal arm, and imagined future poses"></svg><div class="control-trace"><h4>Physical goal error</h4><svg id="world-goal-trace" viewBox="0 0 320 180" role="img" aria-label="Physical goal-error trace"></svg><p id="world-goal-trace-summary" class="lab-note">Action 0 will be measured from the simulator.</p></div></div>
 <output id="world-control-output">Train a model above or inspect the untrained controller first.</output>
-<p class="lab-note">Blue: actual physical pose. Amber dashed: goal. Teal translucent: imagined poses drawn by a separately fitted diagnostic readout. The readout uses state labels to draw predictions but never scores candidate actions. Its error contributes to discrepancies in the drawing.</p>
+<p class="lab-note">Blue: actual physical pose. Amber dashed: goal. Teal translucent: imagined poses drawn by a separately fitted diagnostic readout. The teal paint is a labeled debug drawing. It is not the planner’s cost. Candidate scoring uses only the learned latent rollout, the encoded goal, and declared action costs. Readout error can make the drawing look wrong even when the planner’s latent score is consistent.</p>
 </div>
 
 The displayed physical error uses the simulator’s angles **after** an action to evaluate the outcome. That number never enters the search. This separation matters: a demonstration that secretly uses the simulator to choose torques has not established learned-model control.
@@ -64,19 +70,9 @@ The first three goals test local movements from the starting pose. The fourth te
 
 <div class="lab" id="forecast-lab"><h3>One checkpoint, three commands</h3><p>Freeze the model and the same two-frame context. Compare push, reverse and release. The actual paths come from the simulator; learned paths use a separate pose readout fitted with labels for drawing only.</p><button id="world-forecast" disabled>Compare the three futures</button><div id="world-forecasts"><p>The physical starting pose and available commands are shown below. Prepare the nearby laboratory to measure learned forecasts.</p></div></div>
 
-## What the implementation actually optimizes
+The encoder is a 4,096 → 128 → 8 multilayer perceptron. The predictor is a 20 → 128 → 128 → 8 multilayer perceptron with a residual output. Adam uses a learning rate of 0.001, moment coefficients 0.9 and 0.99, and a global gradient-norm cap of 5. These settings specify the experiment. The objective and the shape $B\times3\times8$ were stated before the Train button.
 
-For three sequence positions, batch size $B$, and embedding dimension $d$, the embeddings have shape $[3,B,d]$. The prediction term averages squared error across examples and coordinates. The regularizer computes a batch-size-scaled projected discrepancy independently at each time position, then averages across those positions:
-
-$$\begin{aligned}\loss&=\frac{1}{Bd}\sum_{b=1}^B\sum_{j=1}^d(\pred_{b,j}-\lat_{b,\mathrm{next},j})^2\\&\quad+\lambda\frac{1}{3}\sum_{t=1}^3\reg(\Z_t),\\&\quad \lambda=0.01.\end{aligned}$$
-
-The coefficient is specific to these reductions and this small experiment. Multiplying one term by the batch size or feature count would change the tradeoff. The target embeddings receive gradients as well as the predicted embeddings.
-
-The encoder is a 4,096 → 128 → 8 multilayer perceptron. The predictor is a 20 → 128 → 128 → 8 multilayer perceptron with a residual output. The 20 inputs are two eight-coordinate embeddings and two two-coordinate actions: $8+8+2+2=20$. GELU activations supply nonlinearity; a stack of affine maps without nonlinearities would still be one affine map.
-
-Adam uses a learning rate of 0.001, moment coefficients 0.9 and 0.99, and a global gradient-norm cap of 5. These settings specify the experiment. Keeping them visible makes a comparison reproducible and shows which choices are held fixed.
-
-## Three investigations with worked interpretations
+## Four investigations with worked interpretations
 
 <details><summary>1 · Prediction-only obtains a lower loss. Has it won?</summary>
 
@@ -93,6 +89,12 @@ On this held-out batch, the predictor performs better with the supplied action a
 <details><summary>3 · The arm briefly reaches the target, then leaves. What should success mean?</summary>
 
 Declare the evaluation before comparing models. “Ever within a tolerance,” “within tolerance for five consecutive observations,” and “within tolerance for the final five observations” measure different behaviors. Report the trajectory, not only its smallest error. The present demonstration displays the error after every action and exports the measurements so these definitions can be evaluated explicitly.
+
+</details>
+
+<details><summary>4 · Raise $\lambda$ until prediction degrades. What tradeoff did you see?</summary>
+
+The regularizer can overpower prediction. Spread and SIGReg may look healthy while the predictor stops improving on persistence, or control gets worse. The two terms have to be evaluated together: a neat cloud is not a world model, and a tiny prediction loss is not understanding.
 
 </details>
 

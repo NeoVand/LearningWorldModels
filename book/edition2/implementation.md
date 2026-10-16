@@ -25,6 +25,8 @@ The predictor’s input width is $8+8+2+2=20$. The action values are normalized 
 
 The encoder is a multilayer perceptron (MLP) with widths 4,096 → 128 → 8. The predictor is an MLP with widths 20 → 128 → 128 → 8 and a residual output. GELU supplies the nonlinearities. For a dense layer from width $m$ to width $n$, there are $mn$ weights and $n$ biases because each output uses one weight per input and one offset.
 
+Let $p(u)=e^{-u^2/2}/\sqrt{2\pi}$ be the standard-Gaussian density and $\Phi(x)=\int_{-\infty}^x p(u)\,du$ the corresponding cumulative. Then $\operatorname{GELU}(x)=x\Phi(x)$. At zero, symmetry gives $\Phi(0)=1/2$. The fundamental theorem of calculus gives $\Phi'(x)=p(x)$, so the product rule yields $\operatorname{GELU}'(x)=\Phi(x)+xp(x)$, including slope $1/2$ at zero.
+
 The encoder therefore has $(4096\cdot128+128)+(128\cdot8+8)=525{,}448$ parameters. The predictor has $(20\cdot128+128)+(128\cdot128+128)+(128\cdot8+8)=20{,}232$. Their sum is 545,680. The small model is intentionally simpler than the paper’s transformer so we can inspect the entire learning loop.
 
 <!-- VISUAL: I1 -->
@@ -45,7 +47,7 @@ For one predicted future per example, the browser prediction loss is coordinate-
 
 $$\objective{L}_{\mathrm{pred}}=\frac1{Bd}\sum_{b,j}(\predicted{\hat z}_{b,j}-\encoded{z}_{b,\mathrm{next},j})^2.$$
 
-For three encoded positions, define $R=\tfrac13\sum_{t=1}^3\operatorname{SIGReg}(\encoded{Z}_t)$, where each $\encoded{Z}_t$ has shape $B\times d$. The total loss is $\objective{L}=\objective{L}_{\mathrm{pred}}+\lambda R$. The browser uses $\lambda=0.01$, 32 random unit directions, and 17 frequency nodes from 0 to 3 with the [symmetric trapezoid convention](#sigreg-7) derived earlier. The research configuration uses different scale and settings; coefficient values do not transfer independently of reductions.
+For three encoded positions, define $R=\tfrac13\sum_{t=1}^3\operatorname{SIGReg}(\encoded{Z}_t)$, where each $\encoded{Z}_t$ has shape $B\times d$. The total loss is $\objective{L}=\objective{L}_{\mathrm{pred}}+\lambda R$. The browser uses $\lambda=0.01$, 32 random unit directions, and 17 frequency nodes from 0 to 3 with the [symmetric trapezoid convention](#sigreg-8) derived earlier. The research configuration uses different scale and settings; coefficient values do not transfer independently of reductions.
 
 Why not pool time into one huge batch? A sequence could encode time position rather than observation content. Consider every example at position 1 equal to $-1$, every example at position 2 equal to 0, and every example at position 3 equal to 1. Pooled variance is nonzero, while each time position is completely collapsed across examples. Step-wise regularization rules out that particular pooling shortcut more directly.
 
@@ -53,29 +55,33 @@ Conversely, demanding temporal variance in every short sequence could penalize c
 
 <!-- VISUAL: I2 -->
 
-## Trace SIGReg with a tiny concrete array
+## Cite the canonical SIGReg trace
 
-Take $B=2,d=2,M=2$ and embeddings $\encoded{Z}=\begin{pmatrix}1&0\\-1&0\end{pmatrix}$. Choose the two coordinate directions as columns of $U=I$. Then $H=\encoded{Z}U=\encoded{Z}$. Along the first direction, projected values are $1,-1$; along the second they are $0,0$.
+The [SIGReg chapter](#sigreg) already computed the finite sum on $\Z=[(-1,0),(1,0)]$, one coordinate direction, and nodes $0,1,2$. The unscaled weighted sum was approximately $0.04648$; multiplying by $B=2$ gave about $0.09296$. Use those numbers. A second toy batch would only invite a contradiction.
 
-At frequency $\omega=1$, the first empirical characteristic function has real part $\cos1$ and imaginary part zero, because opposite sines cancel. The second has real part 1 and imaginary part zero. The Gaussian target is $q=e^{-1/2}$. Their discrepancies are $(\cos1-q)^2$ and $(1-q)^2$. The second direction exposes the collapsed coordinate much more strongly at this frequency.
+The full phase array has shape $B\times M\times K$. Computing it requires work proportional to $BdM+BMK$: first project the embeddings, then evaluate the frequency measurements. Its straightforward storage is proportional to $BMK$, in addition to model activations and other arrays. Averaging examples must happen before squaring the discrepancy.
 
-At zero frequency every empirical characteristic function and target equals 1, so that node contributes exactly zero. At other frequencies the differences change. Integrating several frequencies and sampling more directions makes a richer measurement than inspecting this one pair of coordinates. Averaging examples must happen before squaring the discrepancy; otherwise we would penalize individual phasors instead of their distributional average.
-
-The full phase array has shape $B\times M\times K$. Computing it requires work proportional to $BdM+BMK$: first project the embeddings, then evaluate the frequency measurements. Its straightforward storage is proportional to $BMK$, in addition to model activations and other arrays. Chunking directions can reduce peak memory if the reductions and gradients remain equivalent.
+One more coordinate of the same two-point cloud makes the collapse visible. Along $(0,1)$ both projected samples are $0$, the empirical characteristic function is identically $1$, and the discrepancy at frequency $1$ is $(1-e^{-1/2})^2$. That is the collapsed direction the first projection missed.
 
 <!-- VISUAL: I3 -->
 
-## A complete inspectable reference learner
+## Read the learner in four stages
 
-The following reference uses a tiny tanh encoder and a single residual linear predictor so that every derivative fits on the page. It uses the same finite SIGReg definition as the earlier reference, but it is deliberately not the browser MLP architecture. Its purpose is to expose the full chain rule, including the learnable target branch.
+The tested files below are the complete listing. Read them in this order.
+
+**Shapes.** A window is three frames and two actions. The encoder emits $B\times3\times8$. The predictor consumes $B\times20$ and emits $B\times8$. SIGReg sees three batches of shape $B\times8$.
+
+**One forward.** Encode the three frames with the shared MLP. Concatenate the first two embeddings and two actions. Add the residual correction to the current embedding. That is $\pred_{t+1}$.
+
+**The two reductions.** Average $Bd$ squared coordinate errors for $\objective{L}_{\mathrm{pred}}$. Average three SIGReg values for $R$. The scalar objective is their sum with coefficient $\lambda$.
+
+**One backward coordinate.** The output residual gradient is $2e/(Bd)$. It contributes positively to the predictor output and negatively to the target embedding. The current embedding receives an extra direct contribution through the residual skip. Context sensitivities are multiplied by the predictor’s weight transpose. Every time position then receives its own SIGReg gradient, scaled by $\lambda/3$. Finally the encoder accumulates contributions from all three uses of its shared parameters.
+
+The following reference uses a tiny tanh encoder and a single residual linear predictor so that every derivative fits on the page. It uses the same finite SIGReg definition as the earlier reference, but it is deliberately not the browser MLP architecture.
 
 <!-- CODE: book/edition2/model_reference.py -->
 
-The forward pass above records the encoded window, concatenated context, and residual prediction. The backward pass below differentiates the scalar objective through those exact intermediates. Its imports refer to the reference modules printed in this book.
-
 <!-- CODE: book/edition2/learner_reference.py -->
-
-The output residual gradient is $2e/(Bd)$. It contributes positively to the predictor output and negatively to the target embedding. The current embedding receives an extra direct contribution through the residual skip. Context sensitivities are multiplied by the predictor’s weight transpose. Every time position then receives its own SIGReg gradient, scaled by $\lambda/3$. Finally the encoder accumulates contributions from all three uses of its shared parameters.
 
 The reference holds projection directions fixed during a derivative check. Otherwise a finite-difference perturbation would compare two different randomized objectives and the numerical derivative would be contaminated by sampling noise. During actual stochastic training, fresh directions can be sampled as part of each update’s randomness.
 
@@ -97,13 +103,13 @@ The browser generates 256 training episodes of 64 transitions and 12 separate va
 
 A matched prediction-only comparison holds initialization, data, sampled batches, and update budget fixed while setting the regularizer coefficient to zero. This comparison isolates the regularizer’s effect in this architecture. Each run learns its own coordinate scale, so compare spread and physical control alongside its MSE.
 
-The held-out action shuffle asks whether correctly aligned actions improve prediction. Replacing the earlier frame with the current frame asks whether the selected history supplies useful information. These interventions are performed at evaluation, so they can also produce unfamiliar inputs. An error increase measures sensitivity on this test. Establishing causal effects over a wider action range requires controlled interventions.
+The laboratory button **Evaluate held-out images** runs those diagnostics on the reserved episodes. **Train prediction-only baseline** is the matched comparison: the same seed, data, batches, and update count with $\lambda=0$. The action-shuffle and removed-history ratios appear in that evaluation readout. An error increase measures sensitivity on this test.
 
 <!-- VISUAL: I4 -->
 
 ## Diagnostics should catch different kinds of failure
 
-A useful training display combines several measurements. Prediction loss describes agreement. SIGReg describes the chosen finite distributional discrepancy. Coordinate spread detects shrinking representations. A covariance participation ratio detects concentration into a few dominant directions. Held-out prediction versus persistence tests a specific dynamics baseline. Actual physical control tests the whole loop.
+A useful training display combines several measurements, each tied to a laboratory control. The live **prediction / persistence** ratio is held-out prediction versus copying the current embedding. **Embedding spread** is the mean coordinate standard deviation on a held-out batch; collapse drives it toward zero. The SIGReg term on the training chart is $R$ from the objective above. **Evaluate held-out images** adds shuffled-action and removed-history ratios. **Run 40 actions** tests the whole loop. The participation ratio below detects concentration into a few dominant directions.
 
 For covariance eigenvalues $\rho_j\geq0$, the participation ratio is
 

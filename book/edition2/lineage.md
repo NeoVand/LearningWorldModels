@@ -1,48 +1,24 @@
 # The papers as a conversation
 
-<p class="lead">Each paper becomes easier to read when we know which obstacle it tries to remove. The lineage is a set of related design decisions, not a ladder on which every newer method dominates every older one.</p>
+<p class="lead">Each paper becomes easier to read when we know which obstacle it tries to remove. The lineage is a set of related design decisions.</p>
 
 ## A reading method for research papers
 
-For each paper, ask five questions. What data enters the learner? What is withheld or predicted? Which parameters receive gradients? What prevents trivial agreement? How is usefulness measured? Write the answers before interpreting an accuracy table.
+For each paper, ask five questions. What data enters the learner? What is withheld or predicted? Which parameters receive gradients? What prevents trivial agreement? How is usefulness measured? Write the answers before interpreting an accuracy table. For LeWM v1 the filled answers are: offline image–action trajectories; the next learned frame embedding; both encoder and predictor; SIGReg on each time slice; goal-directed control, probes, perturbations, and ablations.
 
 The word “world model” covers several settings. A representation model can predict missing video features without accepting actions. An action-conditioned model can evaluate candidate controls. A generative model can render future observations. A policy learned using an imagined simulator may no longer need that simulator at execution time. Our endpoint instead keeps the learned model inside an online planner.
 
 The following papers are primary sources. They are linked at fixed versions so changes in later revisions do not silently change the argument.
 
-## I-JEPA: predict a missing region in representation space
+## The teacher-based JEPA family
 
-[I-JEPA, 2301.08243v1](https://arxiv.org/pdf/2301.08243v1), asks whether a visible context in an image can predict representations of hidden target regions. The target encoder processes image information to provide targets; the online context encoder sees the permitted context. A predictor also receives information identifying which target positions to predict.
+[I-JEPA, 2301.08243v1](https://arxiv.org/pdf/2301.08243v1), [V-JEPA, 2404.08471v1](https://arxiv.org/pdf/2404.08471v1), and [V-JEPA 2, 2506.09985v1](https://arxiv.org/pdf/2506.09985v1) share a target encoder updated by an exponential moving average, with the target branch detached from gradient computation. I-JEPA predicts hidden image-region features from visible context; position tokens identify which region is asked. V-JEPA extends that mask to video. V-JEPA 2 adds a second stage: action-conditioned post-training on robot data after action-free visual pretraining.
 
-This last detail matters. Without location information, “predict a missing feature” is ambiguous: the left corner and the center may contain different things. Position identifies the question; the context helps answer it. Masking must prevent the context encoder from directly reading the target pixels. Large target blocks discourage a solution based only on tiny local texture continuations and encourage use of broader scene relationships.
+None of these is LeWM’s symmetric end-to-end objective. A video learner can infer patterns of movement and still be unable to answer “What will happen if I apply torque $a$?” V-JEPA 2 answers that question after a large pretraining investment. LeWM jointly learns the encoder and predictor on environment-specific offline trajectories instead.
 
-The target encoder is updated by an exponential moving average, and the target branch is detached from gradient computation. Thus I-JEPA belongs to the teacher-based family developed in the JEPA chapter. It is not the same symmetric end-to-end objective as LeWM.
-
-Its evaluations include representation tasks such as classification and spatial understanding. These ask whether useful information is accessible from learned features. They do not directly test motor action selection. A model can be an important step toward predictive representation learning without already being an action-conditioned world model.
-
-**Reading exercise.** If the context were the entire image including every target pixel, why might the task become less useful? The encoder and predictor could exploit information that will be unavailable in the intended missing-content problem. A low loss would then answer an easier question than the one we wanted to pose.
+**Frozen evaluation** means the pretrained backbone is held fixed while a smaller readout is fitted. Fine-tuning the entire model answers a different question because the representation can change using the downstream labels.
 
 <!-- VISUAL: H1 -->
-
-## V-JEPA: time becomes part of the missing information
-
-[V-JEPA, 2404.08471v1](https://arxiv.org/pdf/2404.08471v1), extends feature prediction to video. It masks parts of a spatiotemporal signal and predicts target features. The context now includes relationships across frames as well as within a frame. Motion-sensitive tasks can reveal whether the representation learned temporal structure beyond static appearance.
-
-The input is passive video, not a sequence of motor commands for our particular robot. A video learner can infer patterns of movement while remaining unable to answer, “What will happen if I apply torque $a$?” That question requires some bridge between actions and visual changes.
-
-The paper uses a teacher-style target mechanism and evaluates frozen representations on downstream tasks. **Frozen evaluation** means the pretrained backbone is held fixed while a smaller readout is fitted. This isolates information accessible from the representation under that readout’s capacity. Fine-tuning the entire model answers a different question because the representation can change using the downstream labels.
-
-A key lesson is that predicting features can produce useful motion and appearance information without reconstructing pixels. It is evidence for that training route on the tested data and tasks, not a proof that pixel prediction is universally unnecessary.
-
-## V-JEPA 2: large-scale video learning meets robot actions
-
-[V-JEPA 2, 2506.09985v1](https://arxiv.org/pdf/2506.09985v1), separates broad action-free visual pretraining from action-conditioned post-training. The first stage develops visual representations from large video collections. The action-conditioned stage uses robot interaction data to learn how actions change those representations, enabling goal-directed planning.
-
-This separation answers two practical needs. Natural video contains extensive information about objects and motion, but often lacks the action labels a robot predictor needs. Robot datasets contain the relevant actions but are more expensive to collect and narrower in visual coverage. Combining the two can reuse a broad visual prior while learning a specific action interface.
-
-The associated planning results should therefore be read with the pretraining investment visible. “No task-specific reward” does not mean no prior data. “Zero-shot” transfer to an evaluated robot setting does not mean the system has never seen related visual or robot data. Always ask what was held out and from which stage.
-
-LeWM explores a different tradeoff: jointly learn the encoder and predictor directly on environment-specific offline trajectories with a compact model. This can reduce dependence on a large frozen visual foundation model, but it also loses the benefit of that model’s broad pretraining. These are different resource and transfer choices.
 
 ## DINO-WM: start from a visual representation that already works
 
@@ -84,15 +60,15 @@ The important simplification is in the loss and training dependencies. The syste
 
 ## Compare the training setups
 
-| Method | Prediction target | Encoder during main dynamics or representation training | Where action enters |
-|---|---|---|---|
-| I-JEPA | Hidden image-region features | Online encoder plus EMA target | No motor action in the image task |
-| V-JEPA | Hidden video features | Online encoder plus EMA target | Passive video representation learning |
-| V-JEPA 2 | Video features; then action-conditioned features | Separate pretraining and action-conditioned stages | Robot post-training and planning |
-| DINO-WM | Future frozen patch features | Frozen pretrained visual encoder | Dynamics predictor |
-| PLDM | Future learned latent state | Jointly trained, with several constraints | Dynamics predictor and optional auxiliary formulation |
-| LeJEPA | Related-view representations | Regularized joint representation learning | Not the LeWM motor-action task |
-| LeWM | Future learned frame embedding | Jointly trained with prediction plus SIGReg | Causal predictor through adaptive normalization |
+| Method | Prediction target | Encoder during main training | Where action enters | To reproduce control, reimplement |
+|---|---|---|---|---|
+| I-JEPA | Hidden image-region features | Online encoder plus EMA target | No motor action in the image task | Not a control method |
+| V-JEPA | Hidden video features | Online encoder plus EMA target | Passive video | Not a control method |
+| V-JEPA 2 | Video features; then action-conditioned features | Separate pretraining and action-conditioned stages | Robot post-training and planning | Planner plus the action-conditioned stage |
+| DINO-WM | Future frozen patch features | Frozen pretrained visual encoder | Dynamics predictor | Planner and dynamics only |
+| PLDM | Future learned latent state | Jointly trained, with several constraints | Dynamics predictor and optional auxiliary formulation | Full train and planner |
+| LeJEPA | Related-view representations | Regularized joint representation learning | Not the LeWM motor-action task | Not a control method |
+| LeWM | Future learned frame embedding | Jointly trained with prediction plus SIGReg | Causal predictor through adaptive normalization | Full train and CEM planner |
 
 These rows compare targets, encoder updates, and action inputs. Each paper also makes architectural and data choices that affect its results. The linked primary papers are the record for those details.
 
