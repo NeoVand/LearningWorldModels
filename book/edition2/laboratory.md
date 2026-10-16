@@ -92,7 +92,7 @@ Declare the evaluation before comparing models. “Ever within a tolerance,” �
 
 </details>
 
-<details><summary>4 · Raise $\lambda$ until prediction degrades. What tradeoff did you see?</summary>
+<details><summary>4 · Raise lambda until prediction degrades. What tradeoff did you see?</summary>
 
 The regularizer can overpower prediction. Spread and SIGReg may look healthy while the predictor stops improving on persistence, or control gets worse. The two terms have to be evaluated together: a neat cloud is not a world model, and a tiny prediction loss is not understanding.
 

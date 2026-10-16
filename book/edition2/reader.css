@@ -138,7 +138,7 @@ nav input:focus-visible {background:transparent;box-shadow:none;}
 .chapter-outcome strong { color:var(--ink); font-weight:500; }
 .claims-box { margin:20px 0 28px; padding:14px 16px 14px 18px; border-left:2px solid var(--plot-line); background:var(--surface, transparent); font:400 .88rem/1.55 var(--sans); color:var(--ink); }
 .claims-box strong { display:block; margin-bottom:6px; font-weight:600; }
-.chapter-pager { display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin:36px 0 8px; padding-top:20px; border-top:1px solid var(--line); font:400 .78rem/1.4 var(--sans); }
+.chapter-pager { position:static; display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; width:auto; margin:36px 0 8px; padding-top:20px; border-top:1px solid var(--line); font:400 .78rem/1.4 var(--sans); z-index:auto; overflow:visible; }
 .chapter-pager > span:first-child { justify-self:start; }
 .chapter-pager > a { justify-self:center; }
 .chapter-pager > span:last-child { justify-self:end; text-align:right; }

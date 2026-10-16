@@ -184,7 +184,7 @@ const content = chapters
   .map(([id, title, status, prerequisites, outcome], i) => {
     const prev = chapters[i - 1];
     const next = chapters[i + 1];
-    const pager = `<nav class="chapter-pager" aria-label="Chapter"><span>${prev ? `<a href="#${prev[0]}">Previous: ${esc(prev[1])}</a>` : ""}</span><a href="#opening">Contents</a><span>${next ? `<a href="#${next[0]}">Next: ${esc(next[1])}</a>` : ""}</span></nav>`;
+    const pager = `<div class="chapter-pager" role="navigation" aria-label="Chapter"><span>${prev ? `<a href="#${prev[0]}">Previous: ${esc(prev[1])}</a>` : ""}</span><a href="#opening">Contents</a><span>${next ? `<a href="#${next[0]}">Next: ${esc(next[1])}</a>` : ""}</span></div>`;
     return `<article id="${id}"><div class="chapter-meta"><span>${String(i + 1).padStart(2, "0")} / ${status}</span></div>${themedMarkup(render(read(`book/edition2/${id}.md`), id)).replace(/(<p class="lead">[\s\S]*?<\/p>)/, `$1<p class="chapter-outcome"><strong>By the end:</strong> ${esc(outcome)}</p>`)}${pager}</article>`;
   })
   .join("\n");
